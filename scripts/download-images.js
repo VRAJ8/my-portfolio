@@ -6,12 +6,12 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Missing skill icons
+// Missing skill icons (now using PNGs with transparent backgrounds)
 const skillIcons = {
-  'tailwind.svg': 'https://raw.githubusercontent.com/devicons/devicon/master/icons/tailwindcss/tailwindcss-plain.svg',
-  'framer.svg': 'https://raw.githubusercontent.com/devicons/devicon/master/icons/framer/framer-original.svg',
-  'inertia.svg': 'https://raw.githubusercontent.com/devicons/devicon/master/icons/inertia/inertia-original.svg',
-  'laravel.svg': 'https://raw.githubusercontent.com/devicons/devicon/master/icons/laravel/laravel-plain.svg'
+  'tailwind.png': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/tailwindcss.png',
+  'framer.png': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/framer.png',
+  'inertia.png': 'https://raw.githubusercontent.com/innocenzi/inertia-logo/main/logo.png',
+  'laravel.png': 'https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/laravel.png'
 };
 
 // Project images with placeholder images

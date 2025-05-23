@@ -20,12 +20,12 @@ export const skills: Skill[] = [
   {
     name: 'Tailwind CSS',
     category: 'frontend',
-    icon: '/icons/tailwind.svg'
+    icon: '/icons/tailwind.png'
   },
   {
     name: 'Framer Motion',
     category: 'frontend',
-    icon: '/icons/framer.svg'
+    icon: '/icons/framer.png'
   },
   {
     name: 'Three.js',
@@ -35,7 +35,7 @@ export const skills: Skill[] = [
   {
     name: 'Inertia.js',
     category: 'frontend',
-    icon: '/icons/inertia.svg'
+    icon: '/icons/inertia.png'
   },
   
   // Backend
@@ -57,7 +57,7 @@ export const skills: Skill[] = [
   {
     name: 'Laravel',
     category: 'backend',
-    icon: '/icons/laravel.svg'
+    icon: '/icons/laravel.png'
   },
   {
     name: 'PHP',
