@@ -1,15 +1,13 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import AnimatedText from '../ui/AnimatedText';
 import SkillPill from '../ui/SkillPill';
-import { Skill } from '../../types';
 import { skills } from '../../data/skills';
 
-const About: React.FC = () => {
+const About = () => {
   const categoryNames = {
     frontend: 'Frontend',
     backend: 'Backend'
-  };
+  } as const;
 
   const containerVariants = {
     hidden: { opacity: 0 },
