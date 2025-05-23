@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 255 255 255;
+    --text-primary: 0 0 0;
+    --text-secondary: 75 75 75;
+  }
+
+  .dark {
+    --background: 0 0 0;
+    --text-primary: 255 255 255;
+    --text-secondary: 142 142 142;
+  }
+
+  body {
+    @apply bg-[rgb(var(--background))] text-[rgb(var(--text-primary))] font-sans antialiased;
+  }
+}
+
+@layer components {
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  .glass-panel {
+    @apply bg-glass backdrop-blur-lg border border-white/10 shadow-glass
+           dark:bg-glass dark:border-white/10 dark:shadow-glass;
+  }
+  
+  .glass-button {
+    @apply bg-glass hover:bg-glass-lighter transition-all duration-300 ease-apple 
+           backdrop-blur-md px-6 py-3 rounded-button 
+           text-[rgb(var(--text-primary))] font-medium shadow-glass hover:scale-[1.02];
+  }
+  
+  .accent-button {
+    @apply bg-accent hover:bg-accent-light transition-all duration-300 ease-apple 
+           px-6 py-3 rounded-button 
+           text-white font-medium shadow-glass hover:scale-[1.02];
+  }
+  
+  .section-title {
+    @apply text-3xl md:text-4xl lg:text-5xl font-bold mb-8 tracking-tight;
+  }
+  
+  .section-container {
+    @apply py-16 md:py-24 px-6 md:px-12 max-w-7xl mx-auto;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-glass dark:bg-glass;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-glass-lighter dark:bg-glass-lighter rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-glass-darker dark:bg-glass-darker;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Prevent blue highlight on mobile */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
