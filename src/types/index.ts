@@ -23,7 +23,8 @@ export interface Social {
 export interface Skill {
   name: string;
   category: 'frontend' | 'backend' | 'design' | 'tools';
-  icon: string;
+  icon?: string;
+  level?: number;
 }
 
 export interface TimelineItem {

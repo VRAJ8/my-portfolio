@@ -2,10 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import AnimatedText from '../ui/AnimatedText';
 import SkillPill from '../ui/SkillPill';
-import TimelineItem from '../ui/TimelineItem';
-import { Skill, TimelineItem as TimelineItemType } from '../../types';
+import { Skill } from '../../types';
 import { skills } from '../../data/skills';
-import { timeline } from '../../data/timeline';
 
 const About: React.FC = () => {
   const categoryNames = {
