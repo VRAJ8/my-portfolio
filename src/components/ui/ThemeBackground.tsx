@@ -2,30 +2,34 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../context/ThemeContext';
 
+// Import images
+import darkBg from '../../assets/dark-bg.jpg';
+import lightBg from '../../assets/light-bg.jpg';
+
 const ThemeBackground: React.FC = () => {
   const { isDarkMode } = useTheme();
 
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden">
-      {/* Dark theme background */}
-      <motion.div
-        className="absolute inset-0 bg-[url('/src/assets/dark-bg.jpg')] bg-cover bg-center"
-        initial={{ opacity: 1 }}
-        animate={{ opacity: isDarkMode ? 1 : 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
-      </motion.div>
+      {/* Dark mode background */}
+      <div
+        className={`absolute inset-0 transition-opacity duration-500 ${
+          isDarkMode ? 'opacity-100' : 'opacity-0'
+        }`}
+        style={{
+          background: 'radial-gradient(circle at center, #1a1a2e 0%, #16213e 50%, #0f172a 100%)'
+        }}
+      />
 
-      {/* Light theme background */}
-      <motion.div
-        className="absolute inset-0 bg-[url('/src/assets/light-bg.jpg')] bg-cover bg-center"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: isDarkMode ? 0 : 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="absolute inset-0 bg-white/40 backdrop-blur-[2px]" />
-      </motion.div>
+      {/* Light mode background */}
+      <div
+        className={`absolute inset-0 transition-opacity duration-500 ${
+          isDarkMode ? 'opacity-0' : 'opacity-100'
+        }`}
+        style={{
+          background: 'radial-gradient(circle at center, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%)'
+        }}
+      />
 
       {/* Glassmorphism overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-accent/5 to-transparent dark:from-white/5 dark:via-accent/5" />
