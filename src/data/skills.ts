@@ -5,79 +5,79 @@ export const skills: Skill[] = [
   {
     name: 'React',
     category: 'frontend',
-    icon: '/icons/react.png'
+    icon: '/icons/react.svg'
   },
   {
     name: 'Next.js',
     category: 'frontend',
-    icon: '/icons/nextjs.png'
+    icon: '/icons/nextjs.svg'
   },
   {
     name: 'TypeScript',
     category: 'frontend',
-    icon: '/icons/typescript.png'
+    icon: '/icons/typescript.svg'
   },
   {
     name: 'Tailwind CSS',
     category: 'frontend',
-    icon: '/icons/tailwind.png'
+    icon: '/icons/tailwind.svg'
   },
   {
     name: 'Framer Motion',
     category: 'frontend',
-    icon: '/icons/framer.png'
+    icon: '/icons/framer.svg'
   },
   {
     name: 'Three.js',
     category: 'frontend',
-    icon: '/icons/threejs.png'
+    icon: '/icons/threejs.svg'
   },
   {
     name: 'Inertia.js',
     category: 'frontend',
-    icon: '/icons/inertia.png'
+    icon: '/icons/inertia.svg'
   },
   
   // Backend
   {
     name: 'Node.js',
     category: 'backend',
-    icon: '/icons/nodejs.png'
+    icon: '/icons/nodejs.svg'
   },
   {
     name: 'Express',
     category: 'backend',
-    icon: '/icons/express.png'
+    icon: '/icons/express.svg'
   },
   {
     name: 'MongoDB',
     category: 'backend',
-    icon: '/icons/mongodb.png'
+    icon: '/icons/mongodb.svg'
   },
   {
     name: 'Laravel',
     category: 'backend',
-    icon: '/icons/laravel.png'
+    icon: '/icons/laravel.svg'
   },
   {
     name: 'PHP',
     category: 'backend',
-    icon: '/icons/php.png'
+    icon: '/icons/php.svg'
   },
   {
     name: 'Python',
     category: 'backend',
-    icon: '/icons/python.png'
+    icon: '/icons/python.svg'
   },
   {
     name: 'Java',
     category: 'backend',
-    icon: '/icons/java.png'
+    icon: '/icons/java.svg'
   },
   {
     name: 'Firebase',
     category: 'backend',
-    icon: '/icons/firebase.png'
+    icon: '/icons/firebase.svg'
   },
   
   // Design
