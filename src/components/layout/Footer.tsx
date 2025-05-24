@@ -1,14 +1,14 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Github, Linkedin, Twitter, Heart } from 'lucide-react';
+import { Github, Linkedin, Instagram, Heart } from 'lucide-react';
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
   
   const socialLinks = [
-    { name: 'GitHub', href: 'https://github.com', icon: <Github size={20} /> },
-    { name: 'LinkedIn', href: 'https://linkedin.com', icon: <Linkedin size={20} /> },
-    { name: 'Twitter', href: 'https://twitter.com', icon: <Twitter size={20} /> },
+    { name: 'GitHub', href: 'https://github.com/VRAJ8', icon: <Github size={20} /> },
+    { name: 'LinkedIn', href: 'https://www.linkedin.com/in/vraj-patel-86338a25a/', icon: <Linkedin size={20} /> },
+    { name: 'Instagram', href: 'https://www.instagram.com/vraj._.8/', icon: <Instagram size={20} /> },
   ];
 
   return (

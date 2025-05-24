@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Menu, X, Github, Linkedin, Twitter } from 'lucide-react';
+import { Menu, X, Github, Linkedin, Instagram } from 'lucide-react';
 
 interface HeaderProps {
   scrollProgress: number;
@@ -22,9 +22,9 @@ const Header: React.FC<HeaderProps> = ({ scrollProgress }) => {
   ];
 
   const socialLinks = [
-    { name: 'GitHub', href: 'https://github.com', icon: <Github size={20} /> },
-    { name: 'LinkedIn', href: 'https://linkedin.com', icon: <Linkedin size={20} /> },
-    { name: 'Twitter', href: 'https://twitter.com', icon: <Twitter size={20} /> },
+    { name: 'GitHub', href: 'https://github.com/VRAJ8', icon: <Github size={20} /> },
+    { name: 'LinkedIn', href: 'https://www.linkedin.com/in/vraj-patel-86338a25a/', icon: <Linkedin size={20} /> },
+    { name: 'Instagram', href: 'https://www.instagram.com/vraj._.8/', icon: <Instagram size={20} /> },
   ];
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);

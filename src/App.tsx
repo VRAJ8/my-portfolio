@@ -17,15 +17,26 @@ function ThemeToggle() {
   return (
     <motion.button
       onClick={toggleTheme}
-      className="fixed top-6 right-6 z-50 p-3 rounded-full glass-panel hover:bg-glass-lighter transition-all duration-300"
+      className="fixed bottom-6 right-6 z-50 p-3 rounded-full glass-panel hover:bg-glass-lighter transition-all duration-300"
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
-      aria-label="Toggle theme"
+      aria-label={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
+      title={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
     >
       <motion.div
         initial={false}
-        animate={{ rotate: isDarkMode ? 0 : 180 }}
-        transition={{ duration: 0.5, ease: "easeInOut" }}
+        animate={{ 
+          rotate: isDarkMode ? 0 : 180,
+          scale: [1, 1.2, 1]
+        }}
+        transition={{ 
+          duration: 0.5,
+          ease: "easeInOut",
+          scale: {
+            duration: 0.3,
+            times: [0, 0.5, 1]
+          }
+        }}
       >
         {isDarkMode ? (
           <Sun className="w-5 h-5 text-yellow-400" />
