@@ -5,101 +5,97 @@ export const skills: Skill[] = [
   {
     name: 'React',
     category: 'frontend',
-    icon: '/icons/react.svg'
+    icon: '/icons/react.png'
   },
   {
     name: 'Next.js',
     category: 'frontend',
-    icon: '/icons/nextjs.svg'
+    icon: '/icons/nextjs.png'
   },
   {
     name: 'TypeScript',
     category: 'frontend',
-    icon: '/icons/typescript.svg'
+    icon: '/icons/typescript.png'
   },
   {
     name: 'Tailwind CSS',
-    category: 'frontend',
-    icon: '/icons/tailwind.png'
+    category: 'frontend'
   },
   {
     name: 'Framer Motion',
-    category: 'frontend',
-    icon: '/icons/framer.png'
+    category: 'frontend'
   },
   {
     name: 'Three.js',
     category: 'frontend',
-    icon: '/icons/threejs.svg'
+    icon: '/icons/threejs.png'
   },
   {
     name: 'Inertia.js',
-    category: 'frontend',
-    icon: '/icons/inertia.png'
+    category: 'frontend'
   },
   
   // Backend
   {
     name: 'Node.js',
     category: 'backend',
-    icon: '/icons/nodejs.svg'
+    icon: '/icons/nodejs.png'
   },
   {
     name: 'Express',
     category: 'backend',
-    icon: '/icons/express.svg'
+    icon: '/icons/express.png'
   },
   {
     name: 'MongoDB',
     category: 'backend',
-    icon: '/icons/mongodb.svg'
+    icon: '/icons/mongodb.png'
   },
   {
     name: 'Laravel',
-    category: 'backend',
-    icon: '/icons/laravel.png'
+    category: 'backend'
   },
   {
     name: 'PHP',
     category: 'backend',
-    icon: '/icons/php.svg'
+    icon: '/icons/php.png'
   },
   {
     name: 'Python',
     category: 'backend',
-    icon: '/icons/python.svg'
+    icon: '/icons/python.png'
   },
   {
     name: 'Java',
     category: 'backend',
-    icon: '/icons/java.svg'
+    icon: '/icons/java.png'
   },
   {
     name: 'Firebase',
     category: 'backend',
-    icon: '/icons/firebase.svg'
+    icon: '/icons/firebase.png'
   },
   
   // Design
   {
     name: 'Figma',
     category: 'design',
-    icon: '/icons/figma.svg'
+    icon: '/icons/figma.png'
   },
   {
     name: 'Adobe XD',
     category: 'design',
-    icon: '/icons/adobexd.svg'
+    icon: '/icons/adobexd.png'
   },
   {
     name: 'Photoshop',
     category: 'design',
-    icon: '/icons/photoshop.svg'
+    icon: '/icons/photoshop.png'
   },
   {
     name: 'Illustrator',
     category: 'design',
-    icon: '/icons/illustrator.svg'
+    icon: '/icons/illustrator.png'
   },
   { name: '3D Modeling', level: 75, category: 'design' },
   { name: 'UI/UX Design', level: 85, category: 'design' },
@@ -110,22 +106,22 @@ export const skills: Skill[] = [
   {
     name: 'Git',
     category: 'tools',
-    icon: '/icons/git.svg'
+    icon: '/icons/git.png'
   },
   {
     name: 'Docker',
     category: 'tools',
-    icon: '/icons/docker.svg'
+    icon: '/icons/docker.png'
   },
   {
     name: 'AWS',
     category: 'tools',
-    icon: '/icons/aws.svg'
+    icon: '/icons/aws.png'
   },
   {
     name: 'VS Code',
     category: 'tools',
-    icon: '/icons/vscode.svg'
+    icon: '/icons/vscode.png'
   },
   { name: 'Vite', level: 85, category: 'tools' },
   { name: 'Vercel', level: 90, category: 'tools' },

@@ -61,9 +61,9 @@ const ContactForm: React.FC = () => {
     
     setIsSubmitting(true);
     
-    // Simulate form submission
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // The form will be handled by Netlify
+      // We'll just show the success message
       setIsSubmitted(true);
       setFormState({ name: '', email: '', message: '' });
     } catch (error) {
@@ -104,7 +104,17 @@ const ContactForm: React.FC = () => {
           </button>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form 
+          name="contact" 
+          method="POST" 
+          data-netlify="true" 
+          data-netlify-honeypot="bot-field"
+          onSubmit={handleSubmit} 
+          className="space-y-6"
+        >
+          {/* Hidden input for Netlify form handling */}
+          <input type="hidden" name="form-name" value="contact" />
+          
           <div>
             <label 
               htmlFor="name" 
