@@ -8,4 +8,13 @@
 [[redirects]]
   from = "/*"
   to = "/index.html"
-  status = 200 
+  status = 200
+
+# Enable Netlify Forms
+[forms]
+  # Enable form detection
+  enabled = true
+  # Enable honeypot field
+  honeypot = true
+  # Enable spam filtering
+  spam_filter = true 
