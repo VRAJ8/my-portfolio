@@ -62,12 +62,22 @@ const ContactForm: React.FC = () => {
     setIsSubmitting(true);
     
     try {
-      // The form will be handled by Netlify
-      // We'll just show the success message
-      setIsSubmitted(true);
-      setFormState({ name: '', email: '', message: '' });
+      const formData = new FormData(e.target as HTMLFormElement);
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(formData as any).toString(),
+      });
+
+      if (response.ok) {
+        setIsSubmitted(true);
+        setFormState({ name: '', email: '', message: '' });
+      } else {
+        throw new Error('Form submission failed');
+      }
     } catch (error) {
       console.error('Error submitting form:', error);
+      alert('There was a problem submitting your form. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
