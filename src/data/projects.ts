@@ -33,7 +33,7 @@ export const projects: Project[] = [
     id: 3,
     title: "Beast Mode Motors",
     description: "A comprehensive vehicle inventory management system developed during my internship at Techomax Solutions. The platform streamlines car dealership operations with features like inventory management, image uploads, search functionality, and a booking inquiry system.",
-    image: "/images/beastmode.jpg",
+    image: "/images/gwagon.jpg",
     tags: ["PHP", "Laravel", "MySQL", "Blade", "HTML/CSS"],
     demoUrl: "#",
     githubUrl: "#",

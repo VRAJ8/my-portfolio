@@ -12,6 +12,8 @@ export interface Project {
     solution: string;
     impact: string;
   };
+  verified?: boolean;
+  stats?: { icon?: React.ReactNode; value: string; label: string }[];
 }
 
 export interface Social {
