@@ -114,6 +114,7 @@ const ContactForm: React.FC = () => {
         >
           {/* Hidden input for Netlify form handling */}
           <input type="hidden" name="form-name" value="contact" />
+          <input type="hidden" name="bot-field" />
           
           <div>
             <label 
