@@ -8,7 +8,7 @@ export const projects: Project[] = [
     image: "/images/decentlib.jpg",
     tags: ["TypeScript", "React", "Solidity", "MetaMask", "Blockchain"],
     demoUrl: "#",
-    githubUrl: "#",
+    githubUrl: "#https://github.com/Vedant-2211/DecntLib",
     caseStudy: {
       challenge: "Creating a secure and user-friendly decentralized library system that leverages blockchain technology for transparent book management.",
       solution: "Implemented smart contracts for book management, integrated MetaMask for secure transactions, and built a responsive frontend with TypeScript and React.",
@@ -44,12 +44,17 @@ export const projects: Project[] = [
     }
   },
   {
-    id: 4,
-    title: "Virtual Workspace",
-    description: "A collaborative virtual workspace designed for remote teams to interact in a spatial environment.",
-    image: "https://images.pexels.com/photos/7680208/pexels-photo-7680208.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    tags: ["React", "Socket.io", "WebRTC", "Supabase"],
-    demoUrl: "#",
-    githubUrl: "#"
+  id: 4,
+  title: "Code Guard AI",
+  description: "An AI-powered security layer and autonomous code reviewer designed to identify vulnerabilities and optimize code quality. Hosted on the CodeVigil domain, it provides real-time analysis to catch security flaws like SQL injection and XSS before production.",
+  image: "/images/codeguard.jpg", // Ensure you add a relevant image to your public/images folder
+  tags: ["Python", "FastAPI", "Gemini API", "React", "Tailwind CSS", "Groq API", "MongoDB", "Netlify", "Railway"],
+  demoUrl: "https://codevigil.netlify.app", // Replace with your actual deployment link
+  githubUrl: "#https://github.com/VRAJ8/CodeGuardAI", // Replace with your repository link
+  caseStudy: {
+    challenge: "Reducing the manual overhead of peer reviews and ensuring security-first development by catching critical vulnerabilities early in the development lifecycle.",
+    solution: "Developed an autonomous review system using LLMs to perform deep static analysis, integrated with a clean dashboard for developers to track and fix security risks.",
+    impact: "Streamlined the code audit process, providing developers with instant, actionable feedback on security and performance optimizations."
   }
+}
 ];
