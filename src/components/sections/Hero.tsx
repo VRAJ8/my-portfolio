@@ -51,7 +51,7 @@ const Hero: React.FC = () => {
             
             {/* Glowing orbs */}
             <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-accent/10 rounded-full blur-3xl animate-float" />
-            <div className="absolute bottom-1/4 right-1/4 w-40 h-40 bg-accent/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }} />
+            <div className="absolute bottom-1/4 right-1/4 w-40 h-40 bg-accent/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '0.5s' }} />
           </div>
           
           <div className="grid md:grid-cols-2 gap-12 items-center relative z-10">
