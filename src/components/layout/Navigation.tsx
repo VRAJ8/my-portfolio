@@ -15,8 +15,11 @@ const sections = [
 
 const sectionIds = sections.map((s) => s.id);
 
-// A little overshoot so the selection moves like a droplet rather than sliding.
+// The selection moves like a droplet: it slides with a little overshoot and,
+// as it lands, stretches along the direction of travel then wobbles back.
 const dropSpring = { type: 'spring', stiffness: 380, damping: 26, mass: 0.9 } as const;
+const wobble = { type: 'spring', stiffness: 320, damping: 11 } as const;
+const dropTransition = { ...dropSpring, scaleX: wobble, scaleY: wobble };
 
 const ThemeToggle: React.FC = () => {
   const { isDarkMode, toggleTheme } = useTheme();
@@ -86,7 +89,9 @@ const Navigation: React.FC = () => {
                   <motion.span
                     layoutId="tab-desktop"
                     className="lg-drop absolute inset-0 rounded-full"
-                    transition={dropSpring}
+                    initial={{ scaleX: 0.9, scaleY: 1.3 }}
+                    animate={{ scaleX: 1, scaleY: 1 }}
+                    transition={dropTransition}
                   />
                 )}
                 <Icon size={20} className="relative shrink-0" />
@@ -122,7 +127,9 @@ const Navigation: React.FC = () => {
                   <motion.span
                     layoutId="tab-mobile"
                     className="lg-drop absolute inset-0 rounded-full"
-                    transition={dropSpring}
+                    initial={{ scaleX: 1.3, scaleY: 0.86 }}
+                    animate={{ scaleX: 1, scaleY: 1 }}
+                    transition={dropTransition}
                   />
                 )}
                 <Icon size={19} className="relative" />

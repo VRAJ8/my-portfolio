@@ -10,9 +10,17 @@ import Contact from './components/sections/Contact';
 import Environment from './components/ui/Environment';
 import { ThemeProvider } from './context/ThemeContext';
 import { initLiquidGlass } from './lib/liquidGlass';
+import { initLiquidMotion } from './lib/liquidMotion';
 
 const App: React.FC = () => {
-  useEffect(() => initLiquidGlass(), []);
+  useEffect(() => {
+    const stopGlass = initLiquidGlass();
+    const stopMotion = initLiquidMotion();
+    return () => {
+      stopGlass();
+      stopMotion();
+    };
+  }, []);
 
   return (
     <ThemeProvider>

@@ -37,7 +37,16 @@ const Skills: React.FC = () => {
                   <motion.span
                     layoutId="skill-tab"
                     className="lg-drop absolute inset-0 rounded-full"
-                    transition={{ type: 'spring', stiffness: 380, damping: 26, mass: 0.9 }}
+                    initial={{ scaleX: 1.25, scaleY: 0.86 }}
+                    animate={{ scaleX: 1, scaleY: 1 }}
+                    transition={{
+                      type: 'spring',
+                      stiffness: 380,
+                      damping: 26,
+                      mass: 0.9,
+                      scaleX: { type: 'spring', stiffness: 320, damping: 11 },
+                      scaleY: { type: 'spring', stiffness: 320, damping: 11 },
+                    }}
                   />
                 )}
                 <span className="relative">{label}</span>

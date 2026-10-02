@@ -2,9 +2,10 @@
  * Liquid Glass refraction.
  *
  * Every glass element (see GLASS below) gets an SVG filter applied as its
- * `backdrop-filter`. The filter uses a generated displacement map shaped like
- * the element's rounded rectangle, so whatever sits behind the glass bends
- * near the rim like light through a curved glass edge.
+ * `backdrop-filter`. The element is modelled as a thick piece of convex glass:
+ * the backdrop is magnified across the surface and bent hard at the curved rim,
+ * colours split slightly at the edges, and specular highlights are lit from
+ * above according to the shape.
  *
  * SVG filters in `backdrop-filter` only work in Chromium browsers. Elsewhere
  * nothing here runs, and the CSS blur-based fallback in index.css is used.
@@ -49,25 +50,43 @@ const getDefs = () => {
   return defs;
 };
 
+interface Optics {
+  /** Width of the curved rim (px). For small controls it spans the whole surface: a glass pebble. */
+  bezel: number;
+  /** Whole-surface magnification, 0–1. */
+  lens: number;
+  /** Add a soft glossy sheen across the top half (pebble controls). */
+  gloss: boolean;
+}
+
+// Light comes from above and slightly left, as in Apple's glass.
+const LIGHT_X = -0.45;
+const LIGHT_Y = -0.89;
+
 /**
- * Builds the displacement map (and an edge mask) for a rounded rectangle.
- * Inside the bezel, each pixel points back toward the centre, strongest at the
- * very edge, which makes the backdrop look lensed by a curved glass rim.
+ * Models the element as a thick convex glass shape and renders three images:
+ *  - map: displacement (R/G = x/y), strongest at the curved rim plus a gentle
+ *    lens across the whole surface, so the backdrop is magnified and bent;
+ *  - mask: where the rim is, used to keep the rim crisp on frosted panels;
+ *  - spec: specular highlights computed from the surface normal and light
+ *    direction — a bright rim on edges facing the light, a softer internal
+ *    reflection on the opposite edges, and an optional top gloss.
  */
-const buildMaps = (w: number, h: number, radius: number, bezel: number) => {
-  const res = w * h > 160_000 ? 0.5 : 1; // Half-resolution maps for big panels; displacement is smooth anyway.
+const buildMaps = (w: number, h: number, radius: number, { bezel, lens, gloss }: Optics) => {
+  const res = w * h > 160_000 ? 0.5 : 1; // Half-resolution maps for big panels; the optics are smooth anyway.
   const cw = Math.max(2, Math.round(w * res));
   const ch = Math.max(2, Math.round(h * res));
   const hw = w / 2;
   const hh = h / 2;
   const r = Math.min(radius, hw, hh);
 
-  const mapCanvas = document.createElement('canvas');
-  const maskCanvas = document.createElement('canvas');
-  mapCanvas.width = maskCanvas.width = cw;
-  mapCanvas.height = maskCanvas.height = ch;
-  const map = mapCanvas.getContext('2d')!.createImageData(cw, ch);
-  const mask = maskCanvas.getContext('2d')!.createImageData(cw, ch);
+  const canvases = [0, 1, 2].map(() => {
+    const c = document.createElement('canvas');
+    c.width = cw;
+    c.height = ch;
+    return c;
+  });
+  const [map, mask, spec] = canvases.map((c) => c.getContext('2d')!.createImageData(cw, ch));
 
   for (let y = 0; y < ch; y++) {
     const py = (y + 0.5) / res - hh;
@@ -75,52 +94,72 @@ const buildMaps = (w: number, h: number, radius: number, bezel: number) => {
       const px = (x + 0.5) / res - hw;
       const i = (y * cw + x) * 4;
 
-      // Signed distance to the rounded rectangle (positive inside).
+      // Signed distance to the rounded rectangle (positive inside) and the outward normal.
       const qx = Math.abs(px) - (hw - r);
       const qy = Math.abs(py) - (hh - r);
-      const outside = Math.hypot(Math.max(qx, 0), Math.max(qy, 0));
-      const inside = Math.min(Math.max(qx, qy), 0);
-      const depth = -(outside + inside - r);
+      const depth = -(Math.hypot(Math.max(qx, 0), Math.max(qy, 0)) + Math.min(Math.max(qx, qy), 0) - r);
 
-      let vx = 0;
-      let vy = 0;
-      let edge = 0;
-      if (depth >= 0 && depth < bezel) {
-        let nx: number;
-        let ny: number;
-        if (qx > 0 && qy > 0) {
-          const len = Math.hypot(qx, qy) || 1;
-          nx = qx / len;
-          ny = qy / len;
-        } else if (qx > qy) {
-          nx = 1;
-          ny = 0;
-        } else {
-          nx = 0;
-          ny = 1;
-        }
-        nx *= Math.sign(px) || 1;
-        ny *= Math.sign(py) || 1;
-        const t = 1 - depth / bezel; // 0 at the inner bezel line, 1 at the rim
-        const strength = t * t;
-        vx = -nx * strength;
-        vy = -ny * strength;
-        edge = Math.min(1, t * 1.6);
-      }
-
-      map.data[i] = 128 + vx * 127;
-      map.data[i + 1] = 128 + vy * 127;
       map.data[i + 2] = 128;
       map.data[i + 3] = 255;
-
       mask.data[i] = mask.data[i + 1] = mask.data[i + 2] = 255;
-      mask.data[i + 3] = edge * 255;
+      spec.data[i] = spec.data[i + 1] = spec.data[i + 2] = 255;
+
+      if (depth < 0) {
+        map.data[i] = map.data[i + 1] = 128;
+        continue;
+      }
+
+      let nx: number;
+      let ny: number;
+      if (qx > 0 && qy > 0) {
+        const len = Math.hypot(qx, qy) || 1;
+        nx = qx / len;
+        ny = qy / len;
+      } else if (qx > qy) {
+        nx = 1;
+        ny = 0;
+      } else {
+        nx = 0;
+        ny = 1;
+      }
+      nx *= Math.sign(px) || 1;
+      ny *= Math.sign(py) || 1;
+
+      // Rim: the surface curves down to the edge (squircle profile), bending light inward.
+      const t = Math.min(1, depth / bezel); // 0 at the edge, 1 where the surface is flat
+      const curve = Math.pow(1 - t, 2.4);
+      let vx = -nx * curve;
+      let vy = -ny * curve;
+
+      // Lens: the whole surface magnifies slightly toward its centre.
+      vx -= (px / hw) * lens;
+      vy -= (py / hh) * lens;
+      const len = Math.hypot(vx, vy);
+      if (len > 1) {
+        vx /= len;
+        vy /= len;
+      }
+      map.data[i] = 128 + vx * 127;
+      map.data[i + 1] = 128 + vy * 127;
+
+      mask.data[i + 3] = Math.min(1, (1 - t) * 1.6) * 255;
+
+      // Specular: bright where the rim faces the light, a fainter reflection on the far side.
+      const facing = nx * LIGHT_X + ny * LIGHT_Y;
+      const rim = 0.95 * Math.exp(-depth / 1.4) + 0.32 * Math.exp(-depth / 6);
+      let alpha = rim * (Math.pow(Math.max(0, facing), 1.3) + 0.5 * Math.pow(Math.max(0, -facing), 1.3) + 0.08);
+      if (gloss) {
+        const top = Math.max(0, 1 - (py + hh) / (h * 0.5));
+        alpha += 0.16 * top * top * Math.min(1, depth / 3);
+      }
+      spec.data[i + 3] = Math.min(1, alpha) * 255;
     }
   }
 
-  mapCanvas.getContext('2d')!.putImageData(map, 0, 0);
-  maskCanvas.getContext('2d')!.putImageData(mask, 0, 0);
-  return { map: mapCanvas.toDataURL(), mask: maskCanvas.toDataURL() };
+  return canvases.map((c, k) => {
+    c.getContext('2d')!.putImageData([map, mask, spec][k], 0, 0);
+    return c.toDataURL();
+  }) as [string, string, string];
 };
 
 const el = (tag: string, attrs: Record<string, string | number>) => {
@@ -129,11 +168,23 @@ const el = (tag: string, attrs: Record<string, string | number>) => {
   return node;
 };
 
+// Keeps one colour channel (plus alpha) of an image, for chromatic dispersion.
+const CHANNEL = {
+  R: '1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0',
+  G: '0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0',
+  B: '0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0',
+};
+
 const createFilter = (w: number, h: number, radius: number, variant: Variant, ox: number, oy: number): FilterEntry => {
   const id = `lg-${nextId++}`;
-  const bezel = variant === 'regular' ? Math.min(34, Math.max(radius, 18), Math.min(w, h) / 2) : Math.min(22, Math.min(w, h) / 2);
-  const scale = variant === 'regular' ? 56 : 40; // Max displacement is scale / 2 px.
-  const { map, mask } = buildMaps(w, h, radius, bezel);
+  const short = Math.min(w, h);
+  const optics: Optics =
+    variant === 'regular'
+      ? { bezel: Math.min(44, Math.max(radius, 24), short / 2), lens: 0.05, gloss: false }
+      : { bezel: Math.max(10, short * 0.48), lens: 0.32, gloss: true };
+  // Maximum displacement is scale / 2 px; thicker glass bends more.
+  const scale = variant === 'regular' ? 72 : Math.min(64, Math.max(26, short * 0.55));
+  const [map, mask, spec] = buildMaps(w, h, radius, optics);
 
   const filter = el('filter', {
     id,
@@ -148,29 +199,39 @@ const createFilter = (w: number, h: number, radius: number, variant: Variant, ox
 
   const image = (href: string, result: string) =>
     el('feImage', { href, x: -ox, y: -oy, width: w, height: h, preserveAspectRatio: 'none', result });
+  const displace = (amount: number, result: string) =>
+    el('feDisplacementMap', { in: 'SourceGraphic', in2: 'map', scale: amount, xChannelSelector: 'R', yChannelSelector: 'G', result });
 
-  filter.append(
-    image(map, 'map'),
-    el('feDisplacementMap', { in: 'SourceGraphic', in2: 'map', scale, xChannelSelector: 'R', yChannelSelector: 'G', result: 'refracted' })
-  );
+  filter.append(image(map, 'map'), image(spec, 'spec'));
 
   if (variant === 'regular') {
-    // Frosted centre for legibility, crisp lensing at the rim.
+    // Big panels: frosted centre for legibility, crisp lensing at the thick rim.
     filter.append(
+      displace(scale, 'refracted'),
       image(mask, 'mask'),
       el('feGaussianBlur', { in: 'refracted', stdDeviation: 7, result: 'frost' }),
       el('feComposite', { in: 'refracted', in2: 'mask', operator: 'in', result: 'rim' }),
-      el('feMerge', { result: 'merged' })
+      el('feComposite', { in: 'rim', in2: 'frost', operator: 'over', result: 'glass' })
     );
-    const merge = filter.lastChild as SVGElement;
-    merge.append(el('feMergeNode', { in: 'frost' }), el('feMergeNode', { in: 'rim' }));
-    filter.append(el('feColorMatrix', { in: 'merged', type: 'saturate', values: 1.6 }));
   } else {
+    // Controls: clear glass with slight chromatic dispersion — red bends least, blue most.
     filter.append(
-      el('feGaussianBlur', { in: 'refracted', stdDeviation: 1.2, result: 'soft' }),
-      el('feColorMatrix', { in: 'soft', type: 'saturate', values: 1.7 })
+      displace(scale * 0.975, 'dr'),
+      displace(scale, 'dg'),
+      displace(scale * 1.03, 'db'),
+      el('feColorMatrix', { in: 'dr', type: 'matrix', values: CHANNEL.R, result: 'r' }),
+      el('feColorMatrix', { in: 'dg', type: 'matrix', values: CHANNEL.G, result: 'g' }),
+      el('feColorMatrix', { in: 'db', type: 'matrix', values: CHANNEL.B, result: 'b' }),
+      el('feComposite', { in: 'r', in2: 'g', operator: 'arithmetic', k1: 0, k2: 1, k3: 1, k4: 0, result: 'rg' }),
+      el('feComposite', { in: 'rg', in2: 'b', operator: 'arithmetic', k1: 0, k2: 1, k3: 1, k4: 0, result: 'rgb' }),
+      el('feGaussianBlur', { in: 'rgb', stdDeviation: 0.6, result: 'glass' })
     );
   }
+
+  filter.append(
+    el('feColorMatrix', { in: 'glass', type: 'saturate', values: 1.65, result: 'vivid' }),
+    el('feComposite', { in: 'spec', in2: 'vivid', operator: 'over' })
+  );
 
   getDefs().appendChild(filter);
   return { id, node: filter, users: 0 };
