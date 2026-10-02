@@ -3,36 +3,45 @@
 @tailwind utilities;
 
 /*
- * visionOS-inspired design tokens.
- * Dark is the signature look (glass windows floating in a dusk environment);
- * light swaps to a daylight environment with frosted white glass.
+ * Liquid Glass design tokens.
+ * Dark is the signature look (glass floating in a dusk environment);
+ * light swaps to a daylight environment with brighter, milkier glass.
  */
 @layer base {
   :root {
     color-scheme: light;
-    --env-base: #e8edf6;
-    --env-1: #9cc3ff;
-    --env-2: #ffc8a6;
-    --env-3: #d6c3ff;
-    --env-4: #a6ecd8;
+    --env-base: #e6ecf7;
+    --env-1: #8fbaff;
+    --env-2: #ffbf98;
+    --env-3: #cfb8ff;
+    --env-4: #9ce8d2;
+    --env-dot: rgba(40, 52, 96, 0.16);
     --env-vignette: rgba(255, 255, 255, 0);
     --env-noise-opacity: 0.05;
 
     --label: #1d1d1f;
-    --label-2: rgba(29, 29, 31, 0.66);
-    --label-3: rgba(29, 29, 31, 0.44);
+    --label-2: rgba(29, 29, 31, 0.68);
+    --label-3: rgba(29, 29, 31, 0.46);
 
-    --glass-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.66), rgba(255, 255, 255, 0.44));
-    --glass-edge: linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.35) 35%, rgba(255, 255, 255, 0.6));
-    --glass-shadow: 0 1px 1px rgba(0, 0, 0, 0.03), 0 30px 70px -24px rgba(40, 50, 90, 0.35);
-    --specular: rgba(255, 255, 255, 0.6);
+    /* Glass */
+    --lg-tint: rgba(255, 255, 255, 0.34);
+    --lg-tint-clear: rgba(255, 255, 255, 0.22);
+    --lg-tint-hover: rgba(255, 255, 255, 0.42);
+    --lg-rim-a: rgba(255, 255, 255, 1);
+    --lg-rim-b: rgba(255, 255, 255, 0.7);
+    --lg-rim-hot: rgba(255, 255, 255, 1);
+    --lg-inner: rgba(255, 255, 255, 0.35);
+    --lg-shadow: 0 4px 12px -4px rgba(30, 40, 90, 0.28), 0 1px 2px rgba(30, 40, 90, 0.1);
+    --panel-shadow: 0 24px 60px -26px rgba(30, 40, 90, 0.4), 0 2px 8px -2px rgba(30, 40, 90, 0.1);
+    --lg-fallback-blur: 18px;
+    --specular: rgba(255, 255, 255, 0.55);
 
-    --fill: rgba(0, 0, 0, 0.045);
-    --fill-hover: rgba(0, 0, 0, 0.08);
-    --selected: rgba(255, 255, 255, 0.9);
-    --selected-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-    --recessed: rgba(0, 0, 0, 0.05);
-    --recessed-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
+    --drop: rgba(255, 255, 255, 0.78);
+    --drop-shadow: 0 4px 14px -4px rgba(30, 40, 90, 0.28);
+    --chip: rgba(255, 255, 255, 0.45);
+    --well: rgba(255, 255, 255, 0.32);
+    --field: rgba(255, 255, 255, 0.4);
+    --field-shadow: inset 0 1px 3px rgba(30, 40, 90, 0.14);
     --hairline: rgba(0, 0, 0, 0.08);
 
     --accent: #007aff;
@@ -40,30 +49,38 @@
 
   .dark {
     color-scheme: dark;
-    --env-base: #06070e;
-    --env-1: #3b2aa0;
-    --env-2: #0c6a86;
-    --env-3: #a8492a;
-    --env-4: #1e44c8;
+    --env-base: #05060d;
+    --env-1: #4330b8;
+    --env-2: #0b7896;
+    --env-3: #b44e2a;
+    --env-4: #2148d6;
+    --env-dot: rgba(255, 255, 255, 0.13);
     --env-vignette: rgba(0, 0, 0, 0.55);
     --env-noise-opacity: 0.07;
 
     --label: #ffffff;
-    --label-2: rgba(255, 255, 255, 0.68);
-    --label-3: rgba(255, 255, 255, 0.44);
+    --label-2: rgba(255, 255, 255, 0.7);
+    --label-3: rgba(255, 255, 255, 0.46);
 
-    --glass-bg: linear-gradient(180deg, rgba(120, 120, 136, 0.3), rgba(72, 72, 86, 0.22));
-    --glass-edge: linear-gradient(180deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.06) 40%, rgba(255, 255, 255, 0.14));
-    --glass-shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.75);
-    --specular: rgba(255, 255, 255, 0.13);
+    --lg-tint: rgba(28, 30, 48, 0.32);
+    --lg-tint-clear: rgba(255, 255, 255, 0.05);
+    --lg-tint-hover: rgba(255, 255, 255, 0.12);
+    --lg-rim-a: rgba(255, 255, 255, 0.62);
+    --lg-rim-b: rgba(255, 255, 255, 0.26);
+    --lg-rim-hot: rgba(255, 255, 255, 0.9);
+    --lg-inner: rgba(255, 255, 255, 0.07);
+    --lg-shadow: 0 4px 12px -4px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.25);
+    --panel-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.8), 0 2px 10px -2px rgba(0, 0, 0, 0.3);
+    --lg-fallback-blur: 22px;
+    --specular: rgba(255, 255, 255, 0.12);
 
-    --fill: rgba(255, 255, 255, 0.08);
-    --fill-hover: rgba(255, 255, 255, 0.15);
-    --selected: rgba(255, 255, 255, 0.2);
-    --selected-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
-    --recessed: rgba(0, 0, 0, 0.24);
-    --recessed-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.35), inset 0 -1px 0 rgba(255, 255, 255, 0.04);
-    --hairline: rgba(255, 255, 255, 0.1);
+    --drop: rgba(255, 255, 255, 0.17);
+    --drop-shadow: 0 4px 14px -4px rgba(0, 0, 0, 0.5);
+    --chip: rgba(255, 255, 255, 0.08);
+    --well: rgba(255, 255, 255, 0.045);
+    --field: rgba(0, 0, 0, 0.22);
+    --field-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
+    --hairline: rgba(255, 255, 255, 0.09);
 
     --accent: #0a84ff;
   }
@@ -91,36 +108,73 @@
 }
 
 @layer components {
-  /* The glass material: translucent fill, heavy blur, a light-catching edge and a soft shadow. */
-  .glass {
+  /*
+   * Liquid Glass. The refraction itself comes from an SVG backdrop filter added
+   * by src/lib/liquidGlass.ts (Chromium). This class provides the tint, the
+   * light-catching rim, inner glow and shadow, plus a blur fallback elsewhere.
+   */
+  .lg {
     position: relative;
     isolation: isolate;
-    background: var(--glass-bg);
-    -webkit-backdrop-filter: blur(40px) saturate(170%);
-    backdrop-filter: blur(40px) saturate(170%);
-    box-shadow: var(--glass-shadow);
+    background-color: var(--lg-tint);
+    -webkit-backdrop-filter: blur(var(--lg-fallback-blur)) saturate(180%);
+    backdrop-filter: blur(var(--lg-fallback-blur)) saturate(180%);
+    box-shadow:
+      inset 0 1px 1px -0.5px var(--lg-rim-a),
+      inset 0 -1px 1px -0.5px var(--lg-rim-b),
+      inset 0 0 24px -4px var(--lg-inner),
+      var(--lg-shadow);
   }
 
-  .glass::before {
+  /*
+   * Large panels: the glass is a background layer (.lg.lg-layer) inside a
+   * .glass-panel wrapper that carries the shadow. Keeping the shadow off the
+   * refracting element keeps Chromium's filter origin pinned to its box.
+   */
+  .glass-panel {
+    position: relative;
+    isolation: isolate;
+    box-shadow: var(--panel-shadow);
+  }
+
+  .lg.lg-layer {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+    --lg-shadow: 0 0 #0000;
+  }
+
+  .lg-clear {
+    background-color: var(--lg-tint-clear);
+    --lg-fallback-blur: 8px;
+  }
+
+  /* Rim: bright where the light hits (top-left), softer opposite, and a hot spot that follows the pointer. */
+  .lg::before {
     content: '';
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    padding: 1px;
-    background: var(--glass-edge);
+    padding: 1.25px;
+    background:
+      radial-gradient(220px circle at var(--mx, 18%) var(--my, 0%), var(--lg-rim-hot), transparent 70%),
+      linear-gradient(135deg, var(--lg-rim-a) 0%, transparent 26%, transparent 64%, var(--lg-rim-b) 100%);
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     pointer-events: none;
+    z-index: 1;
   }
 
-  /* Soft highlight that follows the pointer, like visionOS hover feedback. */
+  /* Soft sheen that follows the pointer across large panels. */
   .specular::after {
     content: '';
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    background: radial-gradient(480px circle at var(--mx, 50%) var(--my, -20%), var(--specular), transparent 60%);
+    background: radial-gradient(520px circle at var(--mx, 50%) var(--my, -20%), var(--specular), transparent 60%);
     opacity: 0;
     transition: opacity 0.5s ease;
     pointer-events: none;
@@ -131,84 +185,338 @@
     opacity: 1;
   }
 
-  .fill-platter {
-    background: var(--fill);
+  /* Squishy, slightly springy press feedback for glass controls. */
+  .lg-press {
+    transition:
+      transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+      background-color 0.3s ease,
+      box-shadow 0.3s ease;
   }
 
-  .recessed {
-    background: var(--recessed);
-    box-shadow: var(--recessed-shadow);
+  .lg-press:hover {
+    background-color: var(--lg-tint-hover);
+    transform: scale(1.04);
+  }
+
+  .lg-press:active {
+    transform: scale(0.96);
+  }
+
+  /* Tinted glass for the primary action. */
+  .lg-tinted {
+    background-color: color-mix(in srgb, var(--accent) 78%, transparent);
+    --lg-inner: rgba(255, 255, 255, 0.28);
+    --lg-rim-b: rgba(255, 255, 255, 0.45);
+    --lg-shadow: 0 6px 16px -6px color-mix(in srgb, var(--accent) 85%, transparent);
+  }
+
+  .lg-tinted.lg-press:hover {
+    background-color: color-mix(in srgb, var(--accent) 90%, transparent);
+  }
+
+  /* The selection "droplet" in tab bars and segmented controls. */
+  .lg-drop {
+    background: var(--drop);
+    box-shadow:
+      inset 0 1px 1px -0.5px rgba(255, 255, 255, 0.9),
+      inset 0 -1px 1px -0.5px rgba(255, 255, 255, 0.35),
+      inset 0 0 12px rgba(255, 255, 255, 0.12),
+      var(--drop-shadow);
+  }
+
+  /* Glass that sits inside a glass panel: no backdrop of its own, so it is drawn as a lit sliver of glass. */
+  .glass-chip {
+    background: var(--chip);
+    box-shadow:
+      inset 0 1px 1px -0.5px var(--lg-rim-a),
+      inset 0 -1px 1px -0.5px var(--lg-rim-b),
+      0 1px 2px rgba(0, 0, 0, 0.06);
+  }
+
+  .glass-well {
+    background: var(--well);
+    box-shadow:
+      inset 0 1px 1px -0.5px var(--lg-rim-b),
+      inset 0 0 0 0.5px var(--hairline);
   }
 
   .btn {
     @apply inline-flex h-11 items-center justify-center gap-2 rounded-full px-5 text-[15px] font-semibold
-           transition-all duration-300 ease-apple active:scale-[0.97]
            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent;
   }
 
   .btn-primary {
-    @apply btn text-white hover:brightness-110;
-    background: var(--accent);
-    box-shadow: 0 10px 30px -10px var(--accent);
+    @apply btn lg lg-press lg-tinted text-white;
   }
 
   .btn-glass {
-    @apply btn text-label;
-    background: var(--fill);
-  }
-
-  .btn-glass:hover {
-    background: var(--fill-hover);
+    @apply btn lg lg-clear lg-press text-label;
   }
 
   .icon-btn {
-    @apply inline-flex h-11 w-11 items-center justify-center rounded-full text-label transition-all duration-300 ease-apple
-           hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent;
-  }
-
-  .icon-btn:hover {
-    background: var(--fill-hover);
+    @apply inline-flex h-11 w-11 items-center justify-center rounded-full text-label
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent;
   }
 
   .eyebrow {
-    @apply inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[13px] font-semibold text-label-secondary;
-    background: var(--fill);
+    @apply lg lg-clear inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[13px] font-semibold text-label-secondary;
   }
 
   .tag {
-    @apply rounded-full px-2.5 py-1 text-xs font-medium text-label-secondary;
-    background: var(--fill);
+    @apply glass-chip rounded-full px-2.5 py-1 text-xs font-medium text-label-secondary;
   }
 
   .field {
     @apply w-full rounded-2xl px-4 py-3 text-[15px] text-label outline-none transition-shadow duration-300
            placeholder:text-label-tertiary;
-    background: var(--recessed);
-    box-shadow: var(--recessed-shadow);
+    background: var(--field);
+    box-shadow:
+      var(--field-shadow),
+      inset 0 -1px 0.5px -0.5px var(--lg-rim-b);
   }
 
   .field:focus {
-    box-shadow: var(--recessed-shadow), 0 0 0 2px color-mix(in srgb, var(--accent) 70%, transparent);
+    box-shadow:
+      var(--field-shadow),
+      0 0 0 2px color-mix(in srgb, var(--accent) 70%, transparent),
+      0 0 18px -2px color-mix(in srgb, var(--accent) 50%, transparent);
   }
 
-  /* Skill "app icons": round, lit from the top-left, tinted with the brand colour. */
+  /* Skill icons: clear glass bubbles over a glow in the brand colour. */
   .orb {
-    @apply relative flex h-[72px] w-[72px] items-center justify-center rounded-full md:h-20 md:w-20;
-    background: radial-gradient(
-      circle at 32% 24%,
-      color-mix(in srgb, var(--orb) 55%, white) 0%,
-      var(--orb) 58%,
-      color-mix(in srgb, var(--orb) 70%, black) 100%
-    );
-    box-shadow:
-      inset 0 1px 1px rgba(255, 255, 255, 0.5),
-      inset 0 -8px 16px rgba(0, 0, 0, 0.22),
-      0 0 0 1px rgba(255, 255, 255, 0.14),
-      0 16px 34px -12px color-mix(in srgb, var(--orb) 75%, transparent);
+    @apply lg lg-clear lg-press relative flex h-[72px] w-[72px] items-center justify-center rounded-full md:h-20 md:w-20;
+  }
+
+  .orb::after {
+    content: '';
+    position: absolute;
+    inset: 7% 20% 52% 20%;
+    border-radius: 50%;
+    background: linear-gradient(rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0));
+    pointer-events: none;
+  }
+
+  .orb svg,
+  .orb .monogram {
+    color: var(--glyph-light);
+    fill: currentColor;
+  }
+
+  .dark .orb svg,
+  .dark .orb .monogram {
+    color: var(--glyph-dark);
+  }
+
+  .orb-glow {
+    position: absolute;
+    inset: -14%;
+    border-radius: 9999px;
+    background: radial-gradient(circle, color-mix(in srgb, var(--orb) 70%, transparent) 0%, transparent 68%);
+    opacity: 0.85;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 }
 
-/* Environment: slow-drifting light sources behind the glass. */
+/* Users who ask for less transparency get solid, readable surfaces. */
+@media (prefers-reduced-transparency: reduce) {
+  .lg {
+    background-color: var(--env-base) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+}
+
+/*
+ * Theme switch: every colour token is registered so the browser can interpolate it,
+ * and the whole page — environment light, glass tint, rims and text — glides
+ * between themes instead of snapping.
+ */
+@property --env-base {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --env-1 {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --env-2 {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --env-3 {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --env-4 {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --env-dot {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --env-vignette {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --label {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --label-2 {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --label-3 {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --lg-tint {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --lg-tint-clear {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --lg-tint-hover {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --lg-rim-a {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --lg-rim-b {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --lg-rim-hot {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --lg-inner {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --specular {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --drop {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --chip {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --well {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --field {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --hairline {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --accent {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+:root {
+  transition:
+    --env-base 0.8s ease,
+    --env-1 0.8s ease,
+    --env-2 0.8s ease,
+    --env-3 0.8s ease,
+    --env-4 0.8s ease,
+    --env-dot 0.8s ease,
+    --env-vignette 0.8s ease,
+    --label 0.8s ease,
+    --label-2 0.8s ease,
+    --label-3 0.8s ease,
+    --lg-tint 0.8s ease,
+    --lg-tint-clear 0.8s ease,
+    --lg-tint-hover 0.8s ease,
+    --lg-rim-a 0.8s ease,
+    --lg-rim-b 0.8s ease,
+    --lg-rim-hot 0.8s ease,
+    --lg-inner 0.8s ease,
+    --specular 0.8s ease,
+    --drop 0.8s ease,
+    --chip 0.8s ease,
+    --well 0.8s ease,
+    --field 0.8s ease,
+    --hairline 0.8s ease,
+    --accent 0.8s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    transition: none;
+  }
+}
+
+/* Environment: slow-drifting light sources and a fine dot grid for the glass to bend. */
 .env-blob {
   position: absolute;
   border-radius: 9999px;
@@ -220,7 +528,7 @@
   left: -12%;
   width: 70vmax;
   height: 70vmax;
-  background: radial-gradient(circle, var(--env-1) 0%, transparent 62%);
+  background: radial-gradient(circle, var(--env-1) 0%, transparent 60%);
   animation: drift-1 38s ease-in-out infinite alternate;
 }
 
@@ -229,7 +537,7 @@
   right: -22%;
   width: 62vmax;
   height: 62vmax;
-  background: radial-gradient(circle, var(--env-2) 0%, transparent 62%);
+  background: radial-gradient(circle, var(--env-2) 0%, transparent 60%);
   animation: drift-2 44s ease-in-out infinite alternate;
 }
 
@@ -238,7 +546,7 @@
   left: 12%;
   width: 80vmax;
   height: 60vmax;
-  background: radial-gradient(ellipse, var(--env-3) 0%, transparent 62%);
+  background: radial-gradient(ellipse, var(--env-3) 0%, transparent 60%);
   opacity: 0.85;
   animation: drift-3 50s ease-in-out infinite alternate;
 }
@@ -248,9 +556,18 @@
   left: 28%;
   width: 46vmax;
   height: 46vmax;
-  background: radial-gradient(circle, var(--env-4) 0%, transparent 62%);
+  background: radial-gradient(circle, var(--env-4) 0%, transparent 60%);
   opacity: 0.7;
   animation: drift-2 34s ease-in-out infinite alternate-reverse;
+}
+
+.env-grid {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--env-dot) 1.1px, transparent 1.6px);
+  background-size: 26px 26px;
+  -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 45%, #000 35%, transparent 100%);
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 45%, #000 35%, transparent 100%);
 }
 
 .env-noise {

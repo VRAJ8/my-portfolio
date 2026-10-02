@@ -17,14 +17,19 @@ interface SkillOrbProps {
 }
 
 const SkillOrb: React.FC<SkillOrbProps> = ({ skill, index }) => {
-  const lum = luminance(skill.icon.hex);
-  // Near-black brand colours become graphite so the orb still reads against a dark environment.
-  const orb = lum < 0.02 ? '#3a3a44' : `#${skill.icon.hex}`;
-  const glyph = lum > 0.45 ? '#0b0b0f' : '#ffffff';
+  const hex = skill.icon?.hex ?? skill.monogram?.hex ?? '888888';
+  const lum = luminance(hex);
+  const brand = `#${hex}`;
+  // Keep the glyph readable on clear glass: lift very dark brand colours in dark mode, deepen very light ones in light mode.
+  const vars = {
+    '--orb': lum < 0.02 ? '#8a8aa0' : brand,
+    '--glyph-dark': lum < 0.04 ? '#ffffff' : lum < 0.15 ? `color-mix(in srgb, ${brand} 45%, white)` : brand,
+    '--glyph-light': lum > 0.5 ? `color-mix(in srgb, ${brand} 55%, black)` : lum < 0.02 ? '#111114' : brand,
+  } as React.CSSProperties;
 
   return (
     <motion.li
-      className="flex w-[88px] flex-col items-center gap-3 md:w-24"
+      className="flex w-[84px] flex-col items-center gap-3 md:w-24"
       custom={index}
       variants={{
         hidden: { opacity: 0, scale: 0.6, y: 20 },
@@ -32,21 +37,24 @@ const SkillOrb: React.FC<SkillOrbProps> = ({ skill, index }) => {
           opacity: 1,
           scale: 1,
           y: 0,
-          transition: { type: 'spring', stiffness: 260, damping: 22, delay: i * 0.04 },
+          transition: { type: 'spring', stiffness: 260, damping: 20, delay: i * 0.03 },
         }),
       }}
     >
-      <motion.div
-        className="orb"
-        style={{ '--orb': orb } as React.CSSProperties}
-        whileHover={{ scale: 1.12, y: -4 }}
-        whileTap={{ scale: 0.95 }}
-        transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-      >
-        <svg viewBox="0 0 24 24" className="h-8 w-8 md:h-9 md:w-9" fill={glyph} aria-hidden="true">
-          <path d={skill.icon.path} />
-        </svg>
-      </motion.div>
+      <div className="relative" style={vars}>
+        <span className="orb-glow" aria-hidden="true" />
+        <div className="orb">
+          {skill.icon ? (
+            <svg viewBox="0 0 24 24" className="relative h-8 w-8 md:h-9 md:w-9" aria-hidden="true">
+              <path d={skill.icon.path} />
+            </svg>
+          ) : (
+            <span className="monogram relative text-lg font-bold tracking-tight md:text-xl" aria-hidden="true">
+              {skill.monogram?.text}
+            </span>
+          )}
+        </div>
+      </div>
       <span className="text-center text-[13px] font-medium leading-tight text-label-secondary">{skill.name}</span>
     </motion.li>
   );

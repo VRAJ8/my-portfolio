@@ -16,13 +16,13 @@ const Skills: React.FC = () => {
         <SectionHeading
           eyebrow="Skills"
           title="My toolkit"
-          subtitle="The languages, libraries and platforms I reach for most."
+          subtitle="The languages, frameworks, libraries and platforms I work with."
           icon={<Shapes size={14} />}
         />
 
-        {/* Segmented control */}
-        <div className="mb-12 flex justify-center">
-          <div className="glass flex gap-1 rounded-full p-1.5" role="tablist" aria-label="Skill categories">
+        {/* Segmented control; scrolls sideways on narrow screens */}
+        <div className="no-scrollbar -mx-4 mb-12 overflow-x-auto px-4 py-3">
+          <div className="lg lg-clear mx-auto flex w-max gap-1 rounded-full p-1.5" role="tablist" aria-label="Skill categories">
             {skillCategories.map(({ id, label }) => (
               <button
                 key={id}
@@ -36,9 +36,8 @@ const Skills: React.FC = () => {
                 {category === id && (
                   <motion.span
                     layoutId="skill-tab"
-                    className="absolute inset-0 rounded-full"
-                    style={{ background: 'var(--selected)', boxShadow: 'var(--selected-shadow)' }}
-                    transition={{ type: 'spring', stiffness: 400, damping: 34 }}
+                    className="lg-drop absolute inset-0 rounded-full"
+                    transition={{ type: 'spring', stiffness: 380, damping: 26, mass: 0.9 }}
                   />
                 )}
                 <span className="relative">{label}</span>
@@ -50,7 +49,7 @@ const Skills: React.FC = () => {
         {/* Home View–style icon field */}
         <motion.ul
           key={category}
-          className="mx-auto flex min-h-[260px] max-w-3xl flex-wrap items-start justify-center gap-x-4 gap-y-8 md:gap-x-8"
+          className="mx-auto flex min-h-[380px] max-w-4xl flex-wrap content-start items-start justify-center gap-x-3 gap-y-8 md:gap-x-6"
           role="tabpanel"
           initial="hidden"
           whileInView="show"

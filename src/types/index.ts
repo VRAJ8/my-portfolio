@@ -16,10 +16,12 @@ export interface Project {
   };
 }
 
-export type SkillCategory = 'ai' | 'dev' | 'tools';
+export type SkillCategory = 'ai' | 'data' | 'dev' | 'cloud' | 'tools';
 
 export interface Skill {
   name: string;
   category: SkillCategory;
-  icon: SimpleIcon;
+  /** Brand icon. Tools without one get a short monogram in their brand colour instead. */
+  icon?: SimpleIcon;
+  monogram?: { text: string; hex: string };
 }

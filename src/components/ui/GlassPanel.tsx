@@ -7,7 +7,7 @@ interface GlassPanelProps extends HTMLMotionProps<'div'> {
 }
 
 /**
- * A visionOS-style glass window: blurred translucent material, lit edge,
+ * A Liquid Glass window: refracting translucent material, lit rim,
  * a highlight that follows the pointer and an optional subtle 3D tilt.
  */
 const GlassPanel: React.FC<GlassPanelProps> = ({ tilt = 0, className = '', style, children, onPointerMove, onPointerLeave, ...rest }) => {
@@ -38,13 +38,14 @@ const GlassPanel: React.FC<GlassPanelProps> = ({ tilt = 0, className = '', style
   return (
     <motion.div
       ref={ref}
-      className={`glass specular ${className}`}
+      className={`glass-panel specular ${className}`}
       style={tilt ? { rotateX, rotateY, transformPerspective: 1400, ...style } : style}
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
       {...rest}
     >
-      {children}
+      <span className="lg lg-layer" aria-hidden="true" />
+      {children as React.ReactNode}
     </motion.div>
   );
 };

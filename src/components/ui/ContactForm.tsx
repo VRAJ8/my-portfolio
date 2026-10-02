@@ -66,7 +66,7 @@ const ContactForm: React.FC = () => {
         {isSubmitted ? (
           <motion.div
             key="sent"
-            className="flex flex-col items-center rounded-3xl px-6 py-12 text-center fill-platter"
+            className="flex flex-col items-center rounded-3xl px-6 py-12 text-center glass-well"
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.96 }}
@@ -150,7 +150,7 @@ const ContactForm: React.FC = () => {
             </div>
 
             {submitError && (
-              <p className="flex items-start gap-2 rounded-2xl px-4 py-3 text-sm text-red-400 fill-platter" role="alert">
+              <p className="flex items-start gap-2 rounded-2xl px-4 py-3 text-sm text-red-400 glass-well" role="alert">
                 <AlertCircle size={18} className="mt-px shrink-0" />
                 {submitError}
               </p>

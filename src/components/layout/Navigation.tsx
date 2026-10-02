@@ -15,12 +15,15 @@ const sections = [
 
 const sectionIds = sections.map((s) => s.id);
 
+// A little overshoot so the selection moves like a droplet rather than sliding.
+const dropSpring = { type: 'spring', stiffness: 380, damping: 26, mass: 0.9 } as const;
+
 const ThemeToggle: React.FC = () => {
   const { isDarkMode, toggleTheme } = useTheme();
   const label = `Switch to ${isDarkMode ? 'light' : 'dark'} mode`;
 
   return (
-    <button onClick={toggleTheme} className="icon-btn glass" aria-label={label} title={label}>
+    <button onClick={toggleTheme} className="icon-btn lg lg-clear lg-press" aria-label={label} title={label}>
       <AnimatePresence mode="wait" initial={false}>
         <motion.span
           key={isDarkMode ? 'sun' : 'moon'}
@@ -50,7 +53,7 @@ const Navigation: React.FC = () => {
       >
         <a
           href="#home"
-          className="glass pointer-events-auto flex items-center gap-2.5 rounded-full py-1.5 pl-1.5 pr-4 text-[15px] font-semibold tracking-tight"
+          className="lg lg-clear lg-press pointer-events-auto flex items-center gap-2.5 rounded-full py-1.5 pl-1.5 pr-4 text-[15px] font-semibold tracking-tight"
           aria-label="VrajPatel, back to top"
         >
           <img src={avatar} alt="" className="h-8 w-8 rounded-full bg-gradient-to-br from-indigo-400/40 to-orange-300/40" />
@@ -69,12 +72,12 @@ const Navigation: React.FC = () => {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
       >
-        <ul className="glass group pointer-events-auto flex flex-col gap-1 rounded-full p-2">
+        <ul className="lg lg-clear group pointer-events-auto flex flex-col gap-1 rounded-[30px] p-2">
           {sections.map(({ id, label, Icon }) => (
             <li key={id}>
               <a
                 href={`#${id}`}
-                className={`relative flex h-11 items-center rounded-full px-3 transition-colors duration-300 hover:bg-[var(--fill-hover)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+                className={`relative flex h-11 items-center rounded-[22px] px-3 transition-colors duration-300 hover:bg-[var(--chip)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
                   active === id ? 'text-label' : 'text-label-secondary'
                 }`}
                 aria-current={active === id ? 'true' : undefined}
@@ -82,9 +85,8 @@ const Navigation: React.FC = () => {
                 {active === id && (
                   <motion.span
                     layoutId="tab-desktop"
-                    className="absolute inset-0 rounded-full"
-                    style={{ background: 'var(--selected)', boxShadow: 'var(--selected-shadow)' }}
-                    transition={{ type: 'spring', stiffness: 400, damping: 34 }}
+                    className="lg-drop absolute inset-0 rounded-full"
+                    transition={dropSpring}
                   />
                 )}
                 <Icon size={20} className="relative shrink-0" />
@@ -106,7 +108,7 @@ const Navigation: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
       >
-        <ul className="glass flex gap-1 rounded-full p-1.5">
+        <ul className="lg lg-clear flex gap-1 rounded-full p-1.5">
           {sections.map(({ id, label, Icon }) => (
             <li key={id}>
               <a
@@ -119,9 +121,8 @@ const Navigation: React.FC = () => {
                 {active === id && (
                   <motion.span
                     layoutId="tab-mobile"
-                    className="absolute inset-0 rounded-full"
-                    style={{ background: 'var(--selected)', boxShadow: 'var(--selected-shadow)' }}
-                    transition={{ type: 'spring', stiffness: 400, damping: 34 }}
+                    className="lg-drop absolute inset-0 rounded-full"
+                    transition={dropSpring}
                   />
                 )}
                 <Icon size={19} className="relative" />

@@ -47,16 +47,17 @@ const ProjectSheet: React.FC<ProjectSheetProps> = ({ project, onClose }) => {
             role="dialog"
             aria-modal="true"
             aria-labelledby="project-sheet-title"
-            className="glass relative flex max-h-[88vh] w-full max-w-2xl flex-col overflow-hidden rounded-[36px]"
+            className="glass-panel flex max-h-[88vh] w-full max-w-2xl flex-col overflow-hidden rounded-[36px]"
             initial={{ opacity: 0, scale: 0.92, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           >
+            <span className="lg lg-layer" aria-hidden="true" />
             <button
               ref={closeRef}
               onClick={onClose}
-              className="icon-btn glass absolute left-5 top-5 z-10"
+              className="icon-btn lg lg-clear lg-press absolute left-5 top-5 z-10"
               aria-label="Close case study"
             >
               <X size={20} />
@@ -82,7 +83,7 @@ const ProjectSheet: React.FC<ProjectSheetProps> = ({ project, onClose }) => {
                 </ul>
 
                 {project.caseStudy && (
-                  <dl className="mt-6 space-y-5 rounded-3xl p-5 recessed sm:p-6">
+                  <dl className="mt-6 space-y-5 rounded-3xl p-5 glass-well sm:p-6">
                     {(['challenge', 'solution', 'impact'] as const).map((key) => (
                       <div key={key}>
                         <dt className="text-[12px] font-semibold uppercase tracking-wider text-label-tertiary">{key}</dt>

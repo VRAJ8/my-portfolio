@@ -66,7 +66,7 @@ const About: React.FC = () => (
 
           <div className="md:col-span-2">
             <h3 className="mb-3 px-1 text-[13px] font-semibold uppercase tracking-wider text-label-tertiary">What I focus on</h3>
-            <ul className="overflow-hidden rounded-3xl fill-platter">
+            <ul className="overflow-hidden rounded-3xl glass-well">
               {focusAreas.map(({ title, detail, Icon, tint }, i) => (
                 <motion.li
                   key={title}
@@ -92,7 +92,7 @@ const About: React.FC = () => (
         {/* Experience */}
         <div className="relative z-[2] mt-10 border-t border-hairline pt-8">
           <h3 className="mb-4 px-1 text-[13px] font-semibold uppercase tracking-wider text-label-tertiary">Experience</h3>
-          <div className="flex flex-col gap-4 rounded-3xl p-5 fill-platter sm:flex-row sm:items-start">
+          <div className="flex flex-col gap-4 rounded-3xl p-5 glass-well sm:flex-row sm:items-start">
             <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-orange-600 text-white shadow-sm">
               <Briefcase size={20} />
             </span>

@@ -36,7 +36,7 @@ const Hero: React.FC = () => (
           <motion.div className="mx-auto md:mx-0" {...rise(0.35)}>
             <div className="relative">
               <div className="absolute -inset-6 rounded-full bg-gradient-to-br from-indigo-500/40 via-sky-400/25 to-orange-400/35 blur-2xl" />
-              <div className="relative rounded-full p-2 fill-platter">
+              <div className="lg lg-clear relative rounded-full p-2">
                 <img
                   src={avatar}
                   alt="Illustrated portrait of Vraj"
@@ -92,14 +92,14 @@ const Hero: React.FC = () => (
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease, delay: 0.9 }}
       >
-        <div className="glass flex gap-1 rounded-full p-1.5">
+        <div className="lg lg-clear flex gap-1 rounded-full p-1.5">
           {socialLinks.map(({ name, href, Icon }) => (
             <a
               key={name}
               href={href}
               target={href.startsWith('http') ? '_blank' : undefined}
               rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
-              className="icon-btn"
+              className="icon-btn lg-press hover:bg-[var(--chip)]"
               aria-label={name}
               title={name}
             >

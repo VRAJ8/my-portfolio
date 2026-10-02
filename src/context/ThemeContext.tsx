@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 interface ThemeContextType {
   isDarkMode: boolean;
@@ -7,13 +7,17 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+const applyTheme = (dark: boolean) => {
+  document.documentElement.classList.toggle('dark', dark);
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#05060d' : '#e6ecf7');
+};
+
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // index.html applies the saved theme before first paint; start from whatever it chose.
   const [isDarkMode, setIsDarkMode] = useState(() => document.documentElement.classList.contains('dark'));
 
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', isDarkMode);
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', isDarkMode ? '#07080f' : '#e8edf6');
+    applyTheme(isDarkMode);
     try {
       localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
     } catch {
@@ -21,13 +25,10 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   }, [isDarkMode]);
 
-  const toggleTheme = () => setIsDarkMode((dark) => !dark);
+  // Colours cross-fade via the registered custom properties in index.css.
+  const toggleTheme = useCallback(() => setIsDarkMode((dark) => !dark), []);
 
-  return (
-    <ThemeContext.Provider value={{ isDarkMode, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={{ isDarkMode, toggleTheme }}>{children}</ThemeContext.Provider>;
 };
 
 export const useTheme = () => {

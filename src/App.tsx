@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { MotionConfig } from 'framer-motion';
 import Navigation from './components/layout/Navigation';
 import Footer from './components/layout/Footer';
@@ -9,25 +9,30 @@ import Projects from './components/sections/Projects';
 import Contact from './components/sections/Contact';
 import Environment from './components/ui/Environment';
 import { ThemeProvider } from './context/ThemeContext';
+import { initLiquidGlass } from './lib/liquidGlass';
 
-const App: React.FC = () => (
-  <ThemeProvider>
-    <MotionConfig reducedMotion="user">
-      <Environment />
-      <Navigation />
-      {/* Left padding on large screens keeps windows clear of the tab bar ornament */}
-      <div className="relative overflow-x-clip lg:pl-20">
-        <main>
-          <Hero />
-          <About />
-          <Skills />
-          <Projects />
-          <Contact />
-        </main>
-        <Footer />
-      </div>
-    </MotionConfig>
-  </ThemeProvider>
-);
+const App: React.FC = () => {
+  useEffect(() => initLiquidGlass(), []);
+
+  return (
+    <ThemeProvider>
+      <MotionConfig reducedMotion="user">
+        <Environment />
+        <Navigation />
+        {/* Left padding on large screens keeps windows clear of the tab bar ornament */}
+        <div className="relative overflow-x-clip lg:pl-20">
+          <main>
+            <Hero />
+            <About />
+            <Skills />
+            <Projects />
+            <Contact />
+          </main>
+          <Footer />
+        </div>
+      </MotionConfig>
+    </ThemeProvider>
+  );
+};
 
 export default App;
