@@ -1,139 +1,129 @@
 import React from 'react';
-import { Github, Linkedin, Instagram, ChevronDown } from 'lucide-react';
-import AnimatedText from '../ui/AnimatedText';
-import Atropos from 'atropos/react';
-import 'atropos/css';
-import Avatar3D from '../ui/Avatar3D';
+import { motion } from 'framer-motion';
+import { ArrowRight, ChevronDown, Github, GraduationCap, Instagram, Linkedin, Mail, MapPin, Sparkles } from 'lucide-react';
+import GlassPanel from '../ui/GlassPanel';
+import WindowBar from '../ui/WindowBar';
+import avatar from '../../assets/avatar.webp';
+import { socials } from '../../data/socials';
 
-const Hero: React.FC = () => {
-  const socialLinks = [
-    { name: 'GitHub', href: 'https://github.com/VRAJ8', icon: <Github size={20} /> },
-    { name: 'LinkedIn', href: 'https://www.linkedin.com/in/vraj-patel-86338a25a/', icon: <Linkedin size={20} /> },
-    { name: 'Instagram', href: 'https://www.instagram.com/vraj._.8/', icon: <Instagram size={20} /> },
-  ];
+const ease: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
-  return (
-    <section 
-      id="home" 
-      className="min-h-screen flex items-center justify-center px-6 py-24 relative overflow-hidden"
-    >
-      <Atropos
-        className="w-full max-w-7xl"
-        highlight={false}
-        shadow={false}
-        rotateXMax={3}
-        rotateYMax={3}
-        rotateTouch={false}
-        activeOffset={40}
-        duration={400}
+const socialLinks = [
+  { name: 'GitHub', href: socials.github, Icon: Github },
+  { name: 'LinkedIn', href: socials.linkedin, Icon: Linkedin },
+  { name: 'Instagram', href: socials.instagram, Icon: Instagram },
+  { name: 'Email', href: `mailto:${socials.email}`, Icon: Mail },
+];
+
+const rise = (delay: number) => ({
+  initial: { opacity: 0, y: 18 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.8, ease, delay },
+});
+
+const Hero: React.FC = () => (
+  <section id="home" className="relative flex min-h-screen items-center justify-center px-4 pb-28 pt-28 md:px-8">
+    <div className="w-full max-w-5xl">
+      <GlassPanel
+        tilt={3}
+        className="rounded-[36px] p-7 sm:p-10 md:rounded-window md:p-14"
+        initial={{ opacity: 0, scale: 0.94, y: 40 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 1.1, ease, delay: 0.1 }}
       >
-        <div className="glass-panel rounded-[32px] p-12 md:p-16 relative overflow-hidden">
-          {/* Enhanced Background Layers */}
-          <div 
-            data-atropos-offset="-2"
-            className="absolute inset-0 pointer-events-none"
-          >
-            {/* Base gradient */}
-            <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-accent/5 to-transparent" />
-            
-            {/* Animated gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-accent/10 via-transparent to-accent/10 animate-pulse-slow" />
-            
-            {/* Grid pattern */}
-            <div 
-              className="absolute inset-0 opacity-[0.03]"
-              style={{
-                backgroundImage: `linear-gradient(to right, white 1px, transparent 1px),
-                                 linear-gradient(to bottom, white 1px, transparent 1px)`,
-                backgroundSize: '40px 40px'
-              }}
-            />
-            
-            {/* Glowing orbs */}
-            <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-accent/10 rounded-full blur-3xl animate-float" />
-            <div className="absolute bottom-1/4 right-1/4 w-40 h-40 bg-accent/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '0.5s' }} />
-          </div>
-          
-          <div className="grid md:grid-cols-2 gap-12 items-center relative z-10">
-            {/* Avatar Section */}
-            <div 
-              data-atropos-offset="1"
-              className="flex justify-center md:justify-start"
-            >
-              <div className="relative w-48 h-48 md:w-64 md:h-64">
-                <div className="w-full h-full glass-panel rounded-[32px] overflow-hidden transform-gpu hover:scale-105 transition-transform duration-500 ease-apple">
-                  <Avatar3D className="w-full h-full" />
-                </div>
-                <div 
-                  data-atropos-offset="2"
-                  className="absolute inset-0 rounded-[32px] bg-gradient-to-tr from-accent/20 to-transparent blur-xl -z-10"
+        <div className="relative z-[2] grid items-center gap-10 md:grid-cols-[auto,1fr] md:gap-14">
+          {/* Persona-style avatar */}
+          <motion.div className="mx-auto md:mx-0" {...rise(0.35)}>
+            <div className="relative">
+              <div className="absolute -inset-6 rounded-full bg-gradient-to-br from-indigo-500/40 via-sky-400/25 to-orange-400/35 blur-2xl" />
+              <div className="relative rounded-full p-2 fill-platter">
+                <img
+                  src={avatar}
+                  alt="Illustrated portrait of Vraj"
+                  width={224}
+                  height={224}
+                  className="h-40 w-40 rounded-full bg-gradient-to-br from-indigo-300/50 via-sky-200/40 to-orange-200/50 object-cover sm:h-48 sm:w-48 md:h-56 md:w-56"
                 />
               </div>
             </div>
+          </motion.div>
 
-            {/* Content Section */}
-            <div 
-              data-atropos-offset="1"
-              className="text-center md:text-left"
-            >
-              <AnimatedText 
-                text="Hello, I'm Vraj" 
-                className="text-4xl md:text-5xl lg:text-7xl font-bold mb-4 leading-tight pb-1" 
-                delay={0.5}
-              />
-              
-              <AnimatedText 
-                text="Creative Developer & Designer" 
-                className="text-xl md:text-2xl text-text-secondary mb-6" 
-                delay={0.7}
-              />
-              
-              <p className="text-text-secondary mb-8 max-w-lg">
-                Crafting immersive digital experiences through the fusion of design and technology.
-                Specializing in spatial computing and innovative user interfaces.
-              </p>
-              
-              {/* Social links */}
-              <div 
-                data-atropos-offset="0.5"
-                className="flex justify-center md:justify-start space-x-4 mb-8"
-              >
-                {socialLinks.map((link) => (
-                  <a
-                    key={link.name}
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-3 rounded-full glass-panel hover:bg-glass-lighter text-text-primary transition-all duration-300 hover:-translate-y-1"
-                    aria-label={link.name}
-                  >
-                    {link.icon}
-                  </a>
-                ))}
-              </div>
-              
-              {/* CTA Button */}
-              <a
-                href="#projects"
-                className="inline-flex items-center accent-button hover:scale-105 transition-transform duration-300"
-              >
-                View My Work
+          <div className="text-center md:text-left">
+            <motion.span className="eyebrow" {...rise(0.45)}>
+              <Sparkles size={14} />
+              Data · AI · Machine Learning
+            </motion.span>
+
+            <motion.h1 className="mt-5 text-5xl font-bold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl" {...rise(0.55)}>
+              Hello, I'm Vraj.
+            </motion.h1>
+
+            <motion.p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-label-secondary md:mx-0 md:text-xl" {...rise(0.65)}>
+              I work where data meets intelligence — exploring datasets, building machine learning models and shipping
+              AI-powered tools people can actually use.
+            </motion.p>
+
+            <motion.div className="mt-6 flex flex-wrap justify-center gap-2 md:justify-start" {...rise(0.72)}>
+              <span className="tag inline-flex items-center gap-1.5 text-[13px]">
+                <GraduationCap size={14} /> Computer Science Engineering
+              </span>
+              <span className="tag inline-flex items-center gap-1.5 text-[13px]">
+                <MapPin size={14} /> Gujarat, India
+              </span>
+            </motion.div>
+
+            <motion.div className="mt-8 flex flex-wrap justify-center gap-3 md:justify-start" {...rise(0.8)}>
+              <a href="#projects" className="btn-primary group">
+                View my work
+                <ArrowRight size={17} className="transition-transform duration-300 group-hover:translate-x-0.5" />
               </a>
-            </div>
+              <a href="#contact" className="btn-glass">
+                Get in touch
+              </a>
+            </motion.div>
           </div>
         </div>
-      </Atropos>
-      
-      {/* Scroll indicator */}
-      <a
-        href="#about"
-        className="absolute bottom-12 left-1/2 transform -translate-x-1/2 flex flex-col items-center glass-panel p-3 rounded-full opacity-70 hover:opacity-100 transition-opacity duration-300 hover:translate-y-1"
-        aria-label="Scroll to About section"
+      </GlassPanel>
+
+      {/* Bottom ornament, overlapping the window edge like visionOS toolbars */}
+      <motion.div
+        className="relative z-10 -mt-7 flex justify-center"
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease, delay: 0.9 }}
       >
-        <ChevronDown size={20} className="text-text-primary" />
-      </a>
-    </section>
-  );
-};
+        <div className="glass flex gap-1 rounded-full p-1.5">
+          {socialLinks.map(({ name, href, Icon }) => (
+            <a
+              key={name}
+              href={href}
+              target={href.startsWith('http') ? '_blank' : undefined}
+              rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
+              className="icon-btn"
+              aria-label={name}
+              title={name}
+            >
+              <Icon size={19} />
+            </a>
+          ))}
+        </div>
+      </motion.div>
+
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1, duration: 0.8 }}>
+        <WindowBar />
+      </motion.div>
+    </div>
+
+    <motion.a
+      href="#about"
+      className="absolute inset-x-0 bottom-8 mx-auto hidden w-fit text-label-tertiary transition-colors hover:text-label md:block"
+      aria-label="Scroll to About"
+      animate={{ y: [0, 6, 0] }}
+      transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+    >
+      <ChevronDown size={24} />
+    </motion.a>
+  </section>
+);
 
 export default Hero;

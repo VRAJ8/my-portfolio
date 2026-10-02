@@ -1,219 +1,180 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Send, CheckCircle } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { AlertCircle, CheckCircle2, Send } from 'lucide-react';
+
+type Fields = { name: string; email: string; message: string };
+
+const emptyFields: Fields = { name: '', email: '', message: '' };
 
 const ContactForm: React.FC = () => {
-  const [formState, setFormState] = useState({
-    name: '',
-    email: '',
-    message: '',
-  });
-  
-  const [errors, setErrors] = useState({
-    name: '',
-    email: '',
-    message: '',
-  });
-  
+  const [formState, setFormState] = useState<Fields>(emptyFields);
+  const [errors, setErrors] = useState<Fields>(emptyFields);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  
+  const [submitError, setSubmitError] = useState('');
+
   const validateForm = () => {
-    let valid = true;
-    const newErrors = { name: '', email: '', message: '' };
-    
-    if (!formState.name.trim()) {
-      newErrors.name = 'Name is required';
-      valid = false;
-    }
-    
-    if (!formState.email.trim()) {
-      newErrors.email = 'Email is required';
-      valid = false;
-    } else if (!/^\S+@\S+\.\S+$/.test(formState.email)) {
-      newErrors.email = 'Please enter a valid email address';
-      valid = false;
-    }
-    
-    if (!formState.message.trim()) {
-      newErrors.message = 'Message is required';
-      valid = false;
-    }
-    
+    const newErrors = { ...emptyFields };
+    if (!formState.name.trim()) newErrors.name = 'Name is required';
+    if (!formState.email.trim()) newErrors.email = 'Email is required';
+    else if (!/^\S+@\S+\.\S+$/.test(formState.email)) newErrors.email = 'Please enter a valid email address';
+    if (!formState.message.trim()) newErrors.message = 'Message is required';
     setErrors(newErrors);
-    return valid;
+    return !newErrors.name && !newErrors.email && !newErrors.message;
   };
-  
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormState(prev => ({ ...prev, [name]: value }));
-    
-    // Clear error when typing
-    if (errors[name as keyof typeof errors]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
-    }
+    setFormState((prev) => ({ ...prev, [name]: value }));
+    if (errors[name as keyof Fields]) setErrors((prev) => ({ ...prev, [name]: '' }));
   };
-  
-  const handleSubmit = async (e: React.FormEvent) => {
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
     if (!validateForm()) return;
-    
+
     setIsSubmitting(true);
-    
+    setSubmitError('');
+
     try {
-      const formData = new FormData(e.target as HTMLFormElement);
+      // Netlify Forms: post url-encoded data (including the hidden form-name) to any path.
+      const formData = new FormData(e.currentTarget);
       const response = await fetch('/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(formData as any).toString(),
+        body: new URLSearchParams(formData as unknown as Record<string, string>).toString(),
       });
-
-      if (response.ok) {
-        setIsSubmitted(true);
-        setFormState({ name: '', email: '', message: '' });
-      } else {
-        throw new Error('Form submission failed');
-      }
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      alert('There was a problem submitting your form. Please try again.');
+      if (!response.ok) throw new Error(`Form submission failed: ${response.status}`);
+      setIsSubmitted(true);
+      setFormState(emptyFields);
+    } catch {
+      setSubmitError('Something went wrong sending your message. Please try again, or email me directly.');
     } finally {
       setIsSubmitting(false);
     }
   };
-  
+
+  const fields = [
+    { name: 'name', label: 'Name', type: 'text', placeholder: 'Your name', autoComplete: 'name' },
+    { name: 'email', label: 'Email', type: 'email', placeholder: 'you@example.com', autoComplete: 'email' },
+  ] as const;
+
   return (
-    <motion.div
-      className="glass-panel dark:glass-panel rounded-card p-8 border border-text-primary-light/10 dark:border-white/10 shadow-glass-light dark:shadow-glass hover:border-accent/30 dark:hover:border-accent/30 transition-all duration-300"
-      initial={{ opacity: 0, x: 50 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-    >
-      <h3 className="text-2xl font-bold mb-6 text-text-primary-light dark:text-white">Send a Message</h3>
-      
-      {isSubmitted ? (
-        <div className="p-12 flex flex-col items-center text-center">
+    <div>
+      <h3 className="mb-3 px-1 text-[13px] font-semibold uppercase tracking-wider text-label-tertiary">Send a message</h3>
+      <AnimatePresence mode="wait" initial={false}>
+        {isSubmitted ? (
           <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ type: 'spring', stiffness: 200, damping: 10 }}
+            key="sent"
+            className="flex flex-col items-center rounded-3xl px-6 py-12 text-center fill-platter"
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.96 }}
           >
-            <CheckCircle size={64} className="text-success mb-6" />
+            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 220, damping: 14 }}>
+              <CheckCircle2 size={56} className="mb-5 text-emerald-400" />
+            </motion.div>
+            <h4 className="text-2xl font-bold">Message sent</h4>
+            <p className="mt-2 text-label-secondary">Thanks for reaching out — I'll get back to you soon.</p>
+            <button className="btn-glass mt-6" onClick={() => setIsSubmitted(false)}>
+              Send another message
+            </button>
           </motion.div>
-          <h3 className="text-2xl font-bold mb-4 text-text-primary-light dark:text-white">Message Sent!</h3>
-          <p className="text-text-primary-light/80 dark:text-white/80 mb-6">
-            Thank you for reaching out. I'll get back to you as soon as possible.
-          </p>
-          <button
-            className="px-6 py-3 rounded-lg bg-glass-darker dark:bg-glass-darker text-text-primary-light dark:text-white hover:bg-accent hover:text-white transition-all duration-300"
-            onClick={() => setIsSubmitted(false)}
+        ) : (
+          <motion.form
+            key="form"
+            name="contact"
+            method="POST"
+            data-netlify="true"
+            data-netlify-honeypot="bot-field"
+            onSubmit={handleSubmit}
+            noValidate
+            className="space-y-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
           >
-            Send Another Message
-          </button>
-        </div>
-      ) : (
-        <form 
-          name="contact" 
-          method="POST" 
-          data-netlify="true" 
-          data-netlify-honeypot="bot-field"
-          onSubmit={handleSubmit} 
-          className="space-y-6"
-        >
-          {/* Hidden input for Netlify form handling */}
-          <input type="hidden" name="form-name" value="contact" />
-          <input type="hidden" name="bot-field" />
-          
-          <div>
-            <label 
-              htmlFor="name" 
-              className="block text-sm font-medium mb-2 text-text-primary-light dark:text-white"
-            >
-              Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formState.name}
-              onChange={handleInputChange}
-              required
-              className="w-full px-4 py-3 rounded-lg bg-glass-darker dark:bg-glass-darker border border-text-primary-light/10 dark:border-white/10 text-text-primary-light dark:text-white placeholder-text-primary-light/50 dark:placeholder-white/50 focus:outline-none focus:border-accent/50 transition-colors duration-300"
-              placeholder="Your name"
-            />
-            {errors.name && (
-              <p className="mt-2 text-sm text-error">{errors.name}</p>
-            )}
-          </div>
-          
-          <div>
-            <label 
-              htmlFor="email" 
-              className="block text-sm font-medium mb-2 text-text-primary-light dark:text-white"
-            >
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formState.email}
-              onChange={handleInputChange}
-              required
-              className="w-full px-4 py-3 rounded-lg bg-glass-darker dark:bg-glass-darker border border-text-primary-light/10 dark:border-white/10 text-text-primary-light dark:text-white placeholder-text-primary-light/50 dark:placeholder-white/50 focus:outline-none focus:border-accent/50 transition-colors duration-300"
-              placeholder="your.email@example.com"
-            />
-            {errors.email && (
-              <p className="mt-2 text-sm text-error">{errors.email}</p>
-            )}
-          </div>
-          
-          <div>
-            <label 
-              htmlFor="message" 
-              className="block text-sm font-medium mb-2 text-text-primary-light dark:text-white"
-            >
-              Message
-            </label>
-            <textarea
-              id="message"
-              name="message"
-              value={formState.message}
-              onChange={handleInputChange}
-              required
-              rows={4}
-              className="w-full px-4 py-3 rounded-lg bg-glass-darker dark:bg-glass-darker border border-text-primary-light/10 dark:border-white/10 text-text-primary-light dark:text-white placeholder-text-primary-light/50 dark:placeholder-white/50 focus:outline-none focus:border-accent/50 transition-colors duration-300 resize-none"
-              placeholder="Your message..."
-            />
-            {errors.message && (
-              <p className="mt-2 text-sm text-error">{errors.message}</p>
-            )}
-          </div>
-          
-          <motion.button
-            type="submit"
-            className="w-full flex items-center justify-center px-6 py-3 rounded-lg bg-accent text-white font-medium hover:bg-accent/90 transition-colors duration-300"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            {isSubmitting ? (
-              <motion.div
-                className="h-5 w-5 border-2 border-white border-t-transparent rounded-full"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            {/* Hidden inputs Netlify uses to route the submission and catch bots */}
+            <input type="hidden" name="form-name" value="contact" />
+            <p className="hidden">
+              <label>
+                Don't fill this out: <input name="bot-field" />
+              </label>
+            </p>
+
+            {fields.map(({ name, label, type, placeholder, autoComplete }) => (
+              <div key={name}>
+                <label htmlFor={name} className="mb-1.5 block px-1 text-sm font-medium text-label-secondary">
+                  {label}
+                </label>
+                <input
+                  id={name}
+                  name={name}
+                  type={type}
+                  autoComplete={autoComplete}
+                  value={formState[name]}
+                  onChange={handleInputChange}
+                  placeholder={placeholder}
+                  aria-invalid={!!errors[name]}
+                  aria-describedby={errors[name] ? `${name}-error` : undefined}
+                  className="field"
+                />
+                {errors[name] && (
+                  <p id={`${name}-error`} className="mt-1.5 px-1 text-sm text-red-400">
+                    {errors[name]}
+                  </p>
+                )}
+              </div>
+            ))}
+
+            <div>
+              <label htmlFor="message" className="mb-1.5 block px-1 text-sm font-medium text-label-secondary">
+                Message
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                rows={5}
+                value={formState.message}
+                onChange={handleInputChange}
+                placeholder="What would you like to talk about?"
+                aria-invalid={!!errors.message}
+                aria-describedby={errors.message ? 'message-error' : undefined}
+                className="field resize-none"
               />
-            ) : (
-              <>
-                <Send size={20} className="mr-2" />
-                Send Message
-              </>
+              {errors.message && (
+                <p id="message-error" className="mt-1.5 px-1 text-sm text-red-400">
+                  {errors.message}
+                </p>
+              )}
+            </div>
+
+            {submitError && (
+              <p className="flex items-start gap-2 rounded-2xl px-4 py-3 text-sm text-red-400 fill-platter" role="alert">
+                <AlertCircle size={18} className="mt-px shrink-0" />
+                {submitError}
+              </p>
             )}
-          </motion.button>
-        </form>
-      )}
-    </motion.div>
+
+            <button type="submit" className="btn-primary w-full" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <motion.span
+                  className="h-5 w-5 rounded-full border-2 border-white border-t-transparent"
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 0.9, repeat: Infinity, ease: 'linear' }}
+                  aria-label="Sending"
+                />
+              ) : (
+                <>
+                  <Send size={17} />
+                  Send message
+                </>
+              )}
+            </button>
+          </motion.form>
+        )}
+      </AnimatePresence>
+    </div>
   );
 };
 

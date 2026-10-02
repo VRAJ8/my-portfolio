@@ -1,107 +1,85 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Mail, MapPin, Phone } from 'lucide-react';
-import AnimatedText from '../ui/AnimatedText';
+import { ChevronRight, Github, Linkedin, Mail, MapPin, Phone, Send } from 'lucide-react';
 import ContactForm from '../ui/ContactForm';
+import GlassPanel from '../ui/GlassPanel';
+import SectionHeading from '../ui/SectionHeading';
+import WindowBar from '../ui/WindowBar';
+import { socials } from '../../data/socials';
 
-const Contact: React.FC = () => {
-  const contactInfo = [
-    {
-      title: 'Email',
-      value: 'vrajp8918@gmail.com',
-      href: 'mailto:vrajp8918@gmail.com',
-      icon: <Mail size={24} className="text-accent" />
-    },
-    {
-      title: 'Location',
-      value: 'Ankleshwar, Gujarat, India',
-      href: 'https://maps.google.com/?q=Ankleshwar,+Gujarat,+India',
-      icon: <MapPin size={24} className="text-accent" />
-    },
-    {
-      title: 'Phone',
-      value: '+91 8200995401',
-      href: 'tel:+918200995401',
-      icon: <Phone size={24} className="text-accent" />
-    }
-  ];
+const contactRows = [
+  { title: 'Email', value: socials.email, href: `mailto:${socials.email}`, Icon: Mail, tint: 'from-sky-400 to-blue-600' },
+  { title: 'LinkedIn', value: 'vraj-patel', href: socials.linkedin, Icon: Linkedin, tint: 'from-blue-500 to-indigo-700' },
+  { title: 'GitHub', value: 'VRAJ8', href: socials.github, Icon: Github, tint: 'from-zinc-500 to-zinc-800' },
+  { title: 'Phone', value: socials.phone, href: `tel:${socials.phone.replace(/\s/g, '')}`, Icon: Phone, tint: 'from-emerald-400 to-green-600' },
+  {
+    title: 'Location',
+    value: socials.location,
+    href: `https://maps.google.com/?q=${encodeURIComponent(socials.location)}`,
+    Icon: MapPin,
+    tint: 'from-rose-400 to-red-600',
+  },
+];
 
-  return (
-    <section id="contact" className="py-20 md:py-32 relative">
-      <div className="section-container">
-        <AnimatedText 
-          text="Get In Touch"
-          className="section-title text-center mb-16 text-text-primary-light dark:text-white group"
-          delay={0.2}
-        >
-          <span className="block w-0 h-0.5 bg-accent transition-all duration-300 group-hover:w-1/4 mt-2 mx-auto" />
-        </AnimatedText>
-        
-        <div className="grid md:grid-cols-2 gap-12">
-          {/* Contact Information */}
-          <motion.div
-            className="flex flex-col justify-between"
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <div>
-              <h3 className="text-2xl font-bold mb-6 text-text-primary-light dark:text-white group">
-                Let's Connect
-                <span className="block w-0 h-0.5 bg-accent transition-all duration-300 group-hover:w-1/3 mt-2" />
-              </h3>
-              <p className="text-text-primary-light/80 dark:text-white/80 mb-8 max-w-md">
-                I'm always open to discussing new projects, creative ideas or opportunities to be part of your vision.
-              </p>
-              
-              <div className="space-y-6 mb-12">
-                {contactInfo.map((info, index) => (
-                  <motion.a
-                    key={index}
-                    href={info.href}
-                    target={info.title === 'Location' ? '_blank' : undefined}
-                    rel={info.title === 'Location' ? 'noopener noreferrer' : undefined}
-                    className="glass-panel dark:glass-panel rounded-card p-4 flex items-center hover:bg-glass-lighter transition-all duration-300 border border-text-primary-light/10 dark:border-white/10 shadow-glass-light dark:shadow-glass hover:border-accent/30 dark:hover:border-accent/30"
-                    whileHover={{ x: 5, y: -2 }}
-                    whileTap={{ scale: 0.98 }}
+const Contact: React.FC = () => (
+  <section id="contact" className="px-4 pb-16 pt-20 md:px-8 md:pt-28">
+    <div className="mx-auto max-w-5xl">
+      <SectionHeading
+        eyebrow="Contact"
+        title="Let's build something smart"
+        subtitle="Open to conversations about data, AI and machine learning — or anything you think I'd enjoy working on."
+        icon={<Send size={14} />}
+      />
+
+      <GlassPanel
+        className="rounded-[36px] p-5 sm:p-8 md:rounded-window md:p-10"
+        initial={{ opacity: 0, scale: 0.95, y: 40 }}
+        whileInView={{ opacity: 1, scale: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <div className="relative z-[2] grid gap-8 md:grid-cols-2 md:gap-10">
+          <div>
+            <h3 className="mb-3 px-1 text-[13px] font-semibold uppercase tracking-wider text-label-tertiary">Reach me</h3>
+            <ul className="overflow-hidden rounded-3xl fill-platter">
+              {contactRows.map(({ title, value, href, Icon, tint }, i) => {
+                const external = href.startsWith('http');
+                return (
+                  <motion.li
+                    key={title}
+                    className="border-b border-hairline last:border-b-0"
+                    initial={{ opacity: 0, x: -16 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: 0.15 + i * 0.07, ease: [0.16, 1, 0.3, 1] }}
                   >
-                    <motion.div 
-                      className="mr-4"
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
+                    <a
+                      href={href}
+                      target={external ? '_blank' : undefined}
+                      rel={external ? 'noopener noreferrer' : undefined}
+                      className="group flex items-center gap-4 p-4 transition-colors duration-300 hover:bg-[var(--fill-hover)] focus-visible:bg-[var(--fill-hover)] focus-visible:outline-none"
                     >
-                      {info.icon}
-                    </motion.div>
-                    <div>
-                      <h4 className="font-medium text-text-primary-light dark:text-white">{info.title}</h4>
-                      <p className="text-text-primary-light/80 dark:text-white/80">{info.value}</p>
-                    </div>
-                  </motion.a>
-                ))}
-              </div>
-            </div>
-            
-            <motion.div
-              className="glass-panel dark:glass-panel rounded-card p-6 max-w-md border border-text-primary-light/10 dark:border-white/10 shadow-glass-light dark:shadow-glass hover:border-accent/30 dark:hover:border-accent/30 transition-all duration-300"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              whileHover={{ y: -5, boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }}
-            >
-              <p className="text-text-primary-light/80 dark:text-white/80 italic">
-                "The future of computing is spatial, and it's already here. Let's build it together."
-              </p>
-            </motion.div>
-          </motion.div>
-          
-          {/* Contact Form */}
+                      <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-gradient-to-br text-white shadow-sm ${tint}`}>
+                        <Icon size={18} />
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-sm text-label-secondary">{title}</span>
+                        <span className="block truncate font-medium text-label">{value}</span>
+                      </span>
+                      <ChevronRight size={18} className="shrink-0 text-label-tertiary transition-transform duration-300 group-hover:translate-x-0.5" />
+                    </a>
+                  </motion.li>
+                );
+              })}
+            </ul>
+          </div>
+
           <ContactForm />
         </div>
-      </div>
-    </section>
-  );
-};
+      </GlassPanel>
+      <WindowBar />
+    </div>
+  </section>
+);
 
 export default Contact;

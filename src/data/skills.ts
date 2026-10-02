@@ -1,136 +1,63 @@
-import { Skill } from '../types';
+import {
+  siExpress,
+  siFastapi,
+  siFirebase,
+  siGit,
+  siGithub,
+  siGooglegemini,
+  siJupyter,
+  siLaravel,
+  siMongodb,
+  siMysql,
+  siNetlify,
+  siNextdotjs,
+  siNodedotjs,
+  siNumpy,
+  siOpenjdk,
+  siPandas,
+  siPhp,
+  siPython,
+  siRailway,
+  siReact,
+  siScikitlearn,
+  siTailwindcss,
+  siTypescript,
+} from 'simple-icons';
+import { Skill, SkillCategory } from '../types';
+
+export const skillCategories: { id: SkillCategory; label: string }[] = [
+  { id: 'ai', label: 'AI & Data' },
+  { id: 'dev', label: 'Development' },
+  { id: 'tools', label: 'Tools & Cloud' },
+];
 
 export const skills: Skill[] = [
-  // Frontend
-  {
-    name: 'React',
-    category: 'frontend',
-    icon: '/icons/react.png'
-  },
-  {
-    name: 'Next.js',
-    category: 'frontend',
-    icon: '/icons/nextjs.png'
-  },
-  {
-    name: 'TypeScript',
-    category: 'frontend',
-    icon: '/icons/typescript.png'
-  },
-  {
-    name: 'Tailwind CSS',
-    category: 'frontend',
-    icon: '/icons/tailwindcss.png'
-  },
-  {
-    name: 'Framer Motion',
-    category: 'frontend',
-    icon: '/icons/framer-motion.png'
-  },
-  {
-    name: 'Three.js',
-    category: 'frontend',
-    icon: '/icons/threejs.png'
-  },
-  {
-    name: 'Inertia.js',
-    category: 'frontend',
-    icon: '/icons/inertiajs.png'
-  },
-  
-  // Backend
-  {
-    name: 'Node.js',
-    category: 'backend',
-    icon: '/icons/nodejs.png'
-  },
-  {
-    name: 'Express',
-    category: 'backend',
-    icon: '/icons/express.png'
-  },
-  {
-    name: 'MongoDB',
-    category: 'backend',
-    icon: '/icons/mongodb.png'
-  },
-  {
-    name: 'Laravel',
-    category: 'backend',
-    icon: '/icons/laravel.png'
-  },
-  {
-    name: 'PHP',
-    category: 'backend',
-    icon: '/icons/php.png'
-  },
-  {
-    name: 'Python',
-    category: 'backend',
-    icon: '/icons/python.png'
-  },
-  {
-    name: 'Java',
-    category: 'backend',
-    icon: '/icons/java.png'
-  },
-  {
-    name: 'Firebase',
-    category: 'backend',
-    icon: '/icons/firebase.png'
-  },
-  
-  // Design
-  {
-    name: 'Figma',
-    category: 'design',
-    icon: '/icons/figma.png'
-  },
-  {
-    name: 'Adobe XD',
-    category: 'design',
-    icon: '/icons/adobexd.png'
-  },
-  {
-    name: 'Photoshop',
-    category: 'design',
-    icon: '/icons/photoshop.png'
-  },
-  {
-    name: 'Illustrator',
-    category: 'design',
-    icon: '/icons/illustrator.png'
-  },
-  { name: '3D Modeling', level: 75, category: 'design' },
-  { name: 'UI/UX Design', level: 85, category: 'design' },
-  { name: 'Blender', level: 70, category: 'design' },
-  { name: 'Motion Design', level: 80, category: 'design' },
-  
-  // Tools & Others
-  {
-    name: 'Git',
-    category: 'tools',
-    icon: '/icons/git.png'
-  },
-  {
-    name: 'Docker',
-    category: 'tools',
-    icon: '/icons/docker.png'
-  },
-  {
-    name: 'AWS',
-    category: 'tools',
-    icon: '/icons/aws.png'
-  },
-  {
-    name: 'VS Code',
-    category: 'tools',
-    icon: '/icons/vscode.png'
-  },
-  { name: 'Vite', level: 85, category: 'tools' },
-  { name: 'Vercel', level: 90, category: 'tools' },
-  { name: 'Netlify', level: 90, category: 'tools' },
-  { name: 'GitHub Actions', level: 80, category: 'tools' },
-  { name: 'Jest', level: 75, category: 'tools' },
-  { name: 'Storybook', level: 80, category: 'tools' },
+  // AI & Data
+  { name: 'Python', category: 'ai', icon: siPython },
+  { name: 'pandas', category: 'ai', icon: siPandas },
+  { name: 'NumPy', category: 'ai', icon: siNumpy },
+  { name: 'scikit-learn', category: 'ai', icon: siScikitlearn },
+  { name: 'Jupyter', category: 'ai', icon: siJupyter },
+  { name: 'Gemini API', category: 'ai', icon: siGooglegemini },
+  { name: 'SQL', category: 'ai', icon: siMysql },
+  { name: 'MongoDB', category: 'ai', icon: siMongodb },
+
+  // Development
+  { name: 'FastAPI', category: 'dev', icon: siFastapi },
+  { name: 'React', category: 'dev', icon: siReact },
+  { name: 'Next.js', category: 'dev', icon: siNextdotjs },
+  { name: 'TypeScript', category: 'dev', icon: siTypescript },
+  { name: 'Tailwind CSS', category: 'dev', icon: siTailwindcss },
+  { name: 'Node.js', category: 'dev', icon: siNodedotjs },
+  { name: 'Express', category: 'dev', icon: siExpress },
+  { name: 'Laravel', category: 'dev', icon: siLaravel },
+  { name: 'PHP', category: 'dev', icon: siPhp },
+  { name: 'Java', category: 'dev', icon: siOpenjdk },
+
+  // Tools & Cloud
+  { name: 'Git', category: 'tools', icon: siGit },
+  { name: 'GitHub', category: 'tools', icon: siGithub },
+  { name: 'Firebase', category: 'tools', icon: siFirebase },
+  { name: 'Netlify', category: 'tools', icon: siNetlify },
+  { name: 'Railway', category: 'tools', icon: siRailway },
 ];

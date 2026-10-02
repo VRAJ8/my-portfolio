@@ -1,85 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import Header from './components/layout/Header';
+import React from 'react';
+import { MotionConfig } from 'framer-motion';
+import Navigation from './components/layout/Navigation';
+import Footer from './components/layout/Footer';
 import Hero from './components/sections/Hero';
 import About from './components/sections/About';
+import Skills from './components/sections/Skills';
 import Projects from './components/sections/Projects';
 import Contact from './components/sections/Contact';
-import Footer from './components/layout/Footer';
-import ScrollIndicator from './components/ui/ScrollIndicator';
-import ThemeBackground from './components/ui/ThemeBackground';
-import { ThemeProvider, useTheme } from './context/ThemeContext';
-import { Sun, Moon } from 'lucide-react';
+import Environment from './components/ui/Environment';
+import { ThemeProvider } from './context/ThemeContext';
 
-function ThemeToggle() {
-  const { isDarkMode, toggleTheme } = useTheme();
-
-  return (
-    <motion.button
-      onClick={toggleTheme}
-      className="fixed bottom-6 right-6 z-50 p-3 rounded-full glass-panel hover:bg-glass-lighter transition-all duration-300"
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.95 }}
-      aria-label={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
-      title={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
-    >
-      <motion.div
-        initial={false}
-        animate={{ 
-          rotate: isDarkMode ? 0 : 180,
-          scale: [1, 1.2, 1]
-        }}
-        transition={{ 
-          duration: 0.5,
-          ease: "easeInOut",
-          scale: {
-            duration: 0.3,
-            times: [0, 0.5, 1]
-          }
-        }}
-      >
-        {isDarkMode ? (
-          <Sun className="w-5 h-5 text-yellow-400" />
-        ) : (
-          <Moon className="w-5 h-5 text-blue-400" />
-        )}
-      </motion.div>
-    </motion.button>
-  );
-}
-
-function App() {
-  const [scrollProgress, setScrollProgress] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
-      const currentScroll = window.scrollY;
-      const progress = (currentScroll / totalScroll) || 0;
-      setScrollProgress(progress);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  return (
-    <ThemeProvider>
-      <div className="relative min-h-screen overflow-hidden">
-        <ThemeBackground />
-        <Header scrollProgress={scrollProgress} />
-        <ThemeToggle />
+const App: React.FC = () => (
+  <ThemeProvider>
+    <MotionConfig reducedMotion="user">
+      <Environment />
+      <Navigation />
+      {/* Left padding on large screens keeps windows clear of the tab bar ornament */}
+      <div className="relative overflow-x-clip lg:pl-20">
         <main>
           <Hero />
           <About />
+          <Skills />
           <Projects />
           <Contact />
         </main>
-        <ScrollIndicator progress={scrollProgress} />
         <Footer />
       </div>
-    </ThemeProvider>
-  );
-}
+    </MotionConfig>
+  </ThemeProvider>
+);
 
 export default App;

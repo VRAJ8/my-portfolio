@@ -1,2 +1,0 @@
-This is a placeholder file to ensure the assets directory exists.
-Please add your dark-bg.jpg and light-bg.jpg files to this directory. 
