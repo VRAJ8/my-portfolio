@@ -2,78 +2,442 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * visionOS-inspired design tokens.
+ * Dark is the signature look (glass windows floating in a dusk environment);
+ * light swaps to a daylight environment with frosted white glass.
+ */
 @layer base {
   :root {
-    --background: 255 255 255;
-    --text-primary: 0 0 0;
-    --text-secondary: 75 75 75;
+    color-scheme: light;
+    --env-base: #e8edf6;
+    --env-1: #9cc3ff;
+    --env-2: #ffc8a6;
+    --env-3: #d6c3ff;
+    --env-4: #a6ecd8;
+    --env-vignette: rgba(255, 255, 255, 0);
+    --env-noise-opacity: 0.05;
+
+    --label: #1d1d1f;
+    --label-2: rgba(29, 29, 31, 0.66);
+    --label-3: rgba(29, 29, 31, 0.44);
+
+    --glass-top: rgba(255, 255, 255, 0.66);
+    --glass-bottom: rgba(255, 255, 255, 0.44);
+    --edge-top: rgba(255, 255, 255, 1);
+    --edge-mid: rgba(255, 255, 255, 0.35);
+    --edge-bottom: rgba(255, 255, 255, 0.6);
+    --glass-shadow: 0 1px 1px rgba(0, 0, 0, 0.03), 0 30px 70px -24px rgba(40, 50, 90, 0.35);
+    --specular: rgba(255, 255, 255, 0.6);
+
+    --fill: rgba(0, 0, 0, 0.045);
+    --fill-hover: rgba(0, 0, 0, 0.08);
+    --selected: rgba(255, 255, 255, 0.9);
+    --selected-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    --recessed: rgba(0, 0, 0, 0.05);
+    --recessed-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
+    --hairline: rgba(0, 0, 0, 0.08);
+
+    --accent: #007aff;
   }
 
   .dark {
-    --background: 0 0 0;
-    --text-primary: 255 255 255;
-    --text-secondary: 142 142 142;
+    color-scheme: dark;
+    --env-base: #06070e;
+    --env-1: #3b2aa0;
+    --env-2: #0c6a86;
+    --env-3: #a8492a;
+    --env-4: #1e44c8;
+    --env-vignette: rgba(0, 0, 0, 0.55);
+    --env-noise-opacity: 0.07;
+
+    --label: #ffffff;
+    --label-2: rgba(255, 255, 255, 0.68);
+    --label-3: rgba(255, 255, 255, 0.44);
+
+    --glass-top: rgba(120, 120, 136, 0.3);
+    --glass-bottom: rgba(72, 72, 86, 0.22);
+    --edge-top: rgba(255, 255, 255, 0.4);
+    --edge-mid: rgba(255, 255, 255, 0.06);
+    --edge-bottom: rgba(255, 255, 255, 0.14);
+    --glass-shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.75);
+    --specular: rgba(255, 255, 255, 0.13);
+
+    --fill: rgba(255, 255, 255, 0.08);
+    --fill-hover: rgba(255, 255, 255, 0.15);
+    --selected: rgba(255, 255, 255, 0.2);
+    --selected-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    --recessed: rgba(0, 0, 0, 0.24);
+    --recessed-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.35), inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+    --hairline: rgba(255, 255, 255, 0.1);
+
+    --accent: #0a84ff;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
   }
 
   body {
-    @apply bg-[rgb(var(--background))] text-[rgb(var(--text-primary))] font-sans antialiased;
+    @apply font-sans antialiased text-label;
+    background: var(--env-base);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--accent) 35%, transparent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 }
 
 @layer components {
-  .perspective-1000 {
-    perspective: 1000px;
+  /* The glass material: translucent fill, heavy blur, a light-catching edge and a soft shadow. */
+  .glass {
+    position: relative;
+    isolation: isolate;
+    background: linear-gradient(180deg, var(--glass-top), var(--glass-bottom));
+    -webkit-backdrop-filter: blur(40px) saturate(170%);
+    backdrop-filter: blur(40px) saturate(170%);
+    box-shadow: var(--glass-shadow);
   }
 
-  .glass-panel {
-    @apply bg-glass backdrop-blur-lg border border-white/10 shadow-glass
-           dark:bg-glass dark:border-white/10 dark:shadow-glass;
+  .glass::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(180deg, var(--edge-top), var(--edge-mid) 35%, var(--edge-bottom));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
   }
-  
-  .glass-button {
-    @apply bg-glass hover:bg-glass-lighter transition-all duration-300 ease-apple 
-           backdrop-blur-md px-6 py-3 rounded-button 
-           text-[rgb(var(--text-primary))] font-medium shadow-glass hover:scale-[1.02];
+
+  /* Soft highlight that follows the pointer, like visionOS hover feedback. */
+  .specular::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(480px circle at var(--mx, 50%) var(--my, -20%), var(--specular), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: 1;
   }
-  
-  .accent-button {
-    @apply bg-accent hover:bg-accent-light transition-all duration-300 ease-apple 
-           px-6 py-3 rounded-button 
-           text-white font-medium shadow-glass hover:scale-[1.02];
+
+  .specular:hover::after {
+    opacity: 1;
   }
-  
-  .section-title {
-    @apply text-3xl md:text-4xl lg:text-5xl font-bold mb-8 tracking-tight;
+
+  .fill-platter {
+    background: var(--fill);
   }
-  
-  .section-container {
-    @apply py-16 md:py-24 px-6 md:px-12 max-w-7xl mx-auto;
+
+  .recessed {
+    background: var(--recessed);
+    box-shadow: var(--recessed-shadow);
+  }
+
+  .btn {
+    @apply inline-flex h-11 items-center justify-center gap-2 rounded-full px-5 text-[15px] font-semibold
+           transition-all duration-300 ease-apple active:scale-[0.97]
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent;
+  }
+
+  .btn-primary {
+    @apply btn text-white hover:brightness-110;
+    background: var(--accent);
+    box-shadow: 0 10px 30px -10px var(--accent);
+  }
+
+  .btn-glass {
+    @apply btn text-label;
+    background: var(--fill);
+  }
+
+  .btn-glass:hover {
+    background: var(--fill-hover);
+  }
+
+  .icon-btn {
+    @apply inline-flex h-11 w-11 items-center justify-center rounded-full text-label transition-all duration-300 ease-apple
+           hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent;
+  }
+
+  .icon-btn:hover {
+    background: var(--fill-hover);
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[13px] font-semibold text-label-secondary;
+    background: var(--fill);
+  }
+
+  .tag {
+    @apply rounded-full px-2.5 py-1 text-xs font-medium text-label-secondary;
+    background: var(--fill);
+  }
+
+  .field {
+    @apply w-full rounded-2xl px-4 py-3 text-[15px] text-label outline-none transition-shadow duration-300
+           placeholder:text-label-tertiary;
+    background: var(--recessed);
+    box-shadow: var(--recessed-shadow);
+  }
+
+  .field:focus {
+    box-shadow: var(--recessed-shadow), 0 0 0 2px color-mix(in srgb, var(--accent) 70%, transparent);
+  }
+
+  /* Skill "app icons": round, lit from the top-left, tinted with the brand colour. */
+  .orb {
+    @apply relative flex h-[72px] w-[72px] items-center justify-center rounded-full md:h-20 md:w-20;
+    background: radial-gradient(
+      circle at 32% 24%,
+      color-mix(in srgb, var(--orb) 55%, white) 0%,
+      var(--orb) 58%,
+      color-mix(in srgb, var(--orb) 70%, black) 100%
+    );
+    box-shadow:
+      inset 0 1px 1px rgba(255, 255, 255, 0.5),
+      inset 0 -8px 16px rgba(0, 0, 0, 0.22),
+      0 0 0 1px rgba(255, 255, 255, 0.14),
+      0 16px 34px -12px color-mix(in srgb, var(--orb) 75%, transparent);
   }
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
+/* Environment: soft light sources behind the glass (static; see Environment.tsx). */
+.env-blob {
+  position: absolute;
+  border-radius: 9999px;
 }
 
-::-webkit-scrollbar-track {
-  @apply bg-glass dark:bg-glass;
+.env-blob-1 {
+  top: -18%;
+  left: -12%;
+  width: 70vmax;
+  height: 70vmax;
+  background: radial-gradient(circle, var(--env-1) 0%, transparent 62%);
 }
 
-::-webkit-scrollbar-thumb {
-  @apply bg-glass-lighter dark:bg-glass-lighter rounded-full;
+.env-blob-2 {
+  top: 8%;
+  right: -22%;
+  width: 62vmax;
+  height: 62vmax;
+  background: radial-gradient(circle, var(--env-2) 0%, transparent 62%);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  @apply bg-glass-darker dark:bg-glass-darker;
+.env-blob-3 {
+  bottom: -32%;
+  left: 12%;
+  width: 80vmax;
+  height: 60vmax;
+  background: radial-gradient(ellipse, var(--env-3) 0%, transparent 62%);
+  opacity: 0.85;
 }
 
-/* Smooth scrolling */
-html {
-  scroll-behavior: smooth;
+.env-blob-4 {
+  top: 34%;
+  left: 28%;
+  width: 46vmax;
+  height: 46vmax;
+  background: radial-gradient(circle, var(--env-4) 0%, transparent 62%);
+  opacity: 0.7;
 }
 
-/* Prevent blue highlight on mobile */
-* {
-  -webkit-tap-highlight-color: transparent;
+.env-noise {
+  position: absolute;
+  inset: 0;
+  opacity: var(--env-noise-opacity);
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.env-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 40%, transparent 40%, var(--env-vignette) 100%);
+}
+
+
+
+
+
+/*
+ * Theme switch: colour tokens are registered so the browser can interpolate
+ * them, and the whole page glides between dark and light instead of snapping.
+ * Only colours animate, so it stays cheap.
+ */
+@property --env-base {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --env-1 {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --env-2 {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --env-3 {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --env-4 {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --env-vignette {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --label {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --label-2 {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --label-3 {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --glass-top {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --glass-bottom {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --edge-top {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --edge-mid {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --edge-bottom {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --specular {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --fill {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --fill-hover {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --selected {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --recessed {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --hairline {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --accent {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+:root {
+  transition:
+    --env-base 0.8s ease,
+    --env-1 0.8s ease,
+    --env-2 0.8s ease,
+    --env-3 0.8s ease,
+    --env-4 0.8s ease,
+    --env-vignette 0.8s ease,
+    --label 0.8s ease,
+    --label-2 0.8s ease,
+    --label-3 0.8s ease,
+    --glass-top 0.8s ease,
+    --glass-bottom 0.8s ease,
+    --edge-top 0.8s ease,
+    --edge-mid 0.8s ease,
+    --edge-bottom 0.8s ease,
+    --specular 0.8s ease,
+    --fill 0.8s ease,
+    --fill-hover 0.8s ease,
+    --selected 0.8s ease,
+    --recessed 0.8s ease,
+    --hairline 0.8s ease,
+    --accent 0.8s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    transition: none;
+  }
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }

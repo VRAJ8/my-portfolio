@@ -1,75 +1,31 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useCallback, useState } from 'react';
+import { LayoutGrid } from 'lucide-react';
 import ProjectCard from '../ui/ProjectCard';
-import AnimatedText from '../ui/AnimatedText';
+import ProjectSheet from '../ui/ProjectSheet';
+import SectionHeading from '../ui/SectionHeading';
 import { projects } from '../../data/projects';
+import { Project } from '../../types';
 
 const Projects: React.FC = () => {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: [0.16, 1, 0.3, 1]
-      }
-    }
-  };
+  const [openProject, setOpenProject] = useState<Project | null>(null);
+  const closeSheet = useCallback(() => setOpenProject(null), []);
 
   return (
-    <section id="projects" className="py-16 md:py-20 relative">
-      <div className="section-container">
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center mb-12"
-        >
-          <AnimatedText 
-            text="Featured Projects"
-            className="section-title text-text-primary-light dark:text-white inline-block"
-            delay={0.2}
-          />
-          <motion.div
-            className="h-1 bg-accent mt-4 mx-auto"
-            initial={{ width: 0 }}
-            whileInView={{ width: "100px" }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-          />
-        </motion.div>
-        
-        <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 gap-8"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
+    <section id="projects" className="px-4 py-20 md:px-8 md:py-28">
+      <div className="mx-auto max-w-5xl">
+        <SectionHeading
+          eyebrow="Projects"
+          title="Selected work"
+          subtitle="From LLM-powered security tooling to full-stack products."
+          icon={<LayoutGrid size={14} />}
+        />
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {projects.map((project, index) => (
-            <motion.div
-              key={project.id}
-              variants={itemVariants}
-              whileHover={{ y: -5 }}
-            >
-              <ProjectCard project={project} index={index} />
-            </motion.div>
+            <ProjectCard key={project.id} project={project} index={index} onOpen={setOpenProject} />
           ))}
-        </motion.div>
+        </div>
       </div>
+      <ProjectSheet project={openProject} onClose={closeSheet} />
     </section>
   );
 };

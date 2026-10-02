@@ -1,136 +1,153 @@
-import { Skill } from '../types';
+import {
+  siAnaconda,
+  siApachespark,
+  siBlender,
+  siCplusplus,
+  siCss,
+  siDjango,
+  siDocker,
+  siExpress,
+  siFastapi,
+  siFigma,
+  siFirebase,
+  siFlask,
+  siFramer,
+  siGit,
+  siGithub,
+  siGithubactions,
+  siGooglecloud,
+  siGooglecolab,
+  siGooglegemini,
+  siGradio,
+  siHtml5,
+  siHuggingface,
+  siInertia,
+  siJavascript,
+  siJsonwebtokens,
+  siJupyter,
+  siKaggle,
+  siKeras,
+  siLangchain,
+  siLaravel,
+  siLinux,
+  siMongodb,
+  siMysql,
+  siNetlify,
+  siNextdotjs,
+  siNodedotjs,
+  siNotion,
+  siNumpy,
+  siOllama,
+  siOpencv,
+  siOpenjdk,
+  siPandas,
+  siPhp,
+  siPlotly,
+  siPostgresql,
+  siPostman,
+  siPycharm,
+  siPython,
+  siPytorch,
+  siRailway,
+  siReact,
+  siScikitlearn,
+  siScipy,
+  siSolidity,
+  siStreamlit,
+  siTailwindcss,
+  siTensorflow,
+  siThreedotjs,
+  siTypescript,
+  siVercel,
+  siVite,
+} from 'simple-icons';
+import { Skill, SkillCategory } from '../types';
+
+export const skillCategories: { id: SkillCategory; label: string }[] = [
+  { id: 'ai', label: 'AI & ML' },
+  { id: 'data', label: 'Data' },
+  { id: 'dev', label: 'Development' },
+  { id: 'cloud', label: 'Cloud & DevOps' },
+  { id: 'tools', label: 'Tools & Design' },
+];
 
 export const skills: Skill[] = [
-  // Frontend
-  {
-    name: 'React',
-    category: 'frontend',
-    icon: '/icons/react.png'
-  },
-  {
-    name: 'Next.js',
-    category: 'frontend',
-    icon: '/icons/nextjs.png'
-  },
-  {
-    name: 'TypeScript',
-    category: 'frontend',
-    icon: '/icons/typescript.png'
-  },
-  {
-    name: 'Tailwind CSS',
-    category: 'frontend',
-    icon: '/icons/tailwindcss.png'
-  },
-  {
-    name: 'Framer Motion',
-    category: 'frontend',
-    icon: '/icons/framer-motion.png'
-  },
-  {
-    name: 'Three.js',
-    category: 'frontend',
-    icon: '/icons/threejs.png'
-  },
-  {
-    name: 'Inertia.js',
-    category: 'frontend',
-    icon: '/icons/inertiajs.png'
-  },
-  
-  // Backend
-  {
-    name: 'Node.js',
-    category: 'backend',
-    icon: '/icons/nodejs.png'
-  },
-  {
-    name: 'Express',
-    category: 'backend',
-    icon: '/icons/express.png'
-  },
-  {
-    name: 'MongoDB',
-    category: 'backend',
-    icon: '/icons/mongodb.png'
-  },
-  {
-    name: 'Laravel',
-    category: 'backend',
-    icon: '/icons/laravel.png'
-  },
-  {
-    name: 'PHP',
-    category: 'backend',
-    icon: '/icons/php.png'
-  },
-  {
-    name: 'Python',
-    category: 'backend',
-    icon: '/icons/python.png'
-  },
-  {
-    name: 'Java',
-    category: 'backend',
-    icon: '/icons/java.png'
-  },
-  {
-    name: 'Firebase',
-    category: 'backend',
-    icon: '/icons/firebase.png'
-  },
-  
-  // Design
-  {
-    name: 'Figma',
-    category: 'design',
-    icon: '/icons/figma.png'
-  },
-  {
-    name: 'Adobe XD',
-    category: 'design',
-    icon: '/icons/adobexd.png'
-  },
-  {
-    name: 'Photoshop',
-    category: 'design',
-    icon: '/icons/photoshop.png'
-  },
-  {
-    name: 'Illustrator',
-    category: 'design',
-    icon: '/icons/illustrator.png'
-  },
-  { name: '3D Modeling', level: 75, category: 'design' },
-  { name: 'UI/UX Design', level: 85, category: 'design' },
-  { name: 'Blender', level: 70, category: 'design' },
-  { name: 'Motion Design', level: 80, category: 'design' },
-  
-  // Tools & Others
-  {
-    name: 'Git',
-    category: 'tools',
-    icon: '/icons/git.png'
-  },
-  {
-    name: 'Docker',
-    category: 'tools',
-    icon: '/icons/docker.png'
-  },
-  {
-    name: 'AWS',
-    category: 'tools',
-    icon: '/icons/aws.png'
-  },
-  {
-    name: 'VS Code',
-    category: 'tools',
-    icon: '/icons/vscode.png'
-  },
-  { name: 'Vite', level: 85, category: 'tools' },
-  { name: 'Vercel', level: 90, category: 'tools' },
-  { name: 'Netlify', level: 90, category: 'tools' },
-  { name: 'GitHub Actions', level: 80, category: 'tools' },
-  { name: 'Jest', level: 75, category: 'tools' },
-  { name: 'Storybook', level: 80, category: 'tools' },
+  // AI & ML
+  { name: 'Python', category: 'ai', icon: siPython },
+  { name: 'TensorFlow', category: 'ai', icon: siTensorflow },
+  { name: 'PyTorch', category: 'ai', icon: siPytorch },
+  { name: 'Keras', category: 'ai', icon: siKeras },
+  { name: 'scikit-learn', category: 'ai', icon: siScikitlearn },
+  { name: 'OpenCV', category: 'ai', icon: siOpencv },
+  { name: 'Hugging Face', category: 'ai', icon: siHuggingface },
+  { name: 'LangChain', category: 'ai', icon: siLangchain },
+  { name: 'Gemini API', category: 'ai', icon: siGooglegemini },
+  { name: 'Groq API', category: 'ai', monogram: { text: 'groq', hex: 'F55036' } },
+  { name: 'OpenAI API', category: 'ai', monogram: { text: 'AI', hex: '10A37F' } },
+  { name: 'Ollama', category: 'ai', icon: siOllama },
+  { name: 'Streamlit', category: 'ai', icon: siStreamlit },
+  { name: 'Gradio', category: 'ai', icon: siGradio },
+
+  // Data
+  { name: 'pandas', category: 'data', icon: siPandas },
+  { name: 'NumPy', category: 'data', icon: siNumpy },
+  { name: 'SciPy', category: 'data', icon: siScipy },
+  { name: 'Matplotlib', category: 'data', monogram: { text: 'plt', hex: '11557C' } },
+  { name: 'Plotly', category: 'data', icon: siPlotly },
+  { name: 'Jupyter', category: 'data', icon: siJupyter },
+  { name: 'Google Colab', category: 'data', icon: siGooglecolab },
+  { name: 'Kaggle', category: 'data', icon: siKaggle },
+  { name: 'Anaconda', category: 'data', icon: siAnaconda },
+  { name: 'Apache Spark', category: 'data', icon: siApachespark },
+  { name: 'MySQL', category: 'data', icon: siMysql },
+  { name: 'PostgreSQL', category: 'data', icon: siPostgresql },
+  { name: 'MongoDB', category: 'data', icon: siMongodb },
+  { name: 'Power BI', category: 'data', monogram: { text: 'BI', hex: 'F2C811' } },
+  { name: 'Tableau', category: 'data', monogram: { text: 'Tb', hex: 'E97627' } },
+
+  // Development
+  { name: 'FastAPI', category: 'dev', icon: siFastapi },
+  { name: 'Flask', category: 'dev', icon: siFlask },
+  { name: 'Django', category: 'dev', icon: siDjango },
+  { name: 'React', category: 'dev', icon: siReact },
+  { name: 'Next.js', category: 'dev', icon: siNextdotjs },
+  { name: 'TypeScript', category: 'dev', icon: siTypescript },
+  { name: 'JavaScript', category: 'dev', icon: siJavascript },
+  { name: 'HTML', category: 'dev', icon: siHtml5 },
+  { name: 'CSS', category: 'dev', icon: siCss },
+  { name: 'Tailwind CSS', category: 'dev', icon: siTailwindcss },
+  { name: 'Node.js', category: 'dev', icon: siNodedotjs },
+  { name: 'Express', category: 'dev', icon: siExpress },
+  { name: 'Laravel', category: 'dev', icon: siLaravel },
+  { name: 'PHP', category: 'dev', icon: siPhp },
+  { name: 'Inertia.js', category: 'dev', icon: siInertia },
+  { name: 'Java', category: 'dev', icon: siOpenjdk },
+  { name: 'C++', category: 'dev', icon: siCplusplus },
+  { name: 'Solidity', category: 'dev', icon: siSolidity },
+  { name: 'Three.js', category: 'dev', icon: siThreedotjs },
+  { name: 'Framer Motion', category: 'dev', icon: siFramer },
+  { name: 'JWT', category: 'dev', icon: siJsonwebtokens },
+
+  // Cloud & DevOps
+  { name: 'Git', category: 'cloud', icon: siGit },
+  { name: 'GitHub', category: 'cloud', icon: siGithub },
+  { name: 'GitHub Actions', category: 'cloud', icon: siGithubactions },
+  { name: 'Docker', category: 'cloud', icon: siDocker },
+  { name: 'AWS', category: 'cloud', monogram: { text: 'aws', hex: 'FF9900' } },
+  { name: 'Google Cloud', category: 'cloud', icon: siGooglecloud },
+  { name: 'Firebase', category: 'cloud', icon: siFirebase },
+  { name: 'Vercel', category: 'cloud', icon: siVercel },
+  { name: 'Netlify', category: 'cloud', icon: siNetlify },
+  { name: 'Railway', category: 'cloud', icon: siRailway },
+  { name: 'Linux', category: 'cloud', icon: siLinux },
+
+  // Tools & Design
+  { name: 'VS Code', category: 'tools', monogram: { text: '</>', hex: '007ACC' } },
+  { name: 'PyCharm', category: 'tools', icon: siPycharm },
+  { name: 'Postman', category: 'tools', icon: siPostman },
+  { name: 'Vite', category: 'tools', icon: siVite },
+  { name: 'Notion', category: 'tools', icon: siNotion },
+  { name: 'Figma', category: 'tools', icon: siFigma },
+  { name: 'Blender', category: 'tools', icon: siBlender },
+  { name: 'Photoshop', category: 'tools', monogram: { text: 'Ps', hex: '31A8FF' } },
 ];
