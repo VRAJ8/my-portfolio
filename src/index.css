@@ -462,7 +462,17 @@
 
 .wordmark {
   font-size: clamp(4rem, 19vw, 13rem);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--label) 30%, transparent) 10%, transparent 92%);
+  /* Normal line height plus padding so the descender of the "j" sits inside the painted box. */
+  line-height: 1;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+  /* Fade toward the bottom, but stop short of transparent so the "j" stays legible. */
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--label) 34%, transparent) 10%,
+    color-mix(in srgb, var(--label) 16%, transparent) 70%,
+    color-mix(in srgb, var(--label) 9%, transparent) 100%
+  );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

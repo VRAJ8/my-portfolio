@@ -136,7 +136,7 @@ const Footer: React.FC = () => {
 
         {/* Statement wordmark, fading into the environment */}
         <motion.p
-          className="wordmark pointer-events-none mt-10 select-none text-center font-bold leading-[0.8] tracking-tighter"
+          className="wordmark pointer-events-none mt-10 select-none text-center font-bold tracking-tighter"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
