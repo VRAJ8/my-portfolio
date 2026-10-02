@@ -27,8 +27,8 @@ const Environment: React.FC = () => {
         <div className="env-blob env-blob-2" />
         <div className="env-blob env-blob-3" />
         <div className="env-blob env-blob-4" />
+        <div className="env-blob env-blob-5" />
       </motion.div>
-      <div className="env-grid" />
       <div className="env-noise" />
       <div className="env-vignette" />
     </div>

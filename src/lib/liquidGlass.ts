@@ -3,9 +3,8 @@
  *
  * Every glass element (see GLASS below) gets an SVG filter applied as its
  * `backdrop-filter`. The element is modelled as a thick piece of convex glass:
- * the backdrop is magnified across the surface and bent hard at the curved rim,
- * colours split slightly at the edges, and specular highlights are lit from
- * above according to the shape.
+ * the backdrop is magnified across the surface and bent at the curved rim,
+ * slightly brightened, and edged with a crisp specular highlight lit from above.
  *
  * SVG filters in `backdrop-filter` only work in Chromium browsers. Elsewhere
  * nothing here runs, and the CSS blur-based fallback in index.css is used.
@@ -145,12 +144,14 @@ const buildMaps = (w: number, h: number, radius: number, { bezel, lens, gloss }:
       mask.data[i + 3] = Math.min(1, (1 - t) * 1.6) * 255;
 
       // Specular: bright where the rim faces the light, a fainter reflection on the far side.
+      // A crisp hairline of light, brightest on the edges facing the light and on the opposite
+      // corner (light passing through the glass), with a faint halo just inside it.
       const facing = nx * LIGHT_X + ny * LIGHT_Y;
-      const rim = 0.95 * Math.exp(-depth / 1.4) + 0.32 * Math.exp(-depth / 6);
-      let alpha = rim * (Math.pow(Math.max(0, facing), 1.3) + 0.5 * Math.pow(Math.max(0, -facing), 1.3) + 0.08);
+      const rim = Math.exp(-depth / 0.85) + 0.18 * Math.exp(-depth / 4);
+      let alpha = rim * (0.22 + 0.78 * Math.pow(Math.max(0, facing), 2) + 0.55 * Math.pow(Math.max(0, -facing), 2.5));
       if (gloss) {
-        const top = Math.max(0, 1 - (py + hh) / (h * 0.5));
-        alpha += 0.16 * top * top * Math.min(1, depth / 3);
+        const top = Math.max(0, 1 - (py + hh) / (h * 0.42));
+        alpha += 0.07 * top * top * Math.min(1, depth / 4);
       }
       spec.data[i + 3] = Math.min(1, alpha) * 255;
     }
@@ -168,22 +169,15 @@ const el = (tag: string, attrs: Record<string, string | number>) => {
   return node;
 };
 
-// Keeps one colour channel (plus alpha) of an image, for chromatic dispersion.
-const CHANNEL = {
-  R: '1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0',
-  G: '0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0',
-  B: '0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0',
-};
-
 const createFilter = (w: number, h: number, radius: number, variant: Variant, ox: number, oy: number): FilterEntry => {
   const id = `lg-${nextId++}`;
   const short = Math.min(w, h);
   const optics: Optics =
     variant === 'regular'
-      ? { bezel: Math.min(44, Math.max(radius, 24), short / 2), lens: 0.05, gloss: false }
-      : { bezel: Math.max(10, short * 0.48), lens: 0.32, gloss: true };
+      ? { bezel: Math.min(36, Math.max(radius, 24), short / 2), lens: 0.04, gloss: false }
+      : { bezel: Math.max(10, short * 0.4), lens: 0.2, gloss: true };
   // Maximum displacement is scale / 2 px; thicker glass bends more.
-  const scale = variant === 'regular' ? 72 : Math.min(64, Math.max(26, short * 0.55));
+  const scale = variant === 'regular' ? 64 : Math.min(56, Math.max(24, short * 0.5));
   const [map, mask, spec] = buildMaps(w, h, radius, optics);
 
   const filter = el('filter', {
@@ -214,23 +208,21 @@ const createFilter = (w: number, h: number, radius: number, variant: Variant, ox
       el('feComposite', { in: 'rim', in2: 'frost', operator: 'over', result: 'glass' })
     );
   } else {
-    // Controls: clear glass with slight chromatic dispersion — red bends least, blue most.
-    filter.append(
-      displace(scale * 0.975, 'dr'),
-      displace(scale, 'dg'),
-      displace(scale * 1.03, 'db'),
-      el('feColorMatrix', { in: 'dr', type: 'matrix', values: CHANNEL.R, result: 'r' }),
-      el('feColorMatrix', { in: 'dg', type: 'matrix', values: CHANNEL.G, result: 'g' }),
-      el('feColorMatrix', { in: 'db', type: 'matrix', values: CHANNEL.B, result: 'b' }),
-      el('feComposite', { in: 'r', in2: 'g', operator: 'arithmetic', k1: 0, k2: 1, k3: 1, k4: 0, result: 'rg' }),
-      el('feComposite', { in: 'rg', in2: 'b', operator: 'arithmetic', k1: 0, k2: 1, k3: 1, k4: 0, result: 'rgb' }),
-      el('feGaussianBlur', { in: 'rgb', stdDeviation: 0.6, result: 'glass' })
-    );
+    // Controls: clear glass, barely softened.
+    filter.append(displace(scale, 'refracted'), el('feGaussianBlur', { in: 'refracted', stdDeviation: 0.5, result: 'glass' }));
   }
 
+  // Glass lifts what's behind it: a touch brighter and more saturated, never muddier.
+  const lift = el('feComponentTransfer', { in: 'vivid', result: 'lit' });
+  lift.append(
+    ...(['feFuncR', 'feFuncG', 'feFuncB'] as const).map((f) =>
+      el(f, { type: 'linear', slope: variant === 'regular' ? 1.04 : 1.1, intercept: variant === 'regular' ? 0.02 : 0.05 })
+    )
+  );
   filter.append(
-    el('feColorMatrix', { in: 'glass', type: 'saturate', values: 1.65, result: 'vivid' }),
-    el('feComposite', { in: 'spec', in2: 'vivid', operator: 'over' })
+    el('feColorMatrix', { in: 'glass', type: 'saturate', values: 1.45, result: 'vivid' }),
+    lift,
+    el('feComposite', { in: 'spec', in2: 'lit', operator: 'over' })
   );
 
   getDefs().appendChild(filter);
