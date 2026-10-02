@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ChevronRight, Github, Linkedin, Mail, MapPin, Phone, Send } from 'lucide-react';
+import { ChevronRight, Github, Linkedin, Mail, MapPin, Send } from 'lucide-react';
 import ContactForm from '../ui/ContactForm';
 import GlassPanel from '../ui/GlassPanel';
 import SectionHeading from '../ui/SectionHeading';
@@ -11,7 +11,6 @@ const contactRows = [
   { title: 'Email', value: socials.email, href: `mailto:${socials.email}`, Icon: Mail, tint: 'from-sky-400 to-blue-600' },
   { title: 'LinkedIn', value: 'vraj-patel', href: socials.linkedin, Icon: Linkedin, tint: 'from-blue-500 to-indigo-700' },
   { title: 'GitHub', value: 'VRAJ8', href: socials.github, Icon: Github, tint: 'from-zinc-500 to-zinc-800' },
-  { title: 'Phone', value: socials.phone, href: `tel:${socials.phone.replace(/\s/g, '')}`, Icon: Phone, tint: 'from-emerald-400 to-green-600' },
   {
     title: 'Location',
     value: socials.location,
