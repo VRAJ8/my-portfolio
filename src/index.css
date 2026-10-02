@@ -3,45 +3,39 @@
 @tailwind utilities;
 
 /*
- * Liquid Glass design tokens.
- * Dark is the signature look (glass floating in a dusk environment);
- * light swaps to a daylight environment with brighter, milkier glass.
+ * visionOS-inspired design tokens.
+ * Dark is the signature look (glass windows floating in a dusk environment);
+ * light swaps to a daylight environment with frosted white glass.
  */
 @layer base {
   :root {
     color-scheme: light;
-    --env-base: #eef0fb;
-    --env-1: #6f9dff;
-    --env-2: #ff8fc2;
-    --env-3: #ffb36b;
-    --env-4: #5fdcc8;
-    --env-dot: rgba(40, 52, 96, 0.16);
+    --env-base: #e8edf6;
+    --env-1: #9cc3ff;
+    --env-2: #ffc8a6;
+    --env-3: #d6c3ff;
+    --env-4: #a6ecd8;
     --env-vignette: rgba(255, 255, 255, 0);
     --env-noise-opacity: 0.05;
 
     --label: #1d1d1f;
-    --label-2: rgba(29, 29, 31, 0.68);
-    --label-3: rgba(29, 29, 31, 0.46);
+    --label-2: rgba(29, 29, 31, 0.66);
+    --label-3: rgba(29, 29, 31, 0.44);
 
-    /* Glass */
-    --lg-tint: rgba(255, 255, 255, 0.5);
-    --lg-tint-clear: rgba(255, 255, 255, 0.16);
-    --lg-tint-hover: rgba(255, 255, 255, 0.28);
-    --lg-rim-a: rgba(255, 255, 255, 1);
-    --lg-rim-b: rgba(255, 255, 255, 0.7);
-    --lg-rim-hot: rgba(255, 255, 255, 1);
-    --lg-inner: rgba(255, 255, 255, 0.35);
-    --lg-shadow: 0 4px 12px -4px rgba(30, 40, 90, 0.28), 0 1px 2px rgba(30, 40, 90, 0.1);
-    --panel-shadow: 0 24px 60px -26px rgba(30, 40, 90, 0.4), 0 2px 8px -2px rgba(30, 40, 90, 0.1);
-    --lg-fallback-blur: 18px;
-    --specular: rgba(255, 255, 255, 0.55);
+    --glass-top: rgba(255, 255, 255, 0.66);
+    --glass-bottom: rgba(255, 255, 255, 0.44);
+    --edge-top: rgba(255, 255, 255, 1);
+    --edge-mid: rgba(255, 255, 255, 0.35);
+    --edge-bottom: rgba(255, 255, 255, 0.6);
+    --glass-shadow: 0 1px 1px rgba(0, 0, 0, 0.03), 0 30px 70px -24px rgba(40, 50, 90, 0.35);
+    --specular: rgba(255, 255, 255, 0.6);
 
-    --drop: rgba(255, 255, 255, 0.78);
-    --drop-shadow: 0 4px 14px -4px rgba(30, 40, 90, 0.28);
-    --chip: rgba(255, 255, 255, 0.45);
-    --well: rgba(255, 255, 255, 0.32);
-    --field: rgba(255, 255, 255, 0.4);
-    --field-shadow: inset 0 1px 3px rgba(30, 40, 90, 0.14);
+    --fill: rgba(0, 0, 0, 0.045);
+    --fill-hover: rgba(0, 0, 0, 0.08);
+    --selected: rgba(255, 255, 255, 0.9);
+    --selected-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    --recessed: rgba(0, 0, 0, 0.05);
+    --recessed-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
     --hairline: rgba(0, 0, 0, 0.08);
 
     --accent: #007aff;
@@ -49,38 +43,33 @@
 
   .dark {
     color-scheme: dark;
-    --env-base: #120d2e;
-    --env-1: #5b3cf0;
-    --env-2: #e2368f;
-    --env-3: #ff7a2f;
-    --env-4: #1aa7d8;
-    --env-dot: rgba(255, 255, 255, 0.13);
-    --env-vignette: rgba(4, 3, 14, 0.45);
+    --env-base: #06070e;
+    --env-1: #3b2aa0;
+    --env-2: #0c6a86;
+    --env-3: #a8492a;
+    --env-4: #1e44c8;
+    --env-vignette: rgba(0, 0, 0, 0.55);
     --env-noise-opacity: 0.07;
 
     --label: #ffffff;
-    --label-2: rgba(255, 255, 255, 0.7);
-    --label-3: rgba(255, 255, 255, 0.46);
+    --label-2: rgba(255, 255, 255, 0.68);
+    --label-3: rgba(255, 255, 255, 0.44);
 
-    --lg-tint: rgba(20, 16, 44, 0.34);
-    --lg-tint-clear: rgba(255, 255, 255, 0.06);
-    --lg-tint-hover: rgba(255, 255, 255, 0.13);
-    --lg-rim-a: rgba(255, 255, 255, 0.62);
-    --lg-rim-b: rgba(255, 255, 255, 0.26);
-    --lg-rim-hot: rgba(255, 255, 255, 0.9);
-    --lg-inner: rgba(255, 255, 255, 0.07);
-    --lg-shadow: 0 4px 12px -4px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.25);
-    --panel-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.8), 0 2px 10px -2px rgba(0, 0, 0, 0.3);
-    --lg-fallback-blur: 22px;
-    --specular: rgba(255, 255, 255, 0.12);
+    --glass-top: rgba(120, 120, 136, 0.3);
+    --glass-bottom: rgba(72, 72, 86, 0.22);
+    --edge-top: rgba(255, 255, 255, 0.4);
+    --edge-mid: rgba(255, 255, 255, 0.06);
+    --edge-bottom: rgba(255, 255, 255, 0.14);
+    --glass-shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.75);
+    --specular: rgba(255, 255, 255, 0.13);
 
-    --drop: rgba(255, 255, 255, 0.17);
-    --drop-shadow: 0 4px 14px -4px rgba(0, 0, 0, 0.5);
-    --chip: rgba(255, 255, 255, 0.08);
-    --well: rgba(255, 255, 255, 0.045);
-    --field: rgba(0, 0, 0, 0.22);
-    --field-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
-    --hairline: rgba(255, 255, 255, 0.09);
+    --fill: rgba(255, 255, 255, 0.08);
+    --fill-hover: rgba(255, 255, 255, 0.15);
+    --selected: rgba(255, 255, 255, 0.2);
+    --selected-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    --recessed: rgba(0, 0, 0, 0.24);
+    --recessed-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.35), inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+    --hairline: rgba(255, 255, 255, 0.1);
 
     --accent: #0a84ff;
   }
@@ -108,84 +97,36 @@
 }
 
 @layer components {
-  /*
-   * Liquid Glass. The refraction itself comes from an SVG backdrop filter added
-   * by src/lib/liquidGlass.ts (Chromium). This class provides the tint, the
-   * light-catching rim, inner glow and shadow, plus a blur fallback elsewhere.
-   */
-  .lg {
+  /* The glass material: translucent fill, heavy blur, a light-catching edge and a soft shadow. */
+  .glass {
     position: relative;
     isolation: isolate;
-    background-color: var(--lg-tint);
-    -webkit-backdrop-filter: blur(var(--lg-fallback-blur)) saturate(180%);
-    backdrop-filter: blur(var(--lg-fallback-blur)) saturate(180%);
-    /* A hairline edge, a lit lip and a soft inner glow; the filter adds the real highlights. */
-    box-shadow:
-      inset 0 0 0 0.5px rgba(255, 255, 255, 0.18),
-      inset 0 1px 1px -0.5px var(--lg-rim-a),
-      inset 0 -1px 1px -0.5px var(--lg-rim-b),
-      inset 0 0 20px -6px var(--lg-inner),
-      var(--lg-shadow);
+    background: linear-gradient(180deg, var(--glass-top), var(--glass-bottom));
+    -webkit-backdrop-filter: blur(40px) saturate(170%);
+    backdrop-filter: blur(40px) saturate(170%);
+    box-shadow: var(--glass-shadow);
   }
 
-  /* With real refraction the filter renders shape-aware highlights, so the CSS rim steps back. */
-  .lg-refract .lg::before {
-    opacity: 0.45;
-  }
-
-  .lg-refract .orb::after {
-    opacity: 0.4;
-  }
-
-  /*
-   * Large panels: the glass is a background layer (.lg.lg-layer) inside a
-   * .glass-panel wrapper that carries the shadow. Keeping the shadow off the
-   * refracting element keeps Chromium's filter origin pinned to its box.
-   */
-  .glass-panel {
-    position: relative;
-    isolation: isolate;
-    box-shadow: var(--panel-shadow);
-  }
-
-  .lg.lg-layer {
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: inherit;
-    pointer-events: none;
-    --lg-shadow: 0 0 #0000;
-  }
-
-  .lg-clear {
-    background-color: var(--lg-tint-clear);
-    --lg-fallback-blur: 8px;
-  }
-
-  /* Rim: bright where the light hits (top-left), softer opposite, and a hot spot that follows the pointer. */
-  .lg::before {
+  .glass::before {
     content: '';
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    padding: 1.25px;
-    background:
-      radial-gradient(220px circle at var(--mx, 18%) var(--my, 0%), var(--lg-rim-hot), transparent 70%),
-      linear-gradient(135deg, var(--lg-rim-a) 0%, transparent 26%, transparent 64%, var(--lg-rim-b) 100%);
+    padding: 1px;
+    background: linear-gradient(180deg, var(--edge-top), var(--edge-mid) 35%, var(--edge-bottom));
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     pointer-events: none;
-    z-index: 1;
   }
 
-  /* Soft sheen that follows the pointer across large panels. */
+  /* Soft highlight that follows the pointer, like visionOS hover feedback. */
   .specular::after {
     content: '';
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    background: radial-gradient(520px circle at var(--mx, 50%) var(--my, -20%), var(--specular), transparent 60%);
+    background: radial-gradient(480px circle at var(--mx, 50%) var(--my, -20%), var(--specular), transparent 60%);
     opacity: 0;
     transition: opacity 0.5s ease;
     pointer-events: none;
@@ -196,175 +137,145 @@
     opacity: 1;
   }
 
-  /*
-   * Liquid press: src/lib/liquidMotion.ts writes --lq-* while a control is held
-   * (swell, pull toward the pointer, stretch along the drag); on release the
-   * values clear and this springy curve settles it back with an overshoot.
-   */
-  .lg-press {
-    -webkit-user-drag: none;
-    user-select: none;
-    transform: translate(var(--lq-x, 0px), var(--lq-y, 0px)) scale(var(--lq-sx, 1), var(--lq-sy, 1));
-    transition:
-      transform 0.7s cubic-bezier(0.22, 1.9, 0.4, 1),
-      background-color 0.35s ease;
+  .fill-platter {
+    background: var(--fill);
   }
 
-  .lg-press:hover {
-    --lq-sx: 1.04;
-    --lq-sy: 1.04;
-    background-color: var(--lg-tint-hover);
-  }
-
-  .lg-press.lq-pressed {
-    transition-duration: 0.22s, 0.2s;
-    background-color: var(--lg-tint-hover);
-    --lg-inner: rgba(255, 255, 255, 0.3);
-  }
-
-  /* Tinted glass for the primary action. */
-  .lg-tinted {
-    background-color: color-mix(in srgb, var(--accent) 78%, transparent);
-    --lg-inner: rgba(255, 255, 255, 0.28);
-    --lg-rim-b: rgba(255, 255, 255, 0.45);
-    --lg-shadow: 0 6px 16px -6px color-mix(in srgb, var(--accent) 85%, transparent);
-  }
-
-  .lg-tinted.lg-press:hover {
-    background-color: color-mix(in srgb, var(--accent) 90%, transparent);
-  }
-
-  /* The selection "droplet" in tab bars and segmented controls. */
-  .lg-drop {
-    background: var(--drop);
-    box-shadow:
-      inset 0 1.5px 1px -1px rgba(255, 255, 255, 0.95),
-      inset 0 -1.5px 1px -1px rgba(255, 255, 255, 0.5),
-      inset 0 8px 12px -10px rgba(255, 255, 255, 0.45),
-      inset 0 0 12px rgba(255, 255, 255, 0.12),
-      var(--drop-shadow);
-  }
-
-  /* Glass that sits inside a glass panel: no backdrop of its own, so it is drawn as a lit sliver of glass. */
-  .glass-chip {
-    background: var(--chip);
-    box-shadow:
-      inset 0 1px 1px -0.5px var(--lg-rim-a),
-      inset 0 -1px 1px -0.5px var(--lg-rim-b),
-      0 1px 2px rgba(0, 0, 0, 0.06);
-  }
-
-  .glass-well {
-    background: var(--well);
-    box-shadow:
-      inset 0 1px 1px -0.5px var(--lg-rim-b),
-      inset 0 0 0 0.5px var(--hairline);
+  .recessed {
+    background: var(--recessed);
+    box-shadow: var(--recessed-shadow);
   }
 
   .btn {
     @apply inline-flex h-11 items-center justify-center gap-2 rounded-full px-5 text-[15px] font-semibold
+           transition-all duration-300 ease-apple active:scale-[0.97]
            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent;
   }
 
   .btn-primary {
-    @apply btn lg lg-press lg-tinted text-white;
+    @apply btn text-white hover:brightness-110;
+    background: var(--accent);
+    box-shadow: 0 10px 30px -10px var(--accent);
   }
 
   .btn-glass {
-    @apply btn lg lg-clear lg-press text-label;
+    @apply btn text-label;
+    background: var(--fill);
   }
 
-  /* Keep the primary button tinted while hovered or pressed (the generic glass states would clear it). */
-  .btn-primary:hover,
-  .btn-primary.lq-pressed,
-  .lg-tinted.lq-pressed {
-    background-color: color-mix(in srgb, var(--accent) 92%, transparent);
+  .btn-glass:hover {
+    background: var(--fill-hover);
   }
 
   .icon-btn {
-    @apply inline-flex h-11 w-11 items-center justify-center rounded-full text-label
-           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent;
+    @apply inline-flex h-11 w-11 items-center justify-center rounded-full text-label transition-all duration-300 ease-apple
+           hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent;
+  }
+
+  .icon-btn:hover {
+    background: var(--fill-hover);
   }
 
   .eyebrow {
-    @apply lg lg-clear inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[13px] font-semibold text-label-secondary;
+    @apply inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-[13px] font-semibold text-label-secondary;
+    background: var(--fill);
   }
 
   .tag {
-    @apply glass-chip rounded-full px-2.5 py-1 text-xs font-medium text-label-secondary;
+    @apply rounded-full px-2.5 py-1 text-xs font-medium text-label-secondary;
+    background: var(--fill);
   }
 
   .field {
     @apply w-full rounded-2xl px-4 py-3 text-[15px] text-label outline-none transition-shadow duration-300
            placeholder:text-label-tertiary;
-    background: var(--field);
-    box-shadow:
-      var(--field-shadow),
-      inset 0 -1px 0.5px -0.5px var(--lg-rim-b);
+    background: var(--recessed);
+    box-shadow: var(--recessed-shadow);
   }
 
   .field:focus {
-    box-shadow:
-      var(--field-shadow),
-      0 0 0 2px color-mix(in srgb, var(--accent) 70%, transparent),
-      0 0 18px -2px color-mix(in srgb, var(--accent) 50%, transparent);
+    box-shadow: var(--recessed-shadow), 0 0 0 2px color-mix(in srgb, var(--accent) 70%, transparent);
   }
 
-  /* Skill icons: clear glass bubbles over a glow in the brand colour. */
+  /* Skill "app icons": round, lit from the top-left, tinted with the brand colour. */
   .orb {
-    @apply lg lg-clear lg-press relative flex h-[72px] w-[72px] items-center justify-center rounded-full md:h-20 md:w-20;
-  }
-
-  .orb::after {
-    content: '';
-    position: absolute;
-    inset: 7% 20% 52% 20%;
-    border-radius: 50%;
-    background: linear-gradient(rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0));
-    pointer-events: none;
-  }
-
-  .orb svg,
-  .orb .monogram {
-    color: var(--glyph-light);
-    fill: currentColor;
-  }
-
-  .dark .orb svg,
-  .dark .orb .monogram {
-    color: var(--glyph-dark);
-  }
-
-  .orb-glow {
-    position: absolute;
-    inset: -14%;
-    border-radius: 9999px;
-    background: radial-gradient(circle, color-mix(in srgb, var(--orb) 70%, transparent) 0%, transparent 68%);
-    opacity: 0.85;
-  }
-
-  .no-scrollbar {
-    scrollbar-width: none;
-  }
-
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
+    @apply relative flex h-[72px] w-[72px] items-center justify-center rounded-full md:h-20 md:w-20;
+    background: radial-gradient(
+      circle at 32% 24%,
+      color-mix(in srgb, var(--orb) 55%, white) 0%,
+      var(--orb) 58%,
+      color-mix(in srgb, var(--orb) 70%, black) 100%
+    );
+    box-shadow:
+      inset 0 1px 1px rgba(255, 255, 255, 0.5),
+      inset 0 -8px 16px rgba(0, 0, 0, 0.22),
+      0 0 0 1px rgba(255, 255, 255, 0.14),
+      0 16px 34px -12px color-mix(in srgb, var(--orb) 75%, transparent);
   }
 }
 
-/* Users who ask for less transparency get solid, readable surfaces. */
-@media (prefers-reduced-transparency: reduce) {
-  .lg {
-    background-color: var(--env-base) !important;
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
-  }
+/* Environment: soft light sources behind the glass (static; see Environment.tsx). */
+.env-blob {
+  position: absolute;
+  border-radius: 9999px;
 }
+
+.env-blob-1 {
+  top: -18%;
+  left: -12%;
+  width: 70vmax;
+  height: 70vmax;
+  background: radial-gradient(circle, var(--env-1) 0%, transparent 62%);
+}
+
+.env-blob-2 {
+  top: 8%;
+  right: -22%;
+  width: 62vmax;
+  height: 62vmax;
+  background: radial-gradient(circle, var(--env-2) 0%, transparent 62%);
+}
+
+.env-blob-3 {
+  bottom: -32%;
+  left: 12%;
+  width: 80vmax;
+  height: 60vmax;
+  background: radial-gradient(ellipse, var(--env-3) 0%, transparent 62%);
+  opacity: 0.85;
+}
+
+.env-blob-4 {
+  top: 34%;
+  left: 28%;
+  width: 46vmax;
+  height: 46vmax;
+  background: radial-gradient(circle, var(--env-4) 0%, transparent 62%);
+  opacity: 0.7;
+}
+
+.env-noise {
+  position: absolute;
+  inset: 0;
+  opacity: var(--env-noise-opacity);
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.env-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 40%, transparent 40%, var(--env-vignette) 100%);
+}
+
+
+
+
 
 /*
- * Theme switch: every colour token is registered so the browser can interpolate it,
- * and the whole page — environment light, glass tint, rims and text — glides
- * between themes instead of snapping.
+ * Theme switch: colour tokens are registered so the browser can interpolate
+ * them, and the whole page glides between dark and light instead of snapping.
+ * Only colours animate, so it stays cheap.
  */
 @property --env-base {
   syntax: '<color>';
@@ -396,12 +307,6 @@
   initial-value: transparent;
 }
 
-@property --env-dot {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: transparent;
-}
-
 @property --env-vignette {
   syntax: '<color>';
   inherits: true;
@@ -426,43 +331,31 @@
   initial-value: transparent;
 }
 
-@property --lg-tint {
+@property --glass-top {
   syntax: '<color>';
   inherits: true;
   initial-value: transparent;
 }
 
-@property --lg-tint-clear {
+@property --glass-bottom {
   syntax: '<color>';
   inherits: true;
   initial-value: transparent;
 }
 
-@property --lg-tint-hover {
+@property --edge-top {
   syntax: '<color>';
   inherits: true;
   initial-value: transparent;
 }
 
-@property --lg-rim-a {
+@property --edge-mid {
   syntax: '<color>';
   inherits: true;
   initial-value: transparent;
 }
 
-@property --lg-rim-b {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: transparent;
-}
-
-@property --lg-rim-hot {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: transparent;
-}
-
-@property --lg-inner {
+@property --edge-bottom {
   syntax: '<color>';
   inherits: true;
   initial-value: transparent;
@@ -474,25 +367,25 @@
   initial-value: transparent;
 }
 
-@property --drop {
+@property --fill {
   syntax: '<color>';
   inherits: true;
   initial-value: transparent;
 }
 
-@property --chip {
+@property --fill-hover {
   syntax: '<color>';
   inherits: true;
   initial-value: transparent;
 }
 
-@property --well {
+@property --selected {
   syntax: '<color>';
   inherits: true;
   initial-value: transparent;
 }
 
-@property --field {
+@property --recessed {
   syntax: '<color>';
   inherits: true;
   initial-value: transparent;
@@ -517,23 +410,20 @@
     --env-2 0.8s ease,
     --env-3 0.8s ease,
     --env-4 0.8s ease,
-    --env-dot 0.8s ease,
     --env-vignette 0.8s ease,
     --label 0.8s ease,
     --label-2 0.8s ease,
     --label-3 0.8s ease,
-    --lg-tint 0.8s ease,
-    --lg-tint-clear 0.8s ease,
-    --lg-tint-hover 0.8s ease,
-    --lg-rim-a 0.8s ease,
-    --lg-rim-b 0.8s ease,
-    --lg-rim-hot 0.8s ease,
-    --lg-inner 0.8s ease,
+    --glass-top 0.8s ease,
+    --glass-bottom 0.8s ease,
+    --edge-top 0.8s ease,
+    --edge-mid 0.8s ease,
+    --edge-bottom 0.8s ease,
     --specular 0.8s ease,
-    --drop 0.8s ease,
-    --chip 0.8s ease,
-    --well 0.8s ease,
-    --field 0.8s ease,
+    --fill 0.8s ease,
+    --fill-hover 0.8s ease,
+    --selected 0.8s ease,
+    --recessed 0.8s ease,
     --hairline 0.8s ease,
     --accent 0.8s ease;
 }
@@ -544,104 +434,10 @@
   }
 }
 
-/* Environment: slow-drifting light sources and a fine dot grid for the glass to bend. */
-.env-blob {
-  position: absolute;
-  border-radius: 9999px;
-  will-change: transform;
+.no-scrollbar {
+  scrollbar-width: none;
 }
 
-.env-blob-1 {
-  top: -18%;
-  left: -12%;
-  width: 70vmax;
-  height: 70vmax;
-  background: radial-gradient(circle, var(--env-1) 0%, color-mix(in srgb, var(--env-1) 55%, transparent) 30%, transparent 64%);
-  animation: drift-1 38s ease-in-out infinite alternate;
-}
-
-.env-blob-2 {
-  top: 8%;
-  right: -22%;
-  width: 62vmax;
-  height: 62vmax;
-  background: radial-gradient(circle, var(--env-2) 0%, color-mix(in srgb, var(--env-2) 55%, transparent) 30%, transparent 64%);
-  animation: drift-2 44s ease-in-out infinite alternate;
-}
-
-.env-blob-3 {
-  bottom: -32%;
-  left: 12%;
-  width: 80vmax;
-  height: 60vmax;
-  background: radial-gradient(ellipse, var(--env-3) 0%, color-mix(in srgb, var(--env-3) 55%, transparent) 30%, transparent 64%);
-  opacity: 0.85;
-  animation: drift-3 50s ease-in-out infinite alternate;
-}
-
-.env-blob-4 {
-  top: 34%;
-  left: 28%;
-  width: 46vmax;
-  height: 46vmax;
-  background: radial-gradient(circle, var(--env-4) 0%, color-mix(in srgb, var(--env-4) 55%, transparent) 30%, transparent 64%);
-  opacity: 0.7;
-  animation: drift-2 34s ease-in-out infinite alternate-reverse;
-}
-
-.env-blob-5 {
-  top: -30%;
-  left: 30%;
-  width: 60vmax;
-  height: 46vmax;
-  background: radial-gradient(ellipse, color-mix(in srgb, var(--env-2) 70%, var(--env-1)) 0%, transparent 62%);
-  opacity: 0.6;
-  animation: drift-3 42s ease-in-out infinite alternate-reverse;
-}
-
-.env-grid {
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(circle, var(--env-dot) 1.1px, transparent 1.6px);
-  background-size: 26px 26px;
-  -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 45%, #000 35%, transparent 100%);
-  mask-image: radial-gradient(ellipse 90% 80% at 50% 45%, #000 35%, transparent 100%);
-}
-
-.env-noise {
-  position: absolute;
-  inset: 0;
-  opacity: var(--env-noise-opacity);
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-.env-vignette {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at 50% 40%, transparent 40%, var(--env-vignette) 100%);
-}
-
-@keyframes drift-1 {
-  to {
-    transform: translate(12vw, 10vh) scale(1.1);
-  }
-}
-
-@keyframes drift-2 {
-  to {
-    transform: translate(-10vw, 12vh) scale(0.92);
-  }
-}
-
-@keyframes drift-3 {
-  to {
-    transform: translate(-8vw, -8vh) scale(1.08);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .env-blob {
-    animation: none;
-  }
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }

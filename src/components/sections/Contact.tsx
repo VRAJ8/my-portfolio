@@ -40,7 +40,7 @@ const Contact: React.FC = () => (
         <div className="relative z-[2] grid gap-8 md:grid-cols-2 md:gap-10">
           <div>
             <h3 className="mb-3 px-1 text-[13px] font-semibold uppercase tracking-wider text-label-tertiary">Reach me</h3>
-            <ul className="overflow-hidden rounded-3xl glass-well">
+            <ul className="overflow-hidden rounded-3xl fill-platter">
               {contactRows.map(({ title, value, href, Icon, tint }, i) => {
                 const external = href.startsWith('http');
                 return (
@@ -56,7 +56,7 @@ const Contact: React.FC = () => (
                       href={href}
                       target={external ? '_blank' : undefined}
                       rel={external ? 'noopener noreferrer' : undefined}
-                      className="group flex items-center gap-4 p-4 transition-colors duration-300 hover:bg-[var(--chip)] focus-visible:bg-[var(--chip)] focus-visible:outline-none"
+                      className="group flex items-center gap-4 p-4 transition-colors duration-300 hover:bg-[var(--fill-hover)] focus-visible:bg-[var(--fill-hover)] focus-visible:outline-none"
                     >
                       <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-gradient-to-br text-white shadow-sm ${tint}`}>
                         <Icon size={18} />
