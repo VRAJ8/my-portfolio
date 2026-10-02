@@ -68,7 +68,7 @@ const Hero: React.FC = () => (
                 <GraduationCap size={14} /> Computer Science Engineering
               </span>
               <span className="tag inline-flex items-center gap-1.5 text-[13px]">
-                <MapPin size={14} /> Gujarat, India
+                <MapPin size={14} /> San Jose, California
               </span>
             </motion.div>
 

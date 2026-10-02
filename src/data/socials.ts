@@ -4,5 +4,5 @@ export const socials = {
   instagram: 'https://www.instagram.com/vraj._.8/',
   email: 'vrajp8918@gmail.com',
   phone: '+91 8200995401',
-  location: 'Ankleshwar, Gujarat, India',
+  location: 'San Jose, California',
 };
