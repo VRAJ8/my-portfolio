@@ -21,7 +21,8 @@ const Projects: React.FC = () => {
         />
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-6">
           {projects.map((project, index) => (
-            <ProjectCard key={project.id} project={project} index={index} onOpen={setOpenProject} />
+            // Trailers behind the sheet would make its blurred backdrop repaint every frame, so hold them.
+            <ProjectCard key={project.id} project={project} index={index} onOpen={setOpenProject} paused={openProject !== null} />
           ))}
         </div>
       </div>
