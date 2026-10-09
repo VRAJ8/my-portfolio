@@ -8,6 +8,8 @@ interface ProjectCardProps {
   project: Project;
   index: number;
   onOpen: (project: Project) => void;
+  /** Hold the card's trailer still, e.g. while a case study sheet covers the page. */
+  paused?: boolean;
 }
 
 // Six-column grid on large screens: the hero spans all of it, major projects half, minor a third.
@@ -17,7 +19,7 @@ const span: Record<Project['tier'], string> = {
   minor: 'lg:col-span-2',
 };
 
-const ProjectCard: React.FC<ProjectCardProps> = ({ project, index, onOpen }) => {
+const ProjectCard: React.FC<ProjectCardProps> = ({ project, index, onOpen, paused = false }) => {
   const { tier } = project;
   const hero = tier === 'hero';
 
@@ -33,7 +35,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index, onOpen }) => 
       <div
         className={`relative z-[2] overflow-hidden rounded-[22px] ${
           hero
-            ? project.video
+            ? project.video?.aspect === 'square'
               ? 'aspect-square lg:w-1/2 lg:shrink-0 lg:self-center'
               : 'aspect-[16/10] lg:aspect-auto lg:w-[55%] lg:shrink-0'
             : 'aspect-[16/10]'
@@ -43,6 +45,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index, onOpen }) => 
           project={project}
           // The hero frame is taller than the screenshot, so keep its top-left (the headline) in view.
           position={hero ? 'left top' : 'center'}
+          paused={paused}
           className="transition-transform duration-700 ease-apple group-hover:scale-[1.04]"
         />
         <div className="pointer-events-none absolute inset-0 rounded-[22px] ring-1 ring-inset ring-white/10" />

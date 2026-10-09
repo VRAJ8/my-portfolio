@@ -12,7 +12,8 @@ export interface Project {
   /** Screenshot; projects without one get a generated cover. */
   image?: string;
   /** A short silent loop shown on the card instead of the screenshot. */
-  video?: { webm: string; mp4: string; poster: string };
+  /** A silent looping trailer; `aspect` is the shape it was rendered in. */
+  video?: { webm: string; mp4: string; poster: string; aspect: 'square' | 'wide' };
   /** Short proof points shown as chips on the card. */
   highlights?: string[];
   tags: string[];

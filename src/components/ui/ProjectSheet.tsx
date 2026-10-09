@@ -48,7 +48,7 @@ const ProjectSheet: React.FC<ProjectSheetProps> = ({ project, onClose }) => {
             role="dialog"
             aria-modal="true"
             aria-labelledby="project-sheet-title"
-            className="glass relative flex max-h-[88vh] w-full max-w-2xl flex-col overflow-hidden rounded-[36px]"
+            className={`glass relative flex max-h-[88vh] w-full flex-col overflow-hidden rounded-[36px] ${project.video ? 'max-w-3xl' : 'max-w-2xl'}`}
             initial={{ opacity: 0, scale: 0.92, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -64,8 +64,16 @@ const ProjectSheet: React.FC<ProjectSheetProps> = ({ project, onClose }) => {
             </button>
 
             <div className="overflow-y-auto overscroll-contain p-3">
-              <div className="aspect-[16/9] overflow-hidden rounded-[26px]">
-                <ProjectCover project={project} still />
+              <div
+                className={`overflow-hidden rounded-[26px] ${
+                  !project.video
+                    ? 'aspect-[16/9]'
+                    : project.video.aspect === 'square'
+                      ? 'mx-auto aspect-square w-full max-w-[70vh]'
+                      : 'aspect-[16/10]'
+                }`}
+              >
+                <ProjectCover project={project} expanded />
               </div>
 
               <div className="p-4 sm:p-6">
