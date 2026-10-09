@@ -1,15 +1,15 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { BarChart3, Brain, Briefcase, Server, Sparkles, User } from 'lucide-react';
+import { Brain, Database, Server, Sparkles, User } from 'lucide-react';
 import GlassPanel from '../ui/GlassPanel';
 import SectionHeading from '../ui/SectionHeading';
 import WindowBar from '../ui/WindowBar';
 
 const focusAreas = [
   {
-    title: 'Data analysis',
-    detail: 'Cleaning, exploring and visualising data to find the story in it.',
-    Icon: BarChart3,
+    title: 'Data engineering',
+    detail: 'Pipelines, data modeling and warehousing that keep analysis honest.',
+    Icon: Database,
     tint: 'from-sky-400 to-blue-600',
   },
   {
@@ -20,13 +20,13 @@ const focusAreas = [
   },
   {
     title: 'Applied AI & LLMs',
-    detail: 'Putting models like Gemini to work inside real products.',
+    detail: 'Putting LLMs to work inside real products, from code review to reading receipts.',
     Icon: Sparkles,
     tint: 'from-pink-400 to-orange-500',
   },
   {
     title: 'APIs & deployment',
-    detail: 'Wrapping models in FastAPI services and shipping them.',
+    detail: 'Wrapping models and data in REST APIs and shipping them.',
     Icon: Server,
     tint: 'from-emerald-400 to-teal-600',
   },
@@ -47,12 +47,13 @@ const About: React.FC = () => (
         <div className="relative z-[2] grid gap-10 md:grid-cols-5 md:gap-12">
           <div className="space-y-5 text-[17px] leading-relaxed text-label-secondary md:col-span-3">
             <p className="text-2xl font-semibold leading-snug tracking-tight text-label">
-              👋 Hi, I'm Vraj — a Computer Science engineer who's happiest when a messy dataset starts to make sense.
+              👋 Hi, I'm Vraj — an MS student in Applied Data Intelligence at San Jose State, happiest when a messy
+              dataset starts to make sense.
             </p>
             <p>
-              I started out building full-stack web apps, and these days my focus is data, AI and machine learning:
-              analysing data, training models, and turning them into tools — like Code Guard AI, an LLM-powered code
-              reviewer that flags security issues before they ship.
+              I studied Computer Science and Engineering at CHARUSAT and spent three internships shipping full-stack
+              products. Now my focus is data and machine learning: pipelines, models and the products around them — like
+              Player Scout, which finds footballers who play alike from raw match event data.
             </p>
             <p>
               I like work that mixes logic with creativity, and I care about building things that are both useful and
@@ -89,27 +90,6 @@ const About: React.FC = () => (
           </div>
         </div>
 
-        {/* Experience */}
-        <div className="relative z-[2] mt-10 border-t border-hairline pt-8">
-          <h3 className="mb-4 px-1 text-[13px] font-semibold uppercase tracking-wider text-label-tertiary">Experience</h3>
-          <div className="flex flex-col gap-4 rounded-3xl p-5 fill-platter sm:flex-row sm:items-start">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-orange-600 text-white shadow-sm">
-              <Briefcase size={20} />
-            </span>
-            <div className="flex-1">
-              <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-baseline">
-                <h4 className="text-lg font-semibold text-label">Software Development Intern</h4>
-                <span className="tag self-start">2024</span>
-              </div>
-              <p className="text-label-secondary">Techomax Solutions, Bharuch</p>
-              <p className="mt-3 leading-relaxed text-label-secondary">
-                Applied PHP and Laravel to real-world projects: built a luxury car rental platform with vehicle listings,
-                booking management and authentication, and worked with the team on company tasks — hands-on experience
-                with MVC architecture, full-stack development and agile workflows.
-              </p>
-            </div>
-          </div>
-        </div>
       </GlassPanel>
       <WindowBar />
     </div>

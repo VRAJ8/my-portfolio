@@ -65,7 +65,7 @@ const Hero: React.FC = () => (
 
             <motion.div className="mt-6 flex flex-wrap justify-center gap-2 md:justify-start" {...rise(0.72)}>
               <span className="tag inline-flex items-center gap-1.5 text-[13px]">
-                <GraduationCap size={14} /> Computer Science Engineering
+                <GraduationCap size={14} /> MS Applied Data Intelligence · SJSU
               </span>
               <span className="tag inline-flex items-center gap-1.5 text-[13px]">
                 <MapPin size={14} /> San Jose, California

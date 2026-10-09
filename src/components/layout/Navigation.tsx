@@ -1,16 +1,17 @@
 import React from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Home, LayoutGrid, Mail, Moon, Shapes, Sun, User } from 'lucide-react';
+import { Briefcase, Home, LayoutGrid, Mail, Moon, Shapes, Sun, User } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { useActiveSection } from '../../hooks/useActiveSection';
 import avatar from '../../assets/avatar.webp';
 
 const sections = [
-  { id: 'home', label: 'Home', Icon: Home },
-  { id: 'about', label: 'About', Icon: User },
-  { id: 'skills', label: 'Skills', Icon: Shapes },
-  { id: 'projects', label: 'Projects', Icon: LayoutGrid },
-  { id: 'contact', label: 'Contact', Icon: Mail },
+  { id: 'home', label: 'Home', short: 'Home', Icon: Home },
+  { id: 'about', label: 'About', short: 'About', Icon: User },
+  { id: 'experience', label: 'Experience', short: 'Work', Icon: Briefcase },
+  { id: 'skills', label: 'Skills', short: 'Skills', Icon: Shapes },
+  { id: 'projects', label: 'Projects', short: 'Projects', Icon: LayoutGrid },
+  { id: 'contact', label: 'Contact', short: 'Contact', Icon: Mail },
 ] as const;
 
 const sectionIds = sections.map((s) => s.id);
@@ -107,11 +108,11 @@ const Navigation: React.FC = () => {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
       >
         <ul className="glass flex gap-1 rounded-full p-1.5">
-          {sections.map(({ id, label, Icon }) => (
+          {sections.map(({ id, short, Icon }) => (
             <li key={id}>
               <a
                 href={`#${id}`}
-                className={`relative flex h-12 w-14 flex-col items-center justify-center gap-0.5 rounded-full text-[10px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent sm:w-16 ${
+                className={`relative flex h-12 w-[52px] flex-col items-center justify-center gap-0.5 rounded-full text-[10px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent sm:w-16 ${
                   active === id ? 'text-label' : 'text-label-secondary'
                 }`}
                 aria-current={active === id ? 'true' : undefined}
@@ -125,7 +126,7 @@ const Navigation: React.FC = () => {
                   />
                 )}
                 <Icon size={19} className="relative" />
-                <span className="relative">{label}</span>
+                <span className="relative">{short}</span>
               </a>
             </li>
           ))}
