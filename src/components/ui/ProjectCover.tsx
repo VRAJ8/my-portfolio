@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import { useReducedMotion } from 'framer-motion';
 import { Project } from '../../types';
 
 interface ProjectCoverProps {
@@ -6,10 +7,52 @@ interface ProjectCoverProps {
   className?: string;
   /** Where to anchor a screenshot when the frame crops it (CSS object-position). */
   position?: string;
+  /** Show the screenshot even when the project has a video (e.g. in the case study sheet). */
+  still?: boolean;
 }
 
-/** The project's screenshot, or a generated cover when there isn't one. */
-const ProjectCover: React.FC<ProjectCoverProps> = ({ project, className = '', position = 'center' }) => {
+/** A silent looping trailer that only plays while it's on screen. */
+const ProjectVideo: React.FC<{ project: Project; className: string }> = ({ project, className }) => {
+  const ref = useRef<HTMLVideoElement>(null);
+  const reduceMotion = useReducedMotion();
+  const video = project.video!;
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || reduceMotion) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) el.play().catch(() => {});
+        else el.pause();
+      },
+      { threshold: 0.25 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [reduceMotion]);
+
+  return (
+    <video
+      ref={ref}
+      className={`h-full w-full object-cover ${className}`}
+      poster={video.poster}
+      muted
+      loop
+      playsInline
+      preload={reduceMotion ? 'none' : 'metadata'}
+      disablePictureInPicture
+      aria-label={`${project.title} trailer`}
+    >
+      <source src={video.webm} type="video/webm" />
+      <source src={video.mp4} type="video/mp4" />
+    </video>
+  );
+};
+
+/** The project's trailer or screenshot, or a generated cover when there's neither. */
+const ProjectCover: React.FC<ProjectCoverProps> = ({ project, className = '', position = 'center', still = false }) => {
+  if (project.video && !still) return <ProjectVideo project={project} className={className} />;
+
   if (project.image) {
     return (
       <img

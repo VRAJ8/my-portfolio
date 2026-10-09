@@ -12,7 +12,7 @@ interface ProjectCardProps {
 
 // Six-column grid on large screens: the hero spans all of it, major projects half, minor a third.
 const span: Record<Project['tier'], string> = {
-  hero: 'md:col-span-2 md:flex-row lg:col-span-6',
+  hero: 'md:col-span-2 lg:col-span-6 lg:flex-row',
   major: 'lg:col-span-3',
   minor: 'lg:col-span-2',
 };
@@ -32,7 +32,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index, onOpen }) => 
     >
       <div
         className={`relative z-[2] overflow-hidden rounded-[22px] ${
-          hero ? 'aspect-[16/10] md:aspect-auto md:w-[55%] md:shrink-0' : 'aspect-[16/10]'
+          hero
+            ? project.video
+              ? 'aspect-square lg:w-1/2 lg:shrink-0 lg:self-center'
+              : 'aspect-[16/10] lg:aspect-auto lg:w-[55%] lg:shrink-0'
+            : 'aspect-[16/10]'
         }`}
       >
         <ProjectCover
@@ -44,7 +48,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, index, onOpen }) => 
         <div className="pointer-events-none absolute inset-0 rounded-[22px] ring-1 ring-inset ring-white/10" />
       </div>
 
-      <div className={`relative z-[2] flex flex-1 flex-col p-4 ${hero ? 'md:p-8' : tier === 'major' ? 'sm:p-5' : ''}`}>
+      <div className={`relative z-[2] flex flex-1 flex-col p-4 ${hero ? 'md:p-6 lg:p-8' : tier === 'major' ? 'sm:p-5' : ''}`}>
         <div className="mb-3 flex flex-wrap items-center gap-2">
           {hero && <span className="eyebrow">Featured · Data & ML</span>}
           <span className="text-[13px] font-medium text-label-tertiary">{project.year}</span>

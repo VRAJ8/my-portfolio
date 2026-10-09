@@ -11,6 +11,8 @@ export interface Project {
   tier: 'hero' | 'major' | 'minor';
   /** Screenshot; projects without one get a generated cover. */
   image?: string;
+  /** A short silent loop shown on the card instead of the screenshot. */
+  video?: { webm: string; mp4: string; poster: string };
   /** Short proof points shown as chips on the card. */
   highlights?: string[];
   tags: string[];

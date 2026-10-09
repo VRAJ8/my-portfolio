@@ -11,6 +11,11 @@ export const projects: Project[] = [
     year: 2026,
     tier: 'hero',
     image: '/images/player-scout.webp',
+    video: {
+      webm: '/videos/player-scout.webm',
+      mp4: '/videos/player-scout.mp4',
+      poster: '/videos/player-scout-poster.webp',
+    },
     highlights: ['1,865 players · 5 leagues', '36 features in 9 trait groups', 'Search runs in the browser', '105 tests in CI'],
     tags: ['Python', 'pandas', 'scikit-learn', 'PyTorch', 'Dagster', 'DuckDB', 'FastAPI', 'React', 'TypeScript', 'D3'],
     demoUrl: 'https://playslike.vercel.app',

@@ -65,7 +65,7 @@ const ProjectSheet: React.FC<ProjectSheetProps> = ({ project, onClose }) => {
 
             <div className="overflow-y-auto overscroll-contain p-3">
               <div className="aspect-[16/9] overflow-hidden rounded-[26px]">
-                <ProjectCover project={project} />
+                <ProjectCover project={project} still />
               </div>
 
               <div className="p-4 sm:p-6">
