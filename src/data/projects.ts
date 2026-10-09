@@ -59,8 +59,14 @@ export const projects: Project[] = [
     year: 2026,
     tier: 'major',
     image: '/images/beastmode.webp',
+    video: {
+      webm: '/videos/beast-mode-motors.webm',
+      mp4: '/videos/beast-mode-motors.mp4',
+      poster: '/videos/beast-mode-motors-poster.webp',
+    },
     highlights: ['270 tests', 'Claude reads receipts'],
     tags: ['Laravel 12', 'PHP 8.3', 'Livewire', 'Filament', 'Tailwind CSS', 'Claude API', 'PostgreSQL'],
+    demoUrl: 'https://beast-mode-motors.onrender.com',
     githubUrl: 'https://github.com/VRAJ8/BeastModeMotors',
     caseStudy: {
       challenge:
