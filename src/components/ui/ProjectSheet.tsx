@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ExternalLink, Github, X } from 'lucide-react';
+import ProjectCover from './ProjectCover';
 import { Project } from '../../types';
 
 interface ProjectSheetProps {
@@ -64,7 +65,7 @@ const ProjectSheet: React.FC<ProjectSheetProps> = ({ project, onClose }) => {
 
             <div className="overflow-y-auto overscroll-contain p-3">
               <div className="aspect-[16/9] overflow-hidden rounded-[26px]">
-                <img src={project.image} alt={`${project.title} preview`} className="h-full w-full object-cover" />
+                <ProjectCover project={project} still />
               </div>
 
               <div className="p-4 sm:p-6">

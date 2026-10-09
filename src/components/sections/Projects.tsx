@@ -16,10 +16,10 @@ const Projects: React.FC = () => {
         <SectionHeading
           eyebrow="Projects"
           title="Selected work"
-          subtitle="From LLM-powered security tooling to full-stack products."
+          subtitle="Data pipelines, machine learning and AI-powered products — built end to end."
           icon={<LayoutGrid size={14} />}
         />
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-6">
           {projects.map((project, index) => (
             <ProjectCard key={project.id} project={project} index={index} onOpen={setOpenProject} />
           ))}
