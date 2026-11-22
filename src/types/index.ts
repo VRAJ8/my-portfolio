@@ -1,20 +1,20 @@
 import type { SimpleIcon } from 'simple-icons';
 
 export interface Project {
-  id: number;
+  id: string;
   title: string;
-  /** One line under the title, e.g. what it is in a few words. */
   tagline: string;
   description: string;
   year: number;
-  /** hero: full-width headline project; major: large cards; minor: compact cards. */
-  tier: 'hero' | 'major' | 'minor';
-  /** Screenshot; projects without one get a generated cover. */
+  /** Featured projects get a full panel in the work chapter; the rest sit in the grid below it. */
+  featured?: boolean;
+  /** Who it was for or with, when it wasn't a solo project. */
+  context?: string;
+  /** Tint for the project's panel and glow. */
+  accent: string;
   image?: string;
-  /** A short silent loop shown on the card instead of the screenshot. */
   /** A silent looping trailer; `aspect` is the shape it was rendered in. */
   video?: { webm: string; mp4: string; poster: string; aspect: 'square' | 'wide' };
-  /** Short proof points shown as chips on the card. */
   highlights?: string[];
   tags: string[];
   demoUrl?: string;
@@ -26,12 +26,23 @@ export interface Project {
   };
 }
 
+export interface Writing {
+  title: string;
+  subtitle: string;
+  venue: string;
+  date: string;
+  readTime: string;
+  url: string;
+  codeUrl?: string;
+}
+
 export type SkillCategory = 'ai' | 'data' | 'dev' | 'cloud' | 'tools';
 
 export interface Skill {
   name: string;
   category: SkillCategory;
-  /** Brand icon. Tools without one get a short monogram in their brand colour instead. */
+  /** Brand mark from simple-icons, when the tool has one. */
   icon?: SimpleIcon;
+  /** Fallback lettermark for tools without a brand icon. */
   monogram?: { text: string; hex: string };
 }

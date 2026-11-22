@@ -21,9 +21,12 @@ export default defineConfig({
     sourcemap: false,
     rollupOptions: {
       output: {
-        manualChunks: {
-          'react-vendor': ['react', 'react-dom'],
-          'ui-vendor': ['framer-motion', 'lucide-react'],
+        // Group vendor code by package so each chunk caches independently. The 3D stack (three,
+        // React Three Fiber, Theatre.js) is only reached through the lazy Field import.
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return undefined;
+          const pkg = id.split('node_modules/')[1].split('/').slice(0, id.split('node_modules/')[1].startsWith('@') ? 2 : 1).join('/');
+          return `vendor-${pkg.replace('@', '').replace('/', '-')}`;
         },
       },
     },

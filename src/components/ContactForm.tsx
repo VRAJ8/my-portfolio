@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'motion/react';
 import { AlertCircle, CheckCircle2, Send } from 'lucide-react';
 
 type Fields = { name: string; email: string; message: string };
@@ -61,12 +61,12 @@ const ContactForm: React.FC = () => {
 
   return (
     <div>
-      <h3 className="mb-3 px-1 text-[13px] font-semibold uppercase tracking-wider text-label-tertiary">Send a message</h3>
+      <h3 className="kicker mb-5">Send a message</h3>
       <AnimatePresence mode="wait" initial={false}>
         {isSubmitted ? (
           <motion.div
             key="sent"
-            className="flex flex-col items-center rounded-3xl px-6 py-12 text-center fill-platter"
+            className="flex flex-col items-center rounded-3xl border border-[var(--line)] px-6 py-12 text-center"
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.96 }}
@@ -75,8 +75,8 @@ const ContactForm: React.FC = () => {
               <CheckCircle2 size={56} className="mb-5 text-emerald-400" />
             </motion.div>
             <h4 className="text-2xl font-bold">Message sent</h4>
-            <p className="mt-2 text-label-secondary">Thanks for reaching out — I'll get back to you soon.</p>
-            <button className="btn-glass mt-6" onClick={() => setIsSubmitted(false)}>
+            <p className="mt-2 text-ink-2">Thanks for reaching out. I'll get back to you soon.</p>
+            <button className="btn-ghost mt-6" onClick={() => setIsSubmitted(false)}>
               Send another message
             </button>
           </motion.div>
@@ -104,7 +104,7 @@ const ContactForm: React.FC = () => {
 
             {fields.map(({ name, label, type, placeholder, autoComplete }) => (
               <div key={name}>
-                <label htmlFor={name} className="mb-1.5 block px-1 text-sm font-medium text-label-secondary">
+                <label htmlFor={name} className="mb-1.5 block px-1 text-sm font-medium text-ink-2">
                   {label}
                 </label>
                 <input
@@ -128,7 +128,7 @@ const ContactForm: React.FC = () => {
             ))}
 
             <div>
-              <label htmlFor="message" className="mb-1.5 block px-1 text-sm font-medium text-label-secondary">
+              <label htmlFor="message" className="mb-1.5 block px-1 text-sm font-medium text-ink-2">
                 Message
               </label>
               <textarea
@@ -150,7 +150,7 @@ const ContactForm: React.FC = () => {
             </div>
 
             {submitError && (
-              <p className="flex items-start gap-2 rounded-2xl px-4 py-3 text-sm text-red-400 fill-platter" role="alert">
+              <p className="flex items-start gap-2 rounded-2xl border border-red-400/30 px-4 py-3 text-sm text-red-400" role="alert">
                 <AlertCircle size={18} className="mt-px shrink-0" />
                 {submitError}
               </p>
@@ -159,7 +159,7 @@ const ContactForm: React.FC = () => {
             <button type="submit" className="btn-primary w-full" disabled={isSubmitting}>
               {isSubmitting ? (
                 <motion.span
-                  className="h-5 w-5 rounded-full border-2 border-white border-t-transparent"
+                  className="h-5 w-5 rounded-full border-2 border-[var(--bg)] border-t-transparent"
                   animate={{ rotate: 360 }}
                   transition={{ duration: 0.9, repeat: Infinity, ease: 'linear' }}
                   aria-label="Sending"
