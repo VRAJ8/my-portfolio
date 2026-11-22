@@ -1,0 +1,879 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  @font-face { font-family: 'BG'; src: url('fonts/bricolage-grotesque-latin-opsz-normal.woff2') format('woff2'); font-weight: 200 800; }
+  @font-face { font-family: 'SM'; src: url('fonts/space-mono-latin-400-normal.woff2') format('woff2'); font-weight: 400; }
+  @font-face { font-family: 'SM'; src: url('fonts/space-mono-latin-700-normal.woff2') format('woff2'); font-weight: 700; }
+  html, body { margin: 0; background: #000; }
+  canvas { display: block; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1600" height="1000"></canvas>
+<script>
+/*
+ * CodeGuard AI trailer. render(t) draws the frame at time t (seconds) and is a pure
+ * function of t, so frames can be rendered in any order and the loop is exact.
+ * The look (cream paper, ink outlines, hard shadows, sticker colours) is CodeGuard's own,
+ * and every finding, score and stage label comes from a real scan of its demo app.
+ */
+const W = 1600, H = 1000, DURATION = 42.5;
+const C = {
+  ink: '#111111', cream: '#F4EFE6', snow: '#FFFDF8', sub: '#4A463F', faint: '#8A847A', grid: '#E4DDD0',
+  yel: '#FFE14D', pink: '#FF8AD8', cobalt: '#3B5BFF', lime: '#B8F35E', tang: '#FF9F43', lilac: '#C9B6FF',
+  cherry: '#FF5A5F', mint: '#7CF0B4', low: '#DCD5C8',
+};
+const SEV = { critical: [C.cherry, 'CRITICAL'], high: [C.tang, 'HIGH'], medium: [C.yel, 'MEDIUM'], low: [C.low, 'LOW'] };
+const ICONS = {"shield-check": ["M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z", "m9 12 2 2 4-4"], "folder": ["M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"], "folder-up": ["M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z", "M12 10v6", "m9 13 3-3 3 3"], "github": ["M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4", "M9 18c-4.51 2-5-2-7-2"], "sparkles": ["M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z", "M20 3v4", "M22 5h-4", "M4 17v2", "M5 18H3"], "check": ["M20 6 9 17l-5-5"], "x": ["M18 6 6 18", "m6 6 12 12"], "lock": ["M5.0 11.0h14.0a2.0 2.0 0 0 1 2.0 2.0v7.0a2.0 2.0 0 0 1 -2.0 2.0h-14.0a2.0 2.0 0 0 1 -2.0 -2.0v-7.0a2.0 2.0 0 0 1 2.0 -2.0z", "M7 11V7a5 5 0 0 1 10 0v4"], "file-text": ["M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z", "M14 2v4a2 2 0 0 0 2 2h4", "M10 9H8", "M16 13H8", "M16 17H8"], "package": ["M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z", "M12 22V12", "m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7", "m7.5 4.27 9 5.15"], "file-code": ["M10 12.5 8 15l2 2.5", "m14 12.5 2 2.5-2 2.5", "M14 2v4a2 2 0 0 0 2 2h4", "M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"], "scan-search": ["M3 7V5a2 2 0 0 1 2-2h2", "M17 3h2a2 2 0 0 1 2 2v2", "M21 17v2a2 2 0 0 1-2 2h-2", "M7 21H5a2 2 0 0 1-2-2v-2", "M9.0 12.0a3.0 3.0 0 1 0 6.0 0a3.0 3.0 0 1 0 -6.0 0", "m16 16-1.9-1.9"], "git-pull-request": ["M15.0 18.0a3.0 3.0 0 1 0 6.0 0a3.0 3.0 0 1 0 -6.0 0", "M3.0 6.0a3.0 3.0 0 1 0 6.0 0a3.0 3.0 0 1 0 -6.0 0", "M13 6h3a2 2 0 0 1 2 2v7", "M6 9L6 21"], "triangle-alert": ["m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3", "M12 9v4", "M12 17h.01"], "badge-check": ["M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z", "m9 12 2 2 4-4"], "globe": ["M2.0 12.0a10.0 10.0 0 1 0 20.0 0a10.0 10.0 0 1 0 -20.0 0", "M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20", "M2 12h20"], "cpu": ["M6.0 4.0h12.0a2.0 2.0 0 0 1 2.0 2.0v12.0a2.0 2.0 0 0 1 -2.0 2.0h-12.0a2.0 2.0 0 0 1 -2.0 -2.0v-12.0a2.0 2.0 0 0 1 2.0 -2.0z", "M10.0 9.0h4.0a1.0 1.0 0 0 1 1.0 1.0v4.0a1.0 1.0 0 0 1 -1.0 1.0h-4.0a1.0 1.0 0 0 1 -1.0 -1.0v-4.0a1.0 1.0 0 0 1 1.0 -1.0z", "M15 2v2", "M15 20v2", "M2 15h2", "M2 9h2", "M20 15h2", "M20 9h2", "M9 2v2", "M9 20v2"], "zap": ["M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"], "upload": ["M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", "M17 L8 L12 L3 L7 L8", "M12 3L12 15"]};
+const cv = document.getElementById('c');
+const ctx = cv.getContext('2d');
+
+// ---------- helpers ----------
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const lerp = (a, b, k) => a + (b - a) * k;
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const eOut = (k) => 1 - Math.pow(1 - k, 3);
+const eOutExpo = (k) => (k >= 1 ? 1 : 1 - Math.pow(2, -10 * k));
+const eInOut = (k) => (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2);
+const eBack = (k) => { const c1 = 2.2, c3 = c1 + 1; return 1 + c3 * Math.pow(k - 1, 3) + c1 * Math.pow(k - 1, 2); };
+const win = (t, a, b, fi = 0.3, fo = 0.3) => Math.min(eOut(prog(t, a, a + fi)), 1 - eInOut(prog(t, b - fo, b)));
+
+function rng(seed) {
+  return () => {
+    seed |= 0; seed = (seed + 0x6d2b79f5) | 0;
+    let r = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    r = (r + Math.imul(r ^ (r >>> 7), 61 | r)) ^ r;
+    return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+const FAM = { BG: "'BG'", SM: "'SM'" };
+function font(weight, size, fam = 'BG', ls = 0) {
+  ctx.font = `${weight} ${size}px ${FAM[fam]}`;
+  ctx.letterSpacing = `${ls}px`;
+}
+function txt(s, x, y, o = {}) {
+  const { weight = 600, size = 24, fam = 'BG', color = C.ink, align = 'left', ls = 0 } = o;
+  font(weight, size, fam, ls);
+  ctx.fillStyle = color; ctx.textAlign = align; ctx.textBaseline = 'alphabetic';
+  ctx.fillText(s, x, y);
+  ctx.letterSpacing = '0px';
+}
+function tw(s, weight, size, fam = 'BG', ls = 0) {
+  font(weight, size, fam, ls);
+  const w = ctx.measureText(s).width;
+  ctx.letterSpacing = '0px';
+  return w;
+}
+function wrap(s, maxW) {
+  const words = s.split(' '), lines = [];
+  let line = '';
+  for (const w of words) {
+    const test = line ? `${line} ${w}` : w;
+    if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = w; } else line = test;
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+
+function roundRect(x, y, w, h, r) {
+  r = Math.min(r, w / 2, h / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+// Neo-brutalist card: ink outline and a hard offset shadow.
+function brut(x, y, w, h, r = 22, o = {}) {
+  const { fill = C.snow, sh = 10, lw = 5 } = o;
+  if (sh) { roundRect(x + sh, y + sh, w, h, r); ctx.fillStyle = C.ink; ctx.fill(); }
+  roundRect(x, y, w, h, r);
+  ctx.fillStyle = fill; ctx.fill();
+  ctx.lineWidth = lw; ctx.strokeStyle = C.ink; ctx.stroke();
+}
+
+// A lucide icon (24×24 strokes) centred at (cx, cy).
+function icon(name, cx, cy, size, color = C.ink, lw = 2.4) {
+  ctx.save();
+  ctx.translate(cx - size / 2, cy - size / 2);
+  ctx.scale(size / 24, size / 24);
+  ctx.strokeStyle = color; ctx.lineWidth = lw; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  for (const d of ICONS[name]) ctx.stroke(new Path2D(d));
+  ctx.restore();
+}
+
+// A sticker: flat fill, ink outline, hard shadow, centred at (cx, cy). Returns its width.
+function sticker(cx, cy, label, o = {}) {
+  const { bg = C.yel, size = 24, fam = 'SM', weight = 700, padX = 18, h = size * 1.9, rot = 0, scale = 1,
+    sh = 6, lw = 4, ls = 1, color = C.ink, ic = null } = o;
+  const iw = ic ? size * 1.1 + 10 : 0;
+  const w = tw(label, weight, size, fam, ls) + padX * 2 + iw;
+  ctx.save();
+  ctx.translate(cx, cy); ctx.rotate(rot); ctx.scale(scale, scale);
+  brut(-w / 2, -h / 2, w, h, Math.min(14, h / 2), { fill: bg, sh, lw });
+  if (ic) icon(ic, -w / 2 + padX + size * 0.55, 0, size * 1.1, color, 2.6);
+  font(weight, size, fam, ls);
+  ctx.fillStyle = color; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText(label, -w / 2 + padX + iw, 2);
+  ctx.textBaseline = 'alphabetic'; ctx.letterSpacing = '0px';
+  ctx.restore();
+  return w;
+}
+
+// "Slap" in: overshooting scale and a quick fade, like a sticker hitting the page.
+function slap(t, s, dur = 0.34) {
+  const k = prog(t, s, s + dur);
+  return { k, alpha: clamp(k * 4), scale: k <= 0 ? 0 : lerp(1.7, 1, eBack(k)) };
+}
+
+// Text that slides up from behind a mask. `text` is a string or [[part, colour, highlight?], ...].
+function reveal(text, x, y, size, k, o = {}) {
+  const { weight = 800, fam = 'BG', color = C.ink, align = 'left', alpha = 1, ls = 0 } = o;
+  if (k <= 0 || alpha <= 0) return;
+  const segs = Array.isArray(text) ? text : [[text, color]];
+  font(weight, size, fam, ls);
+  const widths = segs.map(([s]) => ctx.measureText(s).width);
+  const w = widths.reduce((p, c) => p + c, 0);
+  const left = align === 'center' ? x - w / 2 : align === 'right' ? x - w : x;
+  ctx.save();
+  ctx.globalAlpha *= alpha * clamp(k * 1.4);
+  const dy = (1 - eOutExpo(k)) * size * 1.1;
+  // marker highlights sit behind their words and grow in from the left
+  let hx = left;
+  segs.forEach(([s, , hl], i) => {
+    if (hl) {
+      const hk = eOut(prog(k, 0.5, 1));
+      ctx.fillStyle = hl;
+      ctx.save(); ctx.translate(hx - 8, y - size * 0.72); ctx.transform(1, 0, -0.08, 1, 0, 0);
+      ctx.fillRect(0, 0, (widths[i] + 16) * hk, size * 0.86);
+      ctx.restore();
+    }
+    hx += widths[i];
+  });
+  ctx.beginPath();
+  ctx.rect(left - 40, y - size * 1.1, w + 80, size * 1.48);
+  ctx.clip();
+  ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+  let cx = left;
+  font(weight, size, fam, ls);
+  segs.forEach(([s, c], i) => { ctx.fillStyle = c || color; ctx.fillText(s, cx, y + dy); cx += widths[i]; });
+  ctx.restore();
+  ctx.letterSpacing = '0px';
+}
+
+// Entrance: alpha and a short slide; returns the eased progress.
+function enter(t, start, dur = 0.5, dist = 40) {
+  const k = eOutExpo(prog(t, start, start + dur));
+  ctx.translate(0, (1 - k) * dist);
+  ctx.globalAlpha *= clamp(k * 1.6);
+  return k;
+}
+
+// ---------- the app's logo: a tilted yellow tile with a shield, and the wordmark ----------
+function logo(x, cy, s, o = {}) {
+  const { word = true, wordSize = s * 0.78 } = o;
+  ctx.save();
+  ctx.translate(x + s / 2, cy); ctx.rotate(-0.1);
+  brut(-s / 2, -s / 2, s, s, s * 0.24, { fill: C.yel, sh: s * 0.09, lw: Math.max(3, s * 0.06) });
+  icon('shield-check', 0, 0, s * 0.58, C.ink, 2.9);
+  ctx.restore();
+  if (!word) return s;
+  const gap = s * 0.3;
+  const w1 = tw('codeguard', 800, wordSize, 'BG', -wordSize * 0.03);
+  txt('codeguard', x + s + gap, cy + wordSize * 0.36, { weight: 800, size: wordSize, ls: -wordSize * 0.03 });
+  txt('.ai', x + s + gap + w1, cy + wordSize * 0.36, { weight: 800, size: wordSize, color: C.cobalt, ls: -wordSize * 0.03 });
+  return s + gap + w1 + tw('.ai', 800, wordSize, 'BG', -wordSize * 0.03);
+}
+
+// ---------- background: cutting-mat paper ----------
+const bgCanvas = document.createElement('canvas');
+bgCanvas.width = W; bgCanvas.height = H;
+{
+  const b = bgCanvas.getContext('2d');
+  b.fillStyle = C.cream; b.fillRect(0, 0, W, H);
+  b.fillStyle = 'rgba(17,17,17,0.10)';
+  for (let y = 15; y < H; y += 30) for (let x = 15; x < W; x += 30) { b.beginPath(); b.arc(x, y, 1.8, 0, Math.PI * 2); b.fill(); }
+}
+
+// ---------- timeline ----------
+const T = {
+  open: [0.0, 3.4], intro: [3.4, 7.0],
+  scan: [7.0, 10.8], find: [10.8, 15.0], deps: [15.0, 18.6], grade: [18.6, 22.6],
+  fix: [22.6, 26.8], ship: [26.8, 30.8], browser: [30.8, 34.4],
+  built: [34.4, 37.0], end: [37.0, 42.5],
+};
+const STEPS = [
+  ['scan', 'SCAN'], ['find', 'FIND'], ['deps', 'DEPS'], ['grade', 'GRADE'],
+  ['fix', 'FIX'], ['ship', 'SHIP'], ['browser', 'BROWSER'],
+];
+const URL = 'codevigil.netlify.app';
+
+// Left-hand caption used by every product step.
+function caption(t, key, idx, lines, sub) {
+  const [a, b] = T[key];
+  const al = win(t, a, b);
+  if (al <= 0) return;
+  const x = 100, maxW = 600;
+  font(800, 88, 'BG');
+  const plain = (l) => (Array.isArray(l) ? l.map((s) => s[0]).join('') : l);
+  const widest = Math.max(...lines.map((l) => ctx.measureText(plain(l)).width));
+  const size = Math.min(88, Math.floor((88 * maxW) / widest));
+  const lh = size * 1.02;
+  font(400, 25, 'SM');
+  const subLines = wrap(sub, 560);
+  const blockH = 30 + 34 + lines.length * lh + 20 + subLines.length * 38;
+  const top = 470 - blockH / 2;
+
+  const kk = eOut(prog(t, a + 0.05, a + 0.4));
+  ctx.save();
+  ctx.globalAlpha = al * kk;
+  const num = `0${idx + 1}`;
+  txt(num, x + (1 - kk) * -20, top + 22, { weight: 700, size: 21, fam: 'SM', color: C.cobalt, ls: 3 });
+  const nw = tw(num, 700, 21, 'SM', 3);
+  txt(`/ 07  ${STEPS[idx][1]}`, x + nw + 12 + (1 - kk) * -20, top + 22, { weight: 700, size: 21, fam: 'SM', color: C.sub, ls: 3 });
+  ctx.restore();
+
+  lines.forEach((l, i) => {
+    reveal(l, x, top + 30 + 34 + (i + 0.8) * lh, size, prog(t, a + 0.1 + i * 0.08, a + 0.55 + i * 0.08), { alpha: al, ls: -size * 0.03 });
+  });
+  const sk = eOut(prog(t, a + 0.4, a + 0.85));
+  ctx.save();
+  ctx.globalAlpha = al * sk;
+  subLines.forEach((l, i) => txt(l, x, top + 30 + 34 + lines.length * lh + 20 + 26 + i * 38 + (1 - sk) * 12, { weight: 400, size: 25, fam: 'SM', color: C.sub }));
+  ctx.restore();
+}
+
+// ---------- scenes ----------
+const SECRET = 'Xk9#mQ2vLp8$wZr4';
+function sceneOpen(t) {
+  const [a, b] = T.open;
+  const al = win(t, a + 0.05, b, 0.3, 0.3);
+  if (al <= 0) return;
+  reveal([['It only takes ', C.ink], ['one line', C.ink, C.yel], ['.', C.ink]], W / 2, 250, 84, prog(t, a + 0.9, a + 1.4), { align: 'center', alpha: al, ls: -2.5 });
+  const x = 270, y = 330, w = 1060, h = 290;
+  ctx.save();
+  ctx.globalAlpha = al;
+  enter(t, a + 0.1, 0.5, 30);
+  brut(x, y, w, h, 24, { sh: 12 });
+  // file tab
+  ctx.fillStyle = C.ink; ctx.fillRect(x, y + 62, w, 5);
+  txt('app.py', x + 34, y + 44, { weight: 700, size: 24, fam: 'SM' });
+  [C.cherry, C.yel, C.mint].forEach((c, i) => { ctx.beginPath(); ctx.arc(x + w - 110 + i * 32, y + 34, 10, 0, Math.PI * 2); ctx.fillStyle = c; ctx.fill(); ctx.lineWidth = 3; ctx.strokeStyle = C.ink; ctx.stroke(); });
+  const lines = [[10, 'app = Flask(__name__)'], [11, null], [12, ''], [13, '@app.route("/user")']];
+  const typedK = prog(t, a + 0.35, a + 1.35);
+  const found = prog(t, a + 1.6, a + 1.85);
+  const masked = prog(t, a + 1.95, a + 2.5);
+  lines.forEach(([n, s], i) => {
+    const ly = y + 120 + i * 50;
+    txt(String(n), x + 60, ly, { weight: 400, size: 28, fam: 'SM', color: C.faint, align: 'right' });
+    if (s !== null) { txt(s, x + 96, ly, { weight: 400, size: 28, fam: 'SM', color: C.sub }); return; }
+    // the secret line
+    if (found > 0) {
+      ctx.fillStyle = `rgba(255,159,67,${0.45 * found})`;
+      ctx.fillRect(x + 80, ly - 34, w - 110, 46);
+    }
+    const full = `DB_PASSWORD = "${SECRET}"`;
+    let shown = full.slice(0, Math.ceil(full.length * typedK));
+    if (masked > 0) {
+      // redact the middle of the value, the way CodeGuard reports it
+      const hidden = Math.round(10 * masked);
+      shown = `DB_PASSWORD = "${SECRET.slice(0, 4)}${'*'.repeat(hidden)}${SECRET.slice(4 + hidden)}"`;
+    }
+    txt(shown, x + 96, ly, { weight: 700, size: 28, fam: 'SM' });
+    if (typedK < 1 && Math.floor(t * 3) % 2 === 0) { ctx.fillStyle = C.cobalt; ctx.fillRect(x + 98 + tw(shown, 700, 28, 'SM'), ly - 26, 4, 32); }
+  });
+  ctx.restore();
+  const s1 = slap(t, a + 1.75);
+  if (s1.k > 0) {
+    ctx.save(); ctx.globalAlpha = al * s1.alpha;
+    sticker(1180, y + 155, 'HIGH · CWE-798', { bg: C.tang, size: 24, rot: -0.07, scale: s1.scale, ic: 'triangle-alert' });
+    ctx.restore();
+  }
+  const lk = eOut(prog(t, a + 2.2, a + 2.6));
+  ctx.save(); ctx.globalAlpha = al * lk;
+  txt('Hardcoded secret · entropy 4.00 bits/char · committed to source', W / 2, y + h + 70 + (1 - lk) * 10, { weight: 400, size: 24, fam: 'SM', color: C.sub, align: 'center' });
+  ctx.restore();
+}
+
+function sceneIntro(t) {
+  const [a, b] = T.intro;
+  const al = win(t, a, b);
+  if (al <= 0) return;
+  const s = 116, ws = 108;
+  const total = s + s * 0.3 + tw('codeguard.ai', 800, ws, 'BG', -ws * 0.03);
+  const lk = slap(t, a + 0.1, 0.4);
+  ctx.save();
+  ctx.globalAlpha = al * lk.alpha;
+  ctx.translate(W / 2, 300); ctx.scale(lk.scale, lk.scale); ctx.translate(-W / 2, -300);
+  logo(W / 2 - total / 2, 300, s, { wordSize: ws });
+  ctx.restore();
+  reveal([['A DevSecOps scanner that grades your repo ', C.ink], ['A–F', C.ink, C.yel], ['.', C.ink]], W / 2, 462, 46, prog(t, a + 0.45, a + 0.9), { weight: 700, align: 'center', alpha: al, ls: -0.8 });
+  const grades = [['F', C.cherry, 'Cooked'], ['D', C.tang, 'Risky'], ['C', C.yel, 'Mid'], ['B', C.lime, 'Solid'], ['A', C.mint, 'Locked in']];
+  const rots = [-0.09, 0.05, -0.03, 0.07, -0.06];
+  const cw = 186, gap = 38, x0 = W / 2 - (cw * 5 + gap * 4) / 2;
+  grades.forEach(([g, col, vibe], i) => {
+    const sl = slap(t, a + 0.85 + i * 0.13, 0.36);
+    if (sl.k <= 0) return;
+    ctx.save();
+    ctx.globalAlpha = al * sl.alpha;
+    const cx = x0 + i * (cw + gap) + cw / 2, cy = 680;
+    ctx.translate(cx, cy); ctx.rotate(rots[i]); ctx.scale(sl.scale, sl.scale);
+    brut(-cw / 2, -110, cw, 220, 20, { fill: col, sh: 10 });
+    txt(g, 0, 40, { weight: 800, size: 150, align: 'center', ls: -4 });
+    txt(vibe, 0, 88, { weight: 700, size: 22, fam: 'SM', align: 'center' });
+    ctx.restore();
+  });
+}
+
+const ENGINES = [
+  ['Rule pack', 'Cross-language rules', 20, C.yel],
+  ['Secrets', 'Signatures + entropy', 20, C.pink],
+  ['Bandit', 'Python AST linter', 35, C.lime],
+  ['Semgrep', 'Taint-mode rules', 35, C.lilac],
+  ['OSV.dev', 'Dependency CVEs', 55, C.tang],
+  ['Radon', 'Complexity & health', 70, C.mint],
+];
+const STAGES = [
+  [0.55, 20, 'Running secret & pattern rules'],
+  [1.1, 35, 'Running SAST engines (Bandit, Semgrep)'],
+  [1.65, 55, 'Resolving dependencies against OSV.dev'],
+  [2.2, 70, 'Measuring complexity & maintainability'],
+  [2.75, 100, 'Done · 10 findings · 0.6 s'],
+];
+function sceneScan(t) {
+  const [a, b] = T.scan;
+  const al = win(t, a, b);
+  if (al <= 0) return;
+  const bx = 800, bw = 680;
+  // the upload drops in
+  const dk = prog(t, a + 0.1, a + 0.55);
+  ctx.save();
+  ctx.globalAlpha = al * clamp(dk * 3);
+  ctx.translate(0, (1 - eBack(dk)) * -120);
+  brut(bx, 196, bw, 120, 22);
+  brut(bx + 26, 218, 76, 76, 16, { fill: C.yel, sh: 5, lw: 4 });
+  icon('folder-up', bx + 64, 256, 44, C.ink, 2.4);
+  txt('vulnerable_app.zip', bx + 126, 252, { weight: 800, size: 34, ls: -0.6 });
+  txt('4 files · 95 lines · Python + JavaScript', bx + 128, 286, { weight: 400, size: 19, fam: 'SM', color: C.sub });
+  ctx.restore();
+  // progress through the engine's real stages
+  const st = a + 0.4;
+  let pct = 0, label = 'Queued';
+  for (let i = 0; i < STAGES.length; i++) {
+    const [d, p, l] = STAGES[i];
+    const prev = i === 0 ? 0 : STAGES[i - 1][1];
+    const k = eOut(prog(t, st + d - 0.35, st + d));
+    if (k > 0) { pct = lerp(prev, p, k); label = l; }
+  }
+  // engines
+  const cw = (bw - 2 * 22) / 3, ch = 112;
+  ENGINES.forEach(([name, blurb, stage, col], i) => {
+    const ek = eOutExpo(prog(t, a + 0.3 + i * 0.06, a + 0.75 + i * 0.06));
+    if (ek <= 0) return;
+    const on = pct >= stage - 0.5;
+    const x = bx + (i % 3) * (cw + 22), y = 362 + Math.floor(i / 3) * (ch + 24);
+    ctx.save();
+    ctx.globalAlpha = al * clamp(ek * 1.5);
+    ctx.translate(0, (1 - ek) * 30);
+    const pop = on ? eBack(prog(pct, stage - 0.5, stage + 6)) : 0;
+    ctx.translate(x + cw / 2, y + ch / 2); ctx.scale(1 + 0.04 * Math.sin(Math.PI * clamp(pop)), 1 + 0.04 * Math.sin(Math.PI * clamp(pop))); ctx.translate(-(x + cw / 2), -(y + ch / 2));
+    brut(x, y, cw, ch, 16, { fill: on ? col : C.snow, sh: on ? 7 : 4, lw: 4 });
+    txt(name, x + 20, y + 46, { weight: 800, size: 30, ls: -0.5 });
+    txt(blurb, x + 20, y + 82, { weight: 400, size: 15, fam: 'SM', color: on ? C.ink : C.sub });
+    if (on) { ctx.beginPath(); ctx.arc(x + cw - 28, y + 30, 15, 0, Math.PI * 2); ctx.fillStyle = C.ink; ctx.fill(); icon('check', x + cw - 28, y + 30, 20, C.snow, 3.4); }
+    ctx.restore();
+  });
+  // progress bar
+  const pk = eOut(prog(t, a + 0.45, a + 0.8));
+  ctx.save();
+  ctx.globalAlpha = al * pk;
+  const py = 650;
+  brut(bx, py, bw, 64, 16, { sh: 7, lw: 4 });
+  if (pct > 0) {
+    ctx.save(); roundRect(bx, py, bw, 64, 16); ctx.clip();
+    ctx.fillStyle = pct >= 100 ? C.mint : C.yel; ctx.fillRect(bx, py, bw * pct / 100, 64);
+    ctx.restore();
+    roundRect(bx, py, bw, 64, 16); ctx.lineWidth = 4; ctx.strokeStyle = C.ink; ctx.stroke();
+  }
+  txt(label, bx + 24, py + 41, { weight: 700, size: 19, fam: 'SM' });
+  txt(`${Math.round(pct)}%`, bx + bw - 24, py + 41, { weight: 700, size: 22, fam: 'SM', align: 'right' });
+  ctx.restore();
+}
+
+const FINDINGS = [
+  ['critical', 'SQL built with string formatting', 'app.py:17', 'CWE-89', 'A03', 'rule pack'],
+  ['critical', 'Shell injection (shell=True)', 'app.py:24', 'CWE-78', 'A03', 'bandit'],
+  ['critical', 'SQL built with string concatenation', 'server.js:9', 'CWE-89', 'A03', 'rule pack'],
+  ['high', 'Hardcoded secret in DB_PASSWORD', 'app.py:11', 'CWE-798', 'A07', 'secrets'],
+  ['high', 'Dynamic code evaluation (eval)', 'server.js:16', 'CWE-95', 'A03', 'rule pack'],
+  ['medium', 'Unsafe pickle deserialization', 'app.py:39', 'CWE-502', 'A08', 'bandit'],
+];
+function sceneFind(t) {
+  const [a, b] = T.find;
+  const al = win(t, a, b);
+  if (al <= 0) return;
+  const bx = 800, by = 176, bw = 680, bh = 660;
+  ctx.save();
+  ctx.globalAlpha = al;
+  enter(t, a + 0.1, 0.5, 40);
+  brut(bx, by, bw, bh, 24, { sh: 12 });
+  txt('10 findings', bx + 30, by + 58, { weight: 800, size: 36, ls: -0.8 });
+  sticker(bx + bw - 30 - tw('Deduped across engines', 700, 15, 'SM', 0.5) / 2 - 16, by + 46, 'Deduped across engines', { bg: C.lilac, size: 15, sh: 4, lw: 3, ls: 0.5, padX: 14 });
+  ctx.fillStyle = C.ink; ctx.fillRect(bx, by + 86, bw, 4);
+  FINDINGS.forEach(([sev, title, loc, cwe, owasp, eng], i) => {
+    const k = eOutExpo(prog(t, a + 0.45 + i * 0.2, a + 0.85 + i * 0.2));
+    if (k <= 0) return;
+    const y = by + 106 + i * 82;
+    ctx.save();
+    ctx.globalAlpha *= clamp(k * 1.5);
+    ctx.translate((1 - k) * 80, 0);
+    const [col, lab] = SEV[sev];
+    const sw = 128;
+    brut(bx + 26, y + 8, sw, 40, 10, { fill: col, sh: 4, lw: 3 });
+    txt(lab, bx + 26 + sw / 2, y + 35, { weight: 700, size: 15, fam: 'SM', align: 'center', ls: 1 });
+    txt(title, bx + 176, y + 30, { weight: 700, size: 24, ls: -0.3 });
+    txt(`${loc} · ${cwe} · ${owasp}:2021`, bx + 177, y + 60, { weight: 400, size: 16, fam: 'SM', color: C.sub });
+    txt(eng, bx + bw - 30, y + 60, { weight: 700, size: 14, fam: 'SM', color: C.faint, align: 'right', ls: 1 });
+    if (i < FINDINGS.length - 1) { ctx.fillStyle = C.grid; ctx.fillRect(bx + 26, y + 76, bw - 52, 2); }
+    ctx.restore();
+  });
+  const mk = eOut(prog(t, a + 1.75, a + 2.1));
+  ctx.globalAlpha *= mk;
+  txt('+ 4 more · OWASP A03 Injection × 6', bx + 30, by + bh - 30, { weight: 700, size: 18, fam: 'SM', color: C.sub });
+  ctx.restore();
+}
+
+function sceneDeps(t) {
+  const [a, b] = T.deps;
+  const al = win(t, a, b);
+  if (al <= 0) return;
+  const bx = 800, bw = 680;
+  ctx.save();
+  ctx.globalAlpha = al;
+  enter(t, a + 0.1, 0.5, 40);
+  brut(bx, 190, bw, 196, 22);
+  txt('requirements.txt', bx + 28, 236, { weight: 700, size: 21, fam: 'SM' });
+  ctx.fillStyle = C.ink; ctx.fillRect(bx, 256, bw, 4);
+  const deps = [['flask==0.12.2', true], ['requests==2.19.0', true], ['pyyaml>=5.1', false]];
+  deps.forEach(([d, bad], i) => {
+    const y = 300 + i * 38;
+    const ck = prog(t, a + 0.55 + i * 0.22, a + 0.75 + i * 0.22);
+    if (ck > 0 && bad) { ctx.fillStyle = `rgba(255,90,95,${0.3 * ck})`; ctx.fillRect(bx + 18, y - 26, bw - 36, 36); }
+    txt(d, bx + 30, y, { weight: 700, size: 24, fam: 'SM' });
+    if (ck >= 1) txt(bad ? 'vulnerable' : 'ok', bx + bw - 30, y, { weight: 700, size: 17, fam: 'SM', color: bad ? '#b3262b' : C.sub, align: 'right' });
+  });
+  ctx.restore();
+  // advisories, with the CVSS score computed from each vector
+  const adv = [
+    ['requests 2.19.0', 'CVE-2018-18074 · fixed in 2.20.0', 'AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H', 9.8, 'critical'],
+    ['flask 0.12.2', 'CVE-2018-1000656 · fixed in 0.12.3', 'AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H', 7.5, 'high'],
+  ];
+  adv.forEach(([pkg, cve, vec, score, sev], i) => {
+    const s0 = a + 1.25 + i * 0.4;
+    const k = eOutExpo(prog(t, s0, s0 + 0.5));
+    if (k <= 0) return;
+    const y = 430 + i * 200;
+    ctx.save();
+    ctx.globalAlpha = al * clamp(k * 1.5);
+    ctx.translate((1 - k) * 90, 0);
+    brut(bx, y, bw, 168, 22);
+    ctx.save(); roundRect(bx, y, bw, 168, 22); ctx.clip(); ctx.fillStyle = SEV[sev][0]; ctx.fillRect(bx, y, 22, 168); ctx.restore();
+    roundRect(bx, y, bw, 168, 22); ctx.lineWidth = 5; ctx.strokeStyle = C.ink; ctx.stroke();
+    ctx.fillStyle = C.ink; ctx.fillRect(bx + 22, y, 4, 168);
+    txt(pkg, bx + 54, y + 56, { weight: 800, size: 34, ls: -0.6 });
+    txt(cve, bx + 55, y + 96, { weight: 700, size: 19, fam: 'SM', color: C.sub });
+    // the vector types out, then the score rolls up
+    const vk = prog(t, s0 + 0.3, s0 + 0.9);
+    txt(vec.slice(0, Math.ceil(vec.length * vk)), bx + 55, y + 136, { weight: 400, size: 16, fam: 'SM', color: C.faint });
+    const sk = eOut(prog(t, s0 + 0.6, s0 + 1.2));
+    const sl = slap(t, s0 + 0.55, 0.32);
+    if (sl.k > 0) {
+      ctx.save(); ctx.globalAlpha *= sl.alpha;
+      ctx.translate(bx + bw - 110, y + 84); ctx.rotate(0.05); ctx.scale(sl.scale, sl.scale);
+      brut(-78, -56, 156, 112, 18, { fill: SEV[sev][0], sh: 7, lw: 4 });
+      txt((score * sk).toFixed(1), 0, 14, { weight: 800, size: 56, align: 'center', ls: -1 });
+      txt(`CVSS · ${SEV[sev][1]}`, 0, 42, { weight: 700, size: 12, fam: 'SM', align: 'center', ls: 1 });
+      ctx.restore();
+    }
+    ctx.restore();
+  });
+}
+
+function sceneGrade(t) {
+  const [a, b] = T.grade;
+  const al = win(t, a, b);
+  if (al <= 0) return;
+  // the score falls as penalties stack up, then the grade lands
+  const ck = eOut(prog(t, a + 0.2, a + 1.3));
+  const score = lerp(100, 30.1, ck);
+  const sl = slap(t, a + 1.3, 0.4);
+  ctx.save();
+  ctx.globalAlpha = al;
+  ctx.save();
+  enter(t, a + 0.1, 0.45, 30);
+  ctx.translate(960, 410); ctx.rotate(-0.07);
+  const landed = sl.k > 0;
+  brut(-150, -190, 300, 380, 26, { fill: landed ? C.cherry : C.snow, sh: 12 });
+  if (landed) {
+    ctx.save(); ctx.scale(sl.scale, sl.scale);
+    txt('F', 0, 70, { weight: 800, size: 250, align: 'center', ls: -6 });
+    ctx.restore();
+    txt('Cooked', 0, 150, { weight: 800, size: 34, align: 'center' });
+  } else {
+    txt(score.toFixed(1), 0, 30, { weight: 800, size: 96, align: 'center', ls: -3 });
+    txt('SCORE', 0, 80, { weight: 700, size: 18, fam: 'SM', align: 'center', ls: 3, color: C.sub });
+  }
+  ctx.restore();
+  if (landed) {
+    const lk = eOut(prog(t, a + 1.5, a + 1.9));
+    ctx.globalAlpha = al * lk;
+    txt('30.1 / 100', 960, 668, { weight: 700, size: 26, fam: 'SM', align: 'center' });
+    ctx.globalAlpha = al;
+  }
+  // severity counts
+  const counts = [['critical', 3], ['high', 5], ['medium', 1], ['low', 1]];
+  counts.forEach(([sev, n], i) => {
+    const s2 = slap(t, a + 0.35 + i * 0.16, 0.32);
+    if (s2.k <= 0) return;
+    ctx.save();
+    ctx.globalAlpha = al * s2.alpha;
+    const cx = 1300, cy = 262 + i * 104;
+    ctx.translate(cx, cy); ctx.rotate([0.04, -0.03, 0.05, -0.02][i]); ctx.scale(s2.scale, s2.scale);
+    brut(-120, -40, 240, 80, 14, { fill: SEV[sev][0], sh: 6, lw: 4 });
+    txt(String(n), -84, 22, { weight: 800, size: 58, align: 'center' });
+    txt(SEV[sev][1], -40, 12, { weight: 700, size: 18, fam: 'SM', ls: 1 });
+    ctx.restore();
+  });
+  // how it's scored
+  const fk = eOutExpo(prog(t, a + 1.9, a + 2.4));
+  if (fk > 0) {
+    ctx.save();
+    ctx.globalAlpha = al * clamp(fk * 1.5);
+    ctx.translate(0, (1 - fk) * 30);
+    brut(800, 720, 680, 120, 18, { sh: 7, lw: 4, fill: C.snow });
+    txt('security = 100 · e^(−penalty / 60)', 830, 768, { weight: 700, size: 22, fam: 'SM' });
+    txt('overall  = 0.7 · security + 0.3 · health', 830, 808, { weight: 700, size: 22, fam: 'SM' });
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
+const DIFF = [
+  ['-', 'query = f"SELECT * FROM users WHERE id = {user_id}"'],
+  ['-', 'return db.execute(query)'],
+  ['+', 'query = "SELECT * FROM users WHERE id = %s"'],
+  ['+', 'return db.execute(query, (user_id,))'],
+];
+function sceneFix(t) {
+  const [a, b] = T.fix;
+  const al = win(t, a, b);
+  if (al <= 0) return;
+  const bx = 800, bw = 680;
+  ctx.save();
+  ctx.globalAlpha = al;
+  enter(t, a + 0.1, 0.5, 40);
+  brut(bx, 176, bw, 440, 24, { sh: 12 });
+  brut(bx + 26, 200, 64, 64, 14, { fill: C.lilac, sh: 4, lw: 4 });
+  icon('sparkles', bx + 58, 232, 36, C.ink, 2.3);
+  txt('AI triage', bx + 112, 236, { weight: 800, size: 34, ls: -0.6 });
+  txt('app.py:17 · SQL built with string formatting', bx + 113, 264, { weight: 400, size: 16, fam: 'SM', color: C.sub });
+  sticker(bx + bw - 120, 226, 'Llama 3.3 · Groq', { bg: C.lilac, size: 15, sh: 4, lw: 3, padX: 12, ls: 0.5, rot: 0.04 });
+  // the patch
+  const dx = bx + 26, dy = 296, dw = bw - 52;
+  brut(dx, dy, dw, 4 * 48 + 24, 14, { fill: C.cream, sh: 0, lw: 3 });
+  DIFF.forEach(([sign, code], i) => {
+    const k = eOut(prog(t, a + 0.55 + i * 0.28, a + 0.85 + i * 0.28));
+    if (k <= 0) return;
+    const y = dy + 12 + i * 48;
+    ctx.save();
+    ctx.globalAlpha *= k;
+    ctx.fillStyle = sign === '-' ? 'rgba(255,90,95,0.32)' : 'rgba(124,240,180,0.6)';
+    ctx.fillRect(dx + 3, y, (dw - 6) * k, 44);
+    txt(sign, dx + 22, y + 31, { weight: 700, size: 20, fam: 'SM', color: sign === '-' ? '#b3262b' : '#0b7a4b' });
+    txt(code.slice(0, Math.ceil(code.length * k)), dx + 50, y + 31, { weight: 400, size: 17.5, fam: 'SM' });
+    ctx.restore();
+  });
+  // copy the patch
+  const press = Math.sin(Math.PI * prog(t, a + 1.95, a + 2.15));
+  const copied = t > a + 2.1;
+  ctx.save();
+  const btx = bx + bw - 26 - 170, bty = 540;
+  ctx.translate(press * 4, press * 4);
+  brut(btx, bty, 170, 54, 14, { fill: copied ? C.mint : C.yel, sh: 6 - press * 4, lw: 4 });
+  icon(copied ? 'check' : 'file-code', btx + 34, bty + 27, 24, C.ink, 2.6);
+  txt(copied ? 'Copied' : 'Copy patch', btx + 56, bty + 35, { weight: 700, size: 17, fam: 'SM' });
+  ctx.restore();
+  txt('Prioritized actions and copy-paste patches', bx + 28, 574, { weight: 400, size: 16, fam: 'SM', color: C.sub });
+  ctx.restore();
+  // re-scan: what got fixed
+  const rk = eOutExpo(prog(t, a + 2.35, a + 2.85));
+  if (rk > 0) {
+    ctx.save();
+    ctx.globalAlpha = al * clamp(rk * 1.5);
+    ctx.translate(0, (1 - rk) * 40);
+    brut(bx, 660, bw, 160, 22, { sh: 10 });
+    txt('Re-scan', bx + 28, 710, { weight: 800, size: 32, ls: -0.5 });
+    txt('after the critical fixes', bx + 30, 740, { weight: 400, size: 16, fam: 'SM', color: C.sub });
+    const sc = lerp(30.1, 47.8, eOut(prog(t, a + 2.6, a + 3.4)));
+    txt(sc.toFixed(1), bx + bw - 30, 726, { weight: 800, size: 60, align: 'right', ls: -1.5 });
+    let cx = bx + 28;
+    [['3 fixed', C.mint], ['0 new', C.snow], ['+17.7', C.yel], ['criticals 3 → 0', C.snow]].forEach(([l, c], i) => {
+      const s2 = slap(t, a + 2.7 + i * 0.12, 0.3);
+      const w = tw(l, 700, 16, 'SM', 0.5) + 28;
+      if (s2.k > 0) { ctx.save(); ctx.globalAlpha *= s2.alpha; sticker(cx + w / 2, 784, l, { bg: c, size: 16, sh: 4, lw: 3, padX: 14, ls: 0.5, scale: s2.scale }); ctx.restore(); }
+      cx += w + 14;
+    });
+    ctx.restore();
+  }
+}
+
+const YAML = [
+  ['- uses: ', 'VRAJ8/CodeGuardAI@main'],
+  ['  with:', ''],
+  ['    fail-on: ', 'high'],
+  ['- uses: ', 'github/codeql-action/upload-sarif@v4'],
+  ['  with:', ''],
+  ['    sarif_file: ', 'codeguard.sarif'],
+];
+function sceneShip(t) {
+  const [a, b] = T.ship;
+  const al = win(t, a, b);
+  if (al <= 0) return;
+  const bx = 800, bw = 680;
+  ctx.save();
+  ctx.globalAlpha = al;
+  enter(t, a + 0.1, 0.5, 40);
+  brut(bx, 170, bw, 300, 22, { sh: 12, fill: C.ink });
+  icon('github', bx + 44, 218, 28, C.snow, 2.2);
+  txt('.github/workflows/codeguard.yml', bx + 74, 226, { weight: 700, size: 18, fam: 'SM', color: C.snow });
+  YAML.forEach(([k, v], i) => {
+    const lk = prog(t, a + 0.4 + i * 0.12, a + 0.6 + i * 0.12);
+    if (lk <= 0) return;
+    ctx.save(); ctx.globalAlpha *= lk;
+    const y = 280 + i * 32;
+    txt(k, bx + 36, y, { weight: 400, size: 19, fam: 'SM', color: '#c9c3b6' });
+    txt(v, bx + 36 + tw(k, 400, 19, 'SM'), y, { weight: 700, size: 19, fam: 'SM', color: i === 0 ? C.yel : C.mint });
+    ctx.restore();
+  });
+  ctx.restore();
+  const outs = [
+    ['SARIF 2.1.0', 'GitHub Security tab', C.cobalt, C.snow, 'scan-search'],
+    ['CycloneDX 1.5', 'SBOM + vulnerabilities', C.lilac, C.ink, 'package'],
+    ['PDF audit', 'Report for reviewers', C.pink, C.ink, 'file-text'],
+    ['README badge', '/api/badge/{id}.svg', C.lime, C.ink, 'badge-check'],
+  ];
+  outs.forEach(([title, sub, bg, fg, ic], i) => {
+    const sl = slap(t, a + 1.15 + i * 0.16, 0.36);
+    if (sl.k <= 0) return;
+    const cw = 330, chh = 116, x = bx + (i % 2) * (cw + 20), y = 510 + Math.floor(i / 2) * (chh + 22);
+    ctx.save();
+    ctx.globalAlpha = al * sl.alpha;
+    ctx.translate(x + cw / 2, y + chh / 2); ctx.rotate([-0.025, 0.02, 0.015, -0.02][i]); ctx.scale(sl.scale, sl.scale); ctx.translate(-(x + cw / 2), -(y + chh / 2));
+    brut(x, y, cw, chh, 18, { fill: bg, sh: 7, lw: 4 });
+    icon(ic, x + 42, y + chh / 2, 36, fg, 2.4);
+    txt(title, x + 80, y + 52, { weight: 800, size: 28, color: fg, ls: -0.5 });
+    txt(sub, x + 81, y + 84, { weight: 400, size: 15, fam: 'SM', color: fg });
+    ctx.restore();
+  });
+}
+
+function sceneBrowser(t) {
+  const [a, b] = T.browser;
+  const al = win(t, a, b);
+  if (al <= 0) return;
+  const bx = 800, by = 176, bw = 680, bh = 560;
+  ctx.save();
+  ctx.globalAlpha = al;
+  enter(t, a + 0.1, 0.5, 40);
+  brut(bx, by, bw, bh, 24, { sh: 12 });
+  [C.cherry, C.yel, C.mint].forEach((c, i) => { ctx.beginPath(); ctx.arc(bx + 36 + i * 30, by + 36, 9, 0, Math.PI * 2); ctx.fillStyle = c; ctx.fill(); ctx.lineWidth = 3; ctx.strokeStyle = C.ink; ctx.stroke(); });
+  brut(bx + 140, by + 16, bw - 170, 42, 21, { fill: C.cream, sh: 0, lw: 3 });
+  icon('lock', bx + 166, by + 37, 18, C.ink, 2.4);
+  txt(`${URL}/scan`, bx + 186, by + 44, { weight: 400, size: 17, fam: 'SM' });
+  ctx.fillStyle = C.ink; ctx.fillRect(bx, by + 74, bw, 4);
+  // drop zone
+  const zx = bx + 30, zy = by + 104, zw = bw - 60, zh = 270;
+  const drop = prog(t, a + 0.55, a + 1.05);
+  const flash = drop >= 1 ? 1 - prog(t, a + 1.05, a + 1.5) : 0;
+  roundRect(zx, zy, zw, zh, 18);
+  ctx.fillStyle = flash > 0 ? `rgba(255,225,77,${0.25 + 0.6 * flash})` : C.cream; ctx.fill();
+  ctx.save(); ctx.setLineDash([14, 10]); ctx.lineWidth = 4; ctx.strokeStyle = C.ink; ctx.stroke(); ctx.restore();
+  const scanning = t > a + 1.05;
+  if (!scanning) {
+    icon('folder-up', zx + zw / 2, zy + 96, 64, C.ink, 2.2);
+    txt('Drop a folder, a .zip or files', zx + zw / 2, zy + 178, { weight: 800, size: 32, align: 'center', ls: -0.5 });
+    txt('or paste a public GitHub repo', zx + zw / 2, zy + 214, { weight: 400, size: 17, fam: 'SM', color: C.sub, align: 'center' });
+  } else {
+    const pk = eOut(prog(t, a + 1.15, a + 1.9));
+    txt(pk < 1 ? 'Scanning in a Web Worker…' : 'Scanned in your browser', zx + zw / 2, zy + 104, { weight: 800, size: 32, align: 'center', ls: -0.5 });
+    brut(zx + 70, zy + 132, zw - 140, 26, 13, { fill: C.snow, sh: 0, lw: 3 });
+    ctx.save(); roundRect(zx + 70, zy + 132, zw - 140, 26, 13); ctx.clip(); ctx.fillStyle = pk < 1 ? C.yel : C.mint; ctx.fillRect(zx + 70, zy + 132, (zw - 140) * pk, 26); ctx.restore();
+    roundRect(zx + 70, zy + 132, zw - 140, 26, 13); ctx.lineWidth = 3; ctx.strokeStyle = C.ink; ctx.stroke();
+    if (pk >= 1) {
+      let cx = zx + 70;
+      [['F · 30.1', C.cherry], ['10 findings', C.snow], ['0 bytes uploaded', C.mint]].forEach(([l, c], i) => {
+        const s2 = slap(t, a + 1.95 + i * 0.14, 0.3);
+        const w = tw(l, 700, 17, 'SM', 0.5) + 30;
+        if (s2.k > 0) { ctx.save(); ctx.globalAlpha *= s2.alpha; sticker(cx + w / 2, zy + 214, l, { bg: c, size: 17, sh: 4, lw: 3, padX: 15, ls: 0.5, scale: s2.scale }); ctx.restore(); }
+        cx += w + 14;
+      });
+    }
+  }
+  icon('lock', bx + 46, by + bh - 116, 26, C.ink, 2.4);
+  txt('Folders and ZIPs never leave the browser.', bx + 74, by + bh - 107, { weight: 700, size: 22 });
+  icon('check', bx + 46, by + bh - 62, 26, C.ink, 3);
+  txt('Same rules as the Python engine, parity-tested.', bx + 74, by + bh - 53, { weight: 700, size: 22 });
+  ctx.restore();
+  // the folder flying in
+  if (drop < 1) {
+    const fk = eInOut(drop);
+    ctx.save();
+    ctx.globalAlpha = al * clamp(prog(t, a + 0.35, a + 0.55));
+    const fx = lerp(1560, zx + zw / 2, fk), fy = lerp(140, zy + zh / 2, fk) - Math.sin(fk * Math.PI) * 60;
+    sticker(fx, fy, 'vulnerable_app/', { bg: C.yel, size: 20, rot: lerp(0.3, -0.05, fk), ic: 'folder', scale: lerp(1.1, 0.9, fk) });
+    ctx.restore();
+  }
+}
+
+function sceneBuilt(t) {
+  const [a, b] = T.built;
+  const al = win(t, a, b, 0.3, 0.35);
+  if (al <= 0) return;
+  ctx.save();
+  ctx.globalAlpha = al * eOut(prog(t, a + 0.05, a + 0.4));
+  txt('UNDER THE HOOD', W / 2, 250, { weight: 700, size: 22, fam: 'SM', color: C.sub, align: 'center', ls: 6 });
+  ctx.restore();
+  reveal([['One pass. ', C.ink], ['Six engines.', C.ink, C.yel]], W / 2, 400, 110, prog(t, a + 0.1, a + 0.6), { align: 'center', alpha: al, ls: -4 });
+  ctx.save();
+  ctx.globalAlpha = al * eOut(prog(t, a + 0.4, a + 0.8));
+  txt('Python 3.12 + FastAPI engine · CLI · GitHub Action · browser worker', W / 2, 478, { weight: 400, size: 23, fam: 'SM', color: C.sub, align: 'center' });
+  ctx.restore();
+  const rows = [
+    ['FastAPI', 'Bandit', 'Semgrep', 'Radon', 'OSV.dev'],
+    ['Llama 3.3 on Groq', 'MongoDB', 'React', 'Docker', 'GitHub Actions'],
+  ];
+  const cols = [C.mint, C.yel, C.lilac, C.pink, C.lime, C.tang];
+  let n = 0;
+  rows.forEach((row, r) => {
+    const ws = row.map((s) => tw(s, 700, 22, 'SM', 0.5) + 44);
+    const total = ws.reduce((p, c) => p + c, 0) + 26 * (row.length - 1);
+    let x = W / 2 - total / 2;
+    row.forEach((s, i) => {
+      const s2 = slap(t, a + 0.55 + n * 0.06, 0.32);
+      if (s2.k > 0) {
+        ctx.save(); ctx.globalAlpha = al * s2.alpha;
+        sticker(x + ws[i] / 2, 600 + r * 96, s, { bg: cols[n % cols.length], size: 22, padX: 22, ls: 0.5, scale: s2.scale, rot: (n % 2 ? 0.03 : -0.03) });
+        ctx.restore();
+      }
+      x += ws[i] + 26; n++;
+    });
+  });
+}
+
+function sceneEnd(t) {
+  const [a, b] = T.end;
+  const al = win(t, a, b, 0.4, 0.9);
+  if (al <= 0) return;
+  const s = 132, ws = 116;
+  const total = s + s * 0.3 + tw('codeguard.ai', 800, ws, 'BG', -ws * 0.03);
+  const lk = slap(t, a + 0.05, 0.45);
+  ctx.save();
+  ctx.globalAlpha = al * lk.alpha;
+  ctx.translate(W / 2, 330); ctx.scale(lk.scale, lk.scale); ctx.translate(-W / 2, -330);
+  logo(W / 2 - total / 2, 330, s, { wordSize: ws });
+  ctx.restore();
+  reveal([['Grade your repo ', C.ink], ['A–F', C.ink, C.yel], ['.', C.ink]], W / 2, 510, 58, prog(t, a + 0.35, a + 0.85), { weight: 800, align: 'center', alpha: al, ls: -1.5 });
+  const pk = eOut(prog(t, a + 0.7, a + 1.2));
+  if (pk > 0) {
+    const breathe = 0.5 + 0.5 * Math.sin((t - a) * 3.2);
+    ctx.save();
+    ctx.globalAlpha = al * pk;
+    ctx.translate(0, (1 - pk) * 26);
+    txt('TRY THE LIVE DEMO', W / 2, 626, { weight: 700, size: 19, fam: 'SM', color: C.sub, align: 'center', ls: 6 });
+    const uw = tw(URL, 800, 52, 'BG', -1) + 120, uh = 108;
+    const press = breathe * 5;
+    brut(W / 2 - uw / 2 + press, 656 + press, uw, uh, uh / 2, { fill: C.yel, sh: 12 - press, lw: 5 });
+    icon('globe', W / 2 - uw / 2 + 60 + press, 656 + uh / 2 + press, 38, C.ink, 2.4);
+    txt(URL, W / 2 - uw / 2 + 96 + press, 656 + uh / 2 + 18 + press, { weight: 800, size: 52, ls: -1 });
+    ctx.restore();
+  }
+  ctx.save();
+  ctx.globalAlpha = al * eOut(prog(t, a + 1.0, a + 1.5));
+  txt('github.com/VRAJ8/CodeGuardAI', W / 2, 856, { weight: 400, size: 22, fam: 'SM', color: C.sub, align: 'center' });
+  ctx.restore();
+}
+
+// Logo in the corner and the step rail along the bottom.
+function chrome(t) {
+  const al = win(t, T.intro[1] - 0.2, T.built[1], 0.4, 0.4);
+  if (al > 0) {
+    ctx.save();
+    ctx.globalAlpha = al;
+    logo(100, 80, 50, { wordSize: 32 });
+    const uw = tw(URL, 400, 18, 'SM');
+    ctx.beginPath(); ctx.arc(1500 - uw - 18, 75, 6, 0, Math.PI * 2); ctx.fillStyle = C.mint; ctx.fill(); ctx.lineWidth = 2.5; ctx.strokeStyle = C.ink; ctx.stroke();
+    txt(URL, 1500, 82, { weight: 400, size: 18, fam: 'SM', color: C.sub, align: 'right' });
+    ctx.restore();
+  }
+  const rl = win(t, T.scan[0], T.browser[1], 0.4, 0.4);
+  if (rl > 0) {
+    ctx.save();
+    ctx.globalAlpha = rl;
+    const x0 = 100, x1 = 1500, gap = 14, n = STEPS.length, sw = (x1 - x0 - gap * (n - 1)) / n;
+    STEPS.forEach(([key, label], i) => {
+      const [s, e] = T[key];
+      const x = x0 + i * (sw + gap);
+      roundRect(x, 896, sw, 14, 7); ctx.fillStyle = C.snow; ctx.fill();
+      const k = prog(t, s, e - 0.2);
+      if (k > 0) { ctx.save(); roundRect(x, 896, sw, 14, 7); ctx.clip(); ctx.fillStyle = C.yel; ctx.fillRect(x, 896, sw * k, 14); ctx.restore(); }
+      roundRect(x, 896, sw, 14, 7); ctx.lineWidth = 3; ctx.strokeStyle = C.ink; ctx.stroke();
+      const cur = t >= s && t < e;
+      txt(`0${i + 1} ${label}`, x, 942, { weight: cur ? 700 : 400, size: 15, fam: 'SM', color: cur ? C.ink : C.faint, ls: 2 });
+    });
+    ctx.restore();
+  }
+}
+
+function render(t) {
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.globalAlpha = 1;
+  ctx.drawImage(bgCanvas, 0, 0);
+  sceneOpen(t);
+  sceneIntro(t);
+  caption(t, 'scan', 0, ['Drop a repo.', [['Six engines', C.ink, C.yel], [' run.', C.ink]]], 'SAST with Bandit and Semgrep taint rules, secrets with entropy checks, OSV.dev for dependencies, Radon for code health.');
+  sceneScan(t);
+  caption(t, 'find', 1, ['Every finding,', [['mapped.', C.ink, C.pink]]], 'Deduplicated across engines and tagged with CWE and the OWASP Top 10.');
+  sceneFind(t);
+  caption(t, 'deps', 2, ['Dependencies', [['get audited.', C.ink, C.tang]]], 'Each package is checked on OSV.dev, with a CVSS 3.1 score computed from the vector and the lowest fixed version.');
+  sceneDeps(t);
+  caption(t, 'grade', 3, ['One grade,', [['A to F.', C.ink, C.yel]]], 'Penalties decay exponentially, so one critical counts for more than a pile of lows.');
+  sceneGrade(t);
+  caption(t, 'fix', 4, ['AI writes', [['the patch.', C.ink, C.lilac]]], 'Llama 3.3 70B on Groq summarizes, prioritizes and writes fixes. Re-scans show what is new and what is fixed.');
+  sceneFix(t);
+  caption(t, 'ship', 5, ['Plug it', [['into CI.', C.ink, C.lime]]], 'A GitHub Action that fails the build on high findings, plus SARIF, an SBOM, a PDF audit and a README badge.');
+  sceneShip(t);
+  caption(t, 'browser', 6, ['Or scan it', [['in your browser.', C.ink, C.mint]]], 'A Web Worker runs the same rules, so code never leaves the page. No sign-up, no server.');
+  sceneBrowser(t);
+  sceneBuilt(t);
+  sceneEnd(t);
+  chrome(t);
+  // black at both ends so the loop is seamless
+  const black = Math.max(1 - eOut(prog(t, 0, 0.5)), eInOut(prog(t, DURATION - 0.9, DURATION)));
+  if (black > 0) { ctx.globalAlpha = black; ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H); ctx.globalAlpha = 1; }
+}
+
+window.DURATION = DURATION;
+window.render = render;
+window.ready = Promise.all([
+  document.fonts.load("800 100px 'BG'"), document.fonts.load("700 100px 'BG'"),
+  document.fonts.load("400 40px 'SM'"), document.fonts.load("700 40px 'SM'"),
+]).then(() => { render(0); return true; });
+</script>
+</body>
+</html>

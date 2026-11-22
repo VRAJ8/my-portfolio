@@ -38,6 +38,12 @@ export const projects: Project[] = [
     year: 2026,
     tier: 'major',
     image: '/images/codeguard.webp',
+    video: {
+      webm: '/videos/codeguard-ai.webm',
+      mp4: '/videos/codeguard-ai.mp4',
+      poster: '/videos/codeguard-ai-poster.webp',
+      aspect: 'wide',
+    },
     highlights: ['Runs as a GitHub Action', 'SARIF, SBOM & PDF reports'],
     tags: ['Python', 'FastAPI', 'Semgrep', 'Bandit', 'Llama 3.3 (Groq)', 'React', 'MongoDB'],
     demoUrl: 'https://codevigil.netlify.app',
