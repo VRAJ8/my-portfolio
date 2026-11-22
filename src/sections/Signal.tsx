@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { Check, Copy, MapPin } from 'lucide-react';
+import { ArrowUpRight, Check, Copy, MapPin } from 'lucide-react';
 import { siGithub, siInstagram } from 'simple-icons';
 import ChapterTitle from '../components/ChapterTitle';
 import ContactForm from '../components/ContactForm';
 import BrandIcon from '../components/BrandIcon';
 import Split from '../components/Split';
-import { socials } from '../data/socials';
+import { availability, socials } from '../data/socials';
 
 // LinkedIn isn't in simple-icons (brand request), so it gets a drawn mark.
 const LinkedInMark = ({ size = 18 }: { size?: number }) => (
@@ -27,10 +27,17 @@ export default function Signal() {
     }
   };
 
+  // Each link gets its brand colour so it reads at a glance.
   const links = [
-    { name: 'LinkedIn', href: socials.linkedin, Icon: () => <LinkedInMark /> },
-    { name: 'GitHub', href: socials.github, Icon: () => <BrandIcon icon={siGithub} /> },
-    { name: 'Instagram', href: socials.instagram, Icon: () => <BrandIcon icon={siInstagram} /> },
+    { name: 'LinkedIn', handle: 'Vraj Patel', href: socials.linkedin, badge: 'bg-[#0A66C2] text-white', Icon: () => <LinkedInMark size={20} /> },
+    { name: 'GitHub', handle: socials.github.split('/').pop(), href: socials.github, badge: 'bg-ink text-[var(--bg)]', Icon: () => <BrandIcon icon={siGithub} size={20} /> },
+    {
+      name: 'Instagram',
+      handle: `@${socials.instagram.replace(/\/$/, '').split('/').pop()}`,
+      href: socials.instagram,
+      badge: 'bg-[radial-gradient(circle_at_30%_107%,#fdf497_0%,#fd5949_45%,#d6249f_60%,#285AEB_90%)] text-white',
+      Icon: () => <BrandIcon icon={siInstagram} size={20} />,
+    },
   ];
 
   return (
@@ -42,7 +49,7 @@ export default function Signal() {
           something that <span className="serif">ships.</span>
         </ChapterTitle>
         <Split as="p" className="lede mt-8 max-w-xl">
-          Open to data, machine learning and AI roles, and to collaborations. Tell me what you're working on, or just say hi.
+          {availability}, and to collaborations. Tell me what you're working on, or just say hi.
         </Split>
 
         <div className="mt-[28svh] grid gap-6 lg:grid-cols-12">
@@ -58,11 +65,23 @@ export default function Signal() {
             </div>
             <div>
               <p className="kicker">Elsewhere</p>
-              <ul className="mt-3 flex gap-1">
-                {links.map(({ name, href, Icon }) => (
+              <ul className="mt-4 space-y-2.5">
+                {links.map(({ name, handle, href, badge, Icon }) => (
                   <li key={name}>
-                    <a href={href} target="_blank" rel="noopener noreferrer" className="icon-btn border border-[var(--line)]" aria-label={name} title={name}>
-                      <Icon />
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center gap-4 rounded-2xl border border-[var(--line-strong)] p-2.5 pr-5 transition-colors duration-300 hover:bg-[color-mix(in_srgb,var(--ink)_7%,transparent)]"
+                    >
+                      <span className={`grid h-11 w-11 shrink-0 place-items-center rounded-xl ${badge}`}>
+                        <Icon />
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block font-medium leading-tight">{name}</span>
+                        <span className="block truncate text-sm text-ink-2">{handle}</span>
+                      </span>
+                      <ArrowUpRight size={18} className="shrink-0 text-ink-2 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink" aria-hidden="true" />
                     </a>
                   </li>
                 ))}

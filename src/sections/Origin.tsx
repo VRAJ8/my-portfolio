@@ -19,7 +19,7 @@ const stats = [
   { value: 8.32, decimals: 2, label: 'B.Tech GPA' },
 ];
 
-/** Chapter 1: where Vraj comes from. The globe turns from Gujarat to San José as you read. */
+/** Chapter 1: where Vraj comes from. The globe turns from Gujarat to California as you read. */
 export default function Origin({ labels }: { labels: boolean }) {
   return (
     <section id="origin" className="relative px-5 py-32 sm:px-8 md:py-44">
@@ -29,7 +29,7 @@ export default function Origin({ labels }: { labels: boolean }) {
           <ChapterTitle index={1} label="Origin">
             From Gujarat
             <br />
-            to <span className="serif">San José.</span>
+            to <span className="serif">California.</span>
           </ChapterTitle>
           <Split as="p" className="lede mt-10">
             Hi, I'm Vraj. I studied Computer Science and Engineering at CHARUSAT in Gujarat, shipped full-stack products
