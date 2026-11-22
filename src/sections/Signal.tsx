@@ -5,7 +5,7 @@ import ChapterTitle from '../components/ChapterTitle';
 import ContactForm from '../components/ContactForm';
 import BrandIcon from '../components/BrandIcon';
 import Split from '../components/Split';
-import { socials } from '../data/socials';
+import { availability, socials } from '../data/socials';
 
 // LinkedIn isn't in simple-icons (brand request), so it gets a drawn mark.
 const LinkedInMark = ({ size = 18 }: { size?: number }) => (
@@ -49,7 +49,7 @@ export default function Signal() {
           something that <span className="serif">ships.</span>
         </ChapterTitle>
         <Split as="p" className="lede mt-8 max-w-xl">
-          Open to data, machine learning and AI roles, and to collaborations. Tell me what you're working on, or just say hi.
+          {availability}, and to collaborations. Tell me what you're working on, or just say hi.
         </Split>
 
         <div className="mt-[28svh] grid gap-6 lg:grid-cols-12">
