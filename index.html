@@ -5,15 +5,27 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="description" content="Vraj Patel — data, AI and machine learning. Projects, skills and ways to get in touch." />
-    <meta name="theme-color" content="#07080f" />
+    <meta
+      name="description"
+      content="Vraj Patel builds data pipelines, machine learning systems and AI products. MS Applied Data Intelligence at San José State. Projects, trailers and ways to get in touch."
+    />
+    <meta property="og:title" content="VrajPatel" />
+    <meta property="og:description" content="Data, AI & machine learning. Every dataset starts as noise." />
+    <meta property="og:image" content="/videos/player-scout-poster.webp" />
+    <meta name="theme-color" content="#05060a" />
     <title>VrajPatel</title>
+    <link rel="preload" href="/data/land.bin" as="fetch" crossorigin />
     <script>
       // Apply the saved theme before first paint so the page never flashes the wrong one.
       try {
         if (localStorage.getItem('theme') === 'light') document.documentElement.classList.remove('dark');
       } catch (e) {}
     </script>
+    <style>
+      /* Shown until the app mounts, so the first paint is already the preloader's colour. */
+      html { background: #05060a; }
+      html:not(.dark) { background: #f3f1ec; }
+    </style>
   </head>
   <body>
     <div id="root"></div>

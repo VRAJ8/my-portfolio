@@ -5,23 +5,27 @@ export default {
   theme: {
     extend: {
       colors: {
-        label: {
-          DEFAULT: 'var(--label)',
-          secondary: 'var(--label-2)',
-          tertiary: 'var(--label-3)',
+        ink: {
+          DEFAULT: 'var(--ink)',
+          2: 'var(--ink-2)',
+          3: 'var(--ink-3)',
         },
+        bg: {
+          DEFAULT: 'var(--bg)',
+          2: 'var(--bg-2)',
+        },
+        line: 'var(--line)',
         accent: 'var(--accent)',
-        hairline: 'var(--hairline)',
+        'accent-2': 'var(--accent-2)',
+        warm: 'var(--warm)',
       },
       fontFamily: {
-        sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', 'Inter', 'system-ui', 'sans-serif'],
-      },
-      borderRadius: {
-        window: '44px',
-        card: '32px',
+        sans: ['"Geist Variable"', 'Geist', 'system-ui', '-apple-system', 'sans-serif'],
+        mono: ['"Geist Mono Variable"', '"Geist Mono"', 'ui-monospace', 'monospace'],
+        serif: ['"Instrument Serif"', 'Georgia', 'serif'],
       },
       transitionTimingFunction: {
-        apple: 'cubic-bezier(0.16, 1, 0.3, 1)',
+        'out-expo': 'cubic-bezier(0.16, 1, 0.3, 1)',
       },
     },
   },

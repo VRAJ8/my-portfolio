@@ -1,5 +1,7 @@
 import {
   siAnaconda,
+  siApacheairflow,
+  siApachekafka,
   siApachespark,
   siBlender,
   siClaude,
@@ -24,6 +26,7 @@ import {
   siGooglecolab,
   siGooglegemini,
   siGradio,
+  siGreensock,
   siHtml5,
   siHuggingface,
   siInertia,
@@ -59,6 +62,7 @@ import {
   siReact,
   siScikitlearn,
   siScipy,
+  siSnowflake,
   siSolidity,
   siStreamlit,
   siTailwindcss,
@@ -67,6 +71,7 @@ import {
   siTypescript,
   siVercel,
   siVite,
+  siWordpress,
 } from 'simple-icons';
 import { Skill, SkillCategory } from '../types';
 
@@ -108,6 +113,9 @@ export const skills: Skill[] = [
   { name: 'Kaggle', category: 'data', icon: siKaggle },
   { name: 'Anaconda', category: 'data', icon: siAnaconda },
   { name: 'Apache Spark', category: 'data', icon: siApachespark },
+  { name: 'Apache Kafka', category: 'data', icon: siApachekafka },
+  { name: 'Apache Airflow', category: 'data', icon: siApacheairflow },
+  { name: 'Snowflake', category: 'data', icon: siSnowflake },
   { name: 'Dagster', category: 'data', monogram: { text: 'Dg', hex: '4F43DD' } },
   { name: 'DuckDB', category: 'data', icon: siDuckdb },
   { name: 'D3.js', category: 'data', icon: siD3 },
@@ -138,7 +146,9 @@ export const skills: Skill[] = [
   { name: 'C++', category: 'dev', icon: siCplusplus },
   { name: 'Solidity', category: 'dev', icon: siSolidity },
   { name: 'Three.js', category: 'dev', icon: siThreedotjs },
-  { name: 'Framer Motion', category: 'dev', icon: siFramer },
+  { name: 'GSAP', category: 'dev', icon: siGreensock },
+  { name: 'Motion', category: 'dev', icon: siFramer },
+  { name: 'WordPress', category: 'dev', icon: siWordpress },
   { name: 'JWT', category: 'dev', icon: siJsonwebtokens },
 
   // Cloud & DevOps
